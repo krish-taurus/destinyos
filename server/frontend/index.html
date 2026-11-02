@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Destiny OS — Your daily guidance</title>
+<meta name="description" content="Daily guidance from your numerology, Vedic chart and habits. Free during beta.">
+<meta name="theme-color" content="#0B0F1A">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="extra.css">
+<script src="config.js"></script>
+</head>
+<body>
+
+<!-- ══════════ ONBOARDING ══════════ -->
+<div class="screen active" id="screen-onboard">
+  <div class="onboard-wrap">
+    <div class="logo-mark">
+      <div class="logo-hex">
+        <svg viewBox="0 0 44 44" fill="none"><polygon points="22,2 40,12 40,32 22,42 4,32 4,12" fill="rgba(107,79,160,0.15)" stroke="#C9A84C" stroke-width="1.5"/><polygon points="22,8 35,15.5 35,28.5 22,36 9,28.5 9,15.5" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/><circle cx="22" cy="22" r="4" fill="#C9A84C"/></svg>
+      </div>
+      <div class="logo-text">DESTINY <span>OS</span><span class="beta-pill">BETA</span></div>
+    </div>
+
+    <div class="step active" id="step-1">
+      <div class="step-label">Your details · Step 1 of 2</div>
+      <h1 class="onboard-headline">Your birth holds<br>a <em>blueprint.</em></h1>
+      <p class="onboard-sub">Enter your name and birth details. We calculate your numerology and Vedic chart, then give you guidance for each day.</p>
+      <div class="field-group">
+        <label class="field-label" for="inp-name">Full name (as given at birth)</label>
+        <input type="text" class="field-input" id="inp-name" autocomplete="name" placeholder="e.g. Priya Sharma">
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="inp-dob">Date of birth</label>
+          <input type="date" class="field-input" id="inp-dob">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="inp-time">Birth time (if known)</label>
+          <input type="time" class="field-input" id="inp-time">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="inp-city">Birth city</label>
+        <input type="text" class="field-input" id="inp-city" placeholder="e.g. Bengaluru, India">
+      </div>
+      <div class="err" id="step1-err"></div>
+      <button class="btn-primary" id="btn-step1">Continue</button>
+    </div>
+
+    <div class="step" id="step-2">
+      <div class="step-label">Your privacy · Step 2 of 2</div>
+      <h2 class="onboard-headline">Your data,<br><em>your call.</em></h2>
+      <p class="onboard-sub">Destiny OS is free during beta. Here's exactly what happens with what you share.</p>
+      <div class="empty-card" style="margin-bottom:14px">
+        Your name, birth details, food photos and answers are sent to our server only to generate your guidance, then processed by our AI provider (Anthropic). We don't store them on our server in this beta; your profile lives in this browser, and you can erase it any time from the menu.
+      </div>
+      <label class="consent"><input type="checkbox" id="c-data"> I consent to Destiny OS processing my birth details and anything I upload to generate personal guidance.</label>
+      <label class="consent"><input type="checkbox" id="c-nature"> I understand astrology and numerology guidance is traditional and reflective, not predictive, and doesn't replace medical, legal or financial advice.</label>
+      <div class="err" id="step2-err"></div>
+      <button class="btn-primary" id="btn-start">Build my profile</button>
+      <button class="btn-secondary" id="btn-back">Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ LOADING ══════════ -->
+<div class="screen" id="screen-loading">
+  <div class="loading-mandala">
+    <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="55" fill="none" stroke="rgba(107,79,160,0.2)"/><circle cx="60" cy="60" r="35" fill="none" stroke="rgba(107,79,160,0.25)"/><circle cx="60" cy="5" r="3" fill="#C9A84C"/><circle cx="60" cy="115" r="3" fill="#C9A84C"/><circle cx="5" cy="60" r="3" fill="#6B4FA0"/><circle cx="115" cy="60" r="3" fill="#6B4FA0"/><polygon points="60,30 73,52.5 60,75 47,52.5" fill="none" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/><circle cx="60" cy="60" r="3" fill="#C9A84C"/></svg>
+  </div>
+  <div class="loading-title">Reading your blueprint…</div>
+  <div class="loading-steps">
+    <div class="loading-step" id="ls-1"><div class="dot"></div> Calculating Pythagorean and Chaldean numbers</div>
+    <div class="loading-step" id="ls-2"><div class="dot"></div> Locating your birthplace</div>
+    <div class="loading-step" id="ls-3"><div class="dot"></div> Computing your Vedic chart and dasha</div>
+    <div class="loading-step" id="ls-4"><div class="dot"></div> Checking today's transits</div>
+  </div>
+  <div class="err" id="load-err" style="max-width:340px;margin:16px auto 0"></div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div class="screen" id="screen-dashboard">
+  <div class="sidebar">
+    <div class="sidebar-logo"><div class="sidebar-logo-text">DESTINY <span>OS</span><span class="beta-pill">BETA</span></div></div>
+    <div class="user-chip">
+      <div class="user-avatar" id="sidebar-avatar">·</div>
+      <div><div class="user-info-name" id="sidebar-name"></div><div class="user-info-sub" id="sidebar-sub"></div></div>
+    </div>
+    <nav class="sidebar-nav" id="side-nav">
+      <div class="nav-section-label">TODAY</div>
+      <div class="nav-item active" data-page="today"><span class="nav-icon">🌅</span> Daily brief</div>
+      <div class="nav-item" data-page="chat"><span class="nav-icon">💬</span> Ask Destiny</div>
+      <div class="nav-section-label">LIFE</div>
+      <div class="nav-item" data-page="compass"><span class="nav-icon">🧭</span> Life Compass</div>
+      <div class="nav-item" data-page="food"><span class="nav-icon">🍽️</span> Food Lens</div>
+      <div class="nav-section-label">YOUR CHARTS</div>
+      <div class="nav-item" data-page="numerology"><span class="nav-icon">🔢</span> Numerology</div>
+      <div class="nav-item" data-page="astrology"><span class="nav-icon">⭐</span> Astrology</div>
+      <div class="nav-item" data-page="colors"><span class="nav-icon">🎨</span> Colours</div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="plan-badge">Free beta<span>Plans launch soon</span></div>
+      <button class="link-btn" id="btn-reset">Erase my profile</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+
+    <!-- TODAY -->
+    <div class="page-section active" id="page-today">
+      <div class="date-header">
+        <div class="date-title"><small id="today-label"></small>Good morning, <span id="greeting-name"></span>.</div>
+        <button class="whatsapp-btn" data-goto="chat">💬 Ask Destiny</button>
+      </div>
+      <div class="intel-grid">
+        <div class="intel-card numerology">
+          <div class="card-header"><div class="card-label"><span class="card-icon">🔢</span> NUMEROLOGY</div></div>
+          <div class="number-ring">
+            <div class="ring-display"><div class="ring-number" id="pd-num"></div></div>
+            <div><div class="ring-info-title" id="pd-name"></div><div class="ring-info-sub" id="pd-sub"></div></div>
+          </div>
+          <div class="card-body" id="num-note"><div class="skeleton"></div><div class="skeleton" style="width:70%"></div></div>
+        </div>
+        <div class="intel-card astrology">
+          <div class="card-header"><div class="card-label"><span class="card-icon">⭐</span> ASTROLOGY</div></div>
+          <div class="card-body" id="astro-body"><div class="skeleton"></div><div class="skeleton" style="width:80%"></div></div>
+          <div class="planet-strip" id="planet-strip"></div>
+        </div>
+        <div class="intel-card biometric">
+          <div class="card-header"><div class="card-label"><span class="card-icon">💚</span> BODY</div></div>
+          <div class="card-body" id="body-card">No wearable connected. WHOOP, Apple Health and Garmin sync arrives after beta. Meanwhile, log meals in Food Lens and today's guidance adapts to what you've eaten.</div>
+          <div class="signal-row"><button class="signal neutral" style="border:none;cursor:pointer" data-goto="food">📷 Log a meal</button></div>
+        </div>
+        <div class="intel-card psychology">
+          <div class="card-header"><div class="card-label"><span class="card-icon">🧠</span> MIND</div></div>
+          <div class="card-body" id="psych-tip"><div class="skeleton"></div><div class="skeleton" style="width:60%"></div></div>
+        </div>
+      </div>
+
+      <div class="decisions-card">
+        <div class="decisions-title">Today's 3 guidance points</div>
+        <div class="decisions-sub" id="decisions-sub">Based on your Personal Day and today's transits</div>
+        <div id="decisions"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+      </div>
+
+      <div class="color-card">
+        <div class="decisions-title">Today's colours</div>
+        <div style="display:flex;gap:40px;flex-wrap:wrap;margin-top:12px">
+          <div><div style="font-size:12px;color:var(--stardust);margin-bottom:6px">WEAR</div><div class="color-swatches" id="wear"></div></div>
+          <div><div style="font-size:12px;color:var(--coral);margin-bottom:6px">AVOID</div><div class="color-swatches" id="avoid"></div></div>
+        </div>
+        <div id="extra" style="margin-top:8px;padding:12px 14px;background:var(--void2);border-radius:8px;font-size:13px;color:var(--stardust);line-height:1.6;display:none"></div>
+      </div>
+      <div class="err" id="brief-err"></div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="page-section" id="page-chat">
+      <h2 class="section-heading">Ask Destiny</h2>
+      <p class="section-sub">Ask about timing, decisions, colours or your day. WhatsApp delivery launches after beta — this is the same assistant.</p>
+      <div class="wa-phone" style="max-width:420px;max-height:none;height:70vh;margin:0">
+        <div class="wa-header"><div class="wa-contact-avatar">🔮</div><div><div class="wa-contact-name">Destiny OS</div><div class="wa-contact-status">● Online</div></div></div>
+        <div class="wa-messages" id="wa-messages"></div>
+        <div class="wa-quick-replies">
+          <div class="quick-reply-chip" data-q="What's the best time today for an important call?">📞 Best time for a call?</div>
+          <div class="quick-reply-chip" data-q="What colour should I wear tomorrow?">🎨 Tomorrow's colour?</div>
+          <div class="quick-reply-chip" data-q="Is this a good week to ask for a raise or pitch a deal?">💰 Good week to negotiate?</div>
+          <div class="quick-reply-chip" data-q="I feel drained today. What should I do?">🌙 Feeling drained</div>
+        </div>
+        <div class="wa-input-bar">
+          <input type="text" class="wa-text-input" id="wa-input" placeholder="Ask anything…" aria-label="Message">
+          <button class="wa-send-btn" id="wa-send" aria-label="Send">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPASS -->
+    <div class="page-section" id="page-compass">
+      <h2 class="section-heading">Life Compass</h2>
+      <p class="section-sub">Where to put your energy this month across body, mind, money, relationships and purpose.</p>
+      <div class="ctx-grid">
+        <div class="field-group"><label class="field-label" for="ctx-work">Work / income situation</label>
+          <select class="field-input" id="ctx-work"><option>Founder / business owner</option><option selected>Salaried professional</option><option>Job seeker</option><option>Student</option><option>Freelancer</option><option>Homemaker</option></select></div>
+        <div class="field-group"><label class="field-label" for="ctx-goal">Biggest goal for the next 90 days</label>
+          <input class="field-input" id="ctx-goal" placeholder="e.g. switch jobs, lose 5 kg, save ₹1 lakh"></div>
+        <div class="field-group"><label class="field-label" for="ctx-energy">Energy lately</label>
+          <select class="field-input" id="ctx-energy"><option>High</option><option selected>Mixed</option><option>Low / drained</option></select></div>
+        <div class="field-group"><label class="field-label" for="ctx-sleep">Sleep lately</label>
+          <select class="field-input" id="ctx-sleep"><option>7+ hours, good</option><option selected>5–7 hours</option><option>Under 5 hours / poor</option></select></div>
+      </div>
+      <div class="field-group"><label class="field-label" for="ctx-worry">What's weighing on you? (optional)</label>
+        <textarea class="field-input" id="ctx-worry" placeholder="Money pressure, a relationship, health, a decision you're stuck on…"></textarea></div>
+      <button class="btn-primary" id="compass-btn" style="max-width:320px">Build my Life Compass</button>
+      <div class="status" id="compass-status"></div>
+      <div id="compass-out" style="display:none">
+        <div class="focus-meter" id="focus-meter"></div>
+        <div class="pillar-tabs" id="pillar-tabs"></div>
+        <div class="pillar-panel" id="pillar-panel"></div>
+        <p class="note"><span class="tag evidence" style="margin:0">Evidence</span> backed by published research &nbsp; <span class="tag classical" style="margin:0">Classical</span> Jyotish / numerology tradition &nbsp; <span class="tag symbolic" style="margin:0">Symbolic</span> reflective practice. Money guidance covers focus and habits, not investments — Destiny OS is not a SEBI-registered adviser. Health guidance doesn't replace a doctor.</p>
+      </div>
+    </div>
+
+    <!-- FOOD -->
+    <div class="page-section" id="page-food">
+      <h2 class="section-heading">Food Lens</h2>
+      <p class="section-sub">Photograph your plate. Get an estimate of calories and macros, plus how the meal fits your day.</p>
+      <div class="drop-zone" id="drop-zone" role="button" tabindex="0">
+        <div id="drop-inner">
+          <div style="font-size:34px;margin-bottom:8px">📷</div>
+          <div style="font-size:14px;color:var(--moon)">Tap to take or choose a food photo</div>
+          <div style="font-size:12px;color:var(--stardust);margin-top:4px">Include the whole plate. A spoon or hand in frame improves portion estimates.</div>
+        </div>
+      </div>
+      <input type="file" id="food-file" accept="image/*" hidden>
+      <div class="field-group" style="margin-top:14px"><label class="field-label" for="food-hint">Anything the photo can't show? (optional)</label>
+        <input class="field-input" id="food-hint" placeholder="e.g. cooked in ghee, 2 rotis under the dal"></div>
+      <button class="btn-primary" id="food-btn" style="max-width:320px" disabled>Estimate this meal</button>
+      <div class="status" id="food-status"></div>
+      <div id="food-out" style="display:none">
+        <div class="pillar-panel">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:22px" id="food-title"></div>
+          <div class="macro-band" id="macro-band"></div>
+          <div id="food-items"></div>
+          <div style="margin-top:14px;padding:12px 14px;background:var(--void2);border-radius:8px;font-size:13px;line-height:1.6" id="food-advice"></div>
+          <p class="note">Photo estimates typically land within about 20–30% of true calories; oil, ghee and hidden fats are the biggest source of error. Use the range, not the single number.</p>
+        </div>
+      </div>
+      <div style="margin-top:24px">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;margin-bottom:10px">Today's plate log</div>
+        <div class="meal-log" id="meal-log"><div class="note">No meals logged yet today.</div></div>
+      </div>
+    </div>
+
+    <!-- NUMEROLOGY -->
+    <div class="page-section" id="page-numerology">
+      <h2 class="section-heading">Your numerology</h2>
+      <p class="section-sub">Pythagorean and Chaldean systems, computed from your birth name and date.</p>
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <button class="pillar-tab active" data-sys="pyth">Pythagorean</button>
+        <button class="pillar-tab" data-sys="chald">Chaldean</button>
+      </div>
+      <div class="num-grid" id="num-grid"></div>
+      <div class="focus-meter" style="grid-template-columns:repeat(3,1fr)" id="cycles"></div>
+    </div>
+
+    <!-- ASTROLOGY -->
+    <div class="page-section" id="page-astrology">
+      <h2 class="section-heading">Your Vedic chart</h2>
+      <p class="section-sub" id="astro-sub">Sidereal (Lahiri) positions · Vimshottari dasha · today's transits</p>
+      <div class="two-col" style="margin-bottom:16px">
+        <div class="pillar-panel"><div class="card-label" style="margin-bottom:10px">NATAL POSITIONS</div><table class="chart-table" id="natal-table"></table></div>
+        <div class="pillar-panel">
+          <div class="card-label" style="margin-bottom:10px">DASHA</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--nebula-light)" id="md-lord"></div>
+          <div style="font-size:12px;color:var(--stardust);margin-bottom:12px" id="md-dates"></div>
+          <div style="background:var(--void2);border-radius:6px;height:6px;overflow:hidden;margin-bottom:8px"><div id="md-bar" style="height:100%;width:0;background:linear-gradient(90deg,var(--nebula-light),var(--gold))"></div></div>
+          <div style="font-size:13px;color:var(--stardust);line-height:1.7" id="ad-text"></div>
+        </div>
+      </div>
+      <div class="pillar-panel"><div class="card-label" style="margin-bottom:10px">TODAY'S TRANSITS</div><table class="chart-table" id="transit-table"></table></div>
+      <p class="note" id="astro-notes"></p>
+    </div>
+
+    <!-- COLOURS -->
+    <div class="page-section" id="page-colors">
+      <h2 class="section-heading">Your colour week</h2>
+      <p class="section-sub">Each day's colour follows your Personal Day number, using traditional numerology colour associations.</p>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px" id="colour-week"></div>
+      <p class="note">Colour associations are a symbolic tradition. Use them as a daily intention, not a rule.</p>
+    </div>
+
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottom-nav" aria-label="Main">
+  <button data-page="today" class="active"><span>🌅</span>Today</button>
+  <button data-page="chat"><span>💬</span>Ask</button>
+  <button data-page="compass"><span>🧭</span>Compass</button>
+  <button data-page="food"><span>🍽️</span>Food</button>
+  <button data-page="astrology"><span>⭐</span>Chart</button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>

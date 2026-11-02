@@ -1,0 +1,27 @@
+/* beta additions */
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--stardust);margin:14px 0;line-height:1.6}
+.consent input{margin-top:4px;accent-color:var(--gold)}
+.beta-pill{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--gold);border:1px solid var(--gold-dim);border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:middle}
+.skeleton{background:linear-gradient(90deg,var(--void2),#26304f,var(--void2));background-size:200% 100%;animation:sk 1.4s infinite;border-radius:6px;height:14px;margin:6px 0}
+@keyframes sk{to{background-position:-200% 0}}
+.empty-card{background:var(--void);border:1px dashed var(--stardust2);border-radius:12px;padding:20px;font-size:13px;color:var(--stardust);line-height:1.6}
+.err{color:var(--coral);font-size:13px;margin-top:8px}
+.bottom-nav{display:none}
+.chart-table{width:100%;border-collapse:collapse;font-size:13px}
+.chart-table td{padding:7px 4px;border-bottom:1px solid rgba(139,133,160,.08)}
+.chart-table td:first-child{color:var(--stardust)}
+.chart-table td:last-child{font-family:'DM Mono',monospace;font-size:11px;color:var(--nebula-light);text-align:right}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.link-btn{background:none;border:none;color:var(--stardust);font-size:12px;cursor:pointer;text-decoration:underline;padding:8px 0}
+@media (max-width:700px){
+  .two-col{grid-template-columns:1fr}
+  .main-content{padding-bottom:90px}
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--void);border-top:1px solid rgba(139,133,160,.15);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around}
+  .bottom-nav button{background:none;border:none;color:var(--stardust);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;font-family:'DM Sans',sans-serif}
+  .bottom-nav button.active{color:var(--gold)}
+  .bottom-nav span{font-size:18px}
+  .date-title{font-size:26px}
+}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+body:not(.in-app) .bottom-nav{display:none!important}

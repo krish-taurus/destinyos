@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: destinyos-api
+    runtime: python
+    rootDir: backend
+    plan: starter
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: CLAUDE_MODEL
+        value: claude-sonnet-5
+      - key: CLAUDE_FAST_MODEL
+        value: claude-haiku-4-5-20251001
+      - key: PYTHON_VERSION
+        value: 3.12.7
