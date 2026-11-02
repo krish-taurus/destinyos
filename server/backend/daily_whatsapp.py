@@ -35,14 +35,15 @@ def clean(t: str, n: int) -> str:
 
 
 def compose(u: dict) -> list[str]:
-    from main import ask_claude, parse_json, profile_text_for, FAST_MODEL, GUARDRAILS   # lazy: needs API keys
+    from main import ask_claude, parse_json, profile_text_for, FAST_MODEL, GUARDRAILS, LANG_RULE   # lazy: needs API keys
     n = numerology.calc(u["name"], u["dob"])
     pd = n["personalDay"]
     prompt = f"""Write today's WhatsApp morning message parts for this subscriber.
 {profile_text_for(u)}
 Reply with only JSON: {{"theme": string (Personal Day {pd} theme in 3-6 words), "wear": string (1-2 colours, e.g. "light green"),
 "practice": string (a 2-minute manifestation practice for today, matched to Personal Day {pd} and their goal if set,
-with the exact words to write or say; under 220 characters)}}"""
+with the exact words to write or say; under 220 characters)}}
+{LANG_RULE.get(u.get('language') or 'en', LANG_RULE['en'])} Keep the JSON keys in English."""
     out = parse_json(ask_claude(f"You write short WhatsApp messages for Destiny OS.\n{GUARDRAILS}",
                                 [{"role": "user", "content": prompt}], model=FAST_MODEL, max_tokens=400))
     return [clean(u["name"].split()[0], 40), str(pd), clean(out.get("theme"), 60),

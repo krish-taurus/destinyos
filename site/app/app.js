@@ -41,6 +41,11 @@ function busy(btn, on, label) { if (!btn) return; if (on) { btn.dataset.l = btn.
 /* ── source tracking: /free-report?src=instagram → stored until registration ── */
 (function () { const s = new URLSearchParams(location.search).get('src'); if (s) store.sset('dos_src', s.slice(0, 40)); })();
 
+/* language toggles: <div class="seg lang-seg" id=…><button data-lang=…> */
+function segVal(id) { const b = $(id).querySelector('button.on'); return b ? b.dataset.lang : 'en'; }
+function segSet(id, lang) { [...$(id).querySelectorAll('button')].forEach(b => b.classList.toggle('on', b.dataset.lang === lang)); }
+['in-lang', 'acct-lang'].forEach(id => $(id).onclick = e => { const b = e.target.closest('[data-lang]'); if (b) segSet(id, b.dataset.lang); });
+
 /* ───────── AUTH ───────── */
 function showAuth() { $('screen-panel').classList.add('hide'); $('screen-auth').classList.remove('hide'); step('step-phone'); }
 function step(id) { ['step-phone', 'step-code', 'step-details'].forEach(s => $(s).classList.toggle('hide', s !== id)); const f = $(id).querySelector('input'); if (f) setTimeout(() => f.focus(), 50); }
@@ -83,7 +88,7 @@ $('btn-register').onclick = async e => {
   try {
     await api('/api/auth/register', { method: 'POST', body: {
       signup_token: pending.signup, name: v('in-name'), dob: v('in-dob'), birth_time: v('in-time') || null, city: v('in-city'),
-      consent: true, whatsapp_optin: $('in-wa').checked, source: store.sget('dos_src') } });
+      consent: true, whatsapp_optin: $('in-wa').checked, source: store.sget('dos_src'), language: segVal('in-lang') } });
     await enter(true);
   } catch (err) { $('err-details').textContent = err.message; }
   finally { busy(e.target, false); }
@@ -92,6 +97,8 @@ $('btn-register').onclick = async e => {
 /* ───────── PANEL ───────── */
 async function loadMe() { me = await api('/api/me'); return me; }
 const plus = () => me && me.plan.subscribed;
+const lang = () => (me && me.language) || 'en';
+const PLAN_NAME = { free: 'Free', plus: 'Destiny Plus', voice: 'Destiny Voice' };
 
 async function enter(isNew) {
   await loadMe();
@@ -106,18 +113,21 @@ async function enter(isNew) {
 
 function renderPlan() {
   const p = me.plan;
-  $('plan-pill').textContent = p.subscribed ? 'Destiny Plus' : 'Free';
-  $('plan-pill').classList.toggle('plus', p.subscribed);
-  $('top-upgrade').classList.toggle('hide', p.subscribed);
+  const t = p.tier || (p.subscribed ? 'plus' : 'free');
+  $('plan-pill').textContent = PLAN_NAME[t];
+  $('plan-pill').classList.toggle('plus', t !== 'free');
+  $('top-upgrade').classList.toggle('hide', t === 'voice');
+  $('top-upgrade').textContent = t === 'plus' ? 'Add voice · ₹999' : 'Upgrade';
 }
 
 /* navigation */
 function page(id) {
+  if (id === 'report' && !report && me && me.has_report) showReport();
   document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === 'page-' + id));
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.page === id));
   history.replaceState(null, '', '#' + id);
   window.scrollTo(0, 0);
-  ({ today: showToday, ask: showAsk, charts: showCharts, compass: showCompass, food: showFood, extras: showExtras, account: showAccount }[id] || (() => {}))();
+  ({ today: showToday, ask: showAsk, voice: showVoice, charts: showCharts, compass: showCompass, food: showFood, extras: showExtras, account: showAccount }[id] || (() => {}))();
 }
 $('nav').onclick = e => { const b = e.target.closest('button[data-page]'); if (b) page(b.dataset.page); };
 document.addEventListener('click', e => { if (e.target.closest('.js-upgrade')) openSub(); });
@@ -133,7 +143,7 @@ const NUM_LABELS = [['lifePath', 'Life Path'], ['expression', 'Expression'], ['s
 async function showReport(autoCreate) {
   ['report-empty', 'report-loading', 'report-used', 'report-out'].forEach(i => $(i).classList.add('hide'));
   if (me.has_report) {
-    try { report = await api('/api/report'); return renderReport(); } catch (e) { $('err-report').textContent = e.message; }
+    try { report = await api('/api/report?lang=' + lang()); if (report.lang !== lang()) return switchReportLang(lang()); return renderReport(); } catch (e) { $('err-report').textContent = e.message; }
   }
   if (me.free_report_available || plus()) {
     $('report-empty').classList.remove('hide');
@@ -147,7 +157,7 @@ async function createReport() {
   lis.forEach(l => l.className = '');
   const tick = setInterval(() => { if (i > 0) lis[i - 1].className = 'done'; if (i < lis.length) lis[i].className = 'on'; i = Math.min(i + 1, lis.length); }, 2200);
   try {
-    report = await api('/api/report', { method: 'POST' });
+    report = await api('/api/report?lang=' + lang(), { method: 'POST' });
     me.has_report = true; me.free_report_available = false;
     renderReport();
   } catch (e) {
@@ -162,16 +172,53 @@ function renderReport() {
   ['report-empty', 'report-loading', 'report-used'].forEach(i => $(i).classList.add('hide'));
   $('report-out').classList.remove('hide');
   $('rep-headline').textContent = report.headline || 'Your blueprint';
+  $('report-out').querySelector('.report-head').setAttribute('lang', report.lang || 'en');
+  segSet('rep-lang', report.lang || 'en');
+  resetBriefing();
   const n = (report.numbers || me.numerology).pythagorean, c = (report.numbers || me.numerology).chaldean;
   $('rep-numbers').innerHTML = NUM_LABELS.map(([k, l]) => `<div><small>${l}</small><b>${esc(n[k])}</b><span>Pythagorean</span></div>`).join('') +
     `<div><small>Name (Chaldean)</small><b>${esc(c.expressionCompound)}/${esc(c.expression)}</b><span>Compound / root</span></div>`;
   let anyLocked = false;
   $('rep-sections').innerHTML = report.sections.map((s, i) => {
-    if (s.locked) { anyLocked = true; return `<div class="card sec locked" style="animation:rise .5s ${i * 60}ms both"><span class="lock">🔒 PLUS</span><h3>${esc(s.title)}</h3><p>${esc(s.teaser)}</p><div class="blur"></div></div>`; }
-    return `<div class="card sec" style="animation:rise .5s ${i * 60}ms both"><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p></div>`;
+    if (s.locked) { anyLocked = true; return `<div class="card sec locked" lang="${esc(report.lang || 'en')}" style="animation:rise .5s ${i * 60}ms both"><span class="lock">🔒 PLUS</span><h3>${esc(s.title)}</h3><p>${esc(s.teaser)}</p><div class="blur"></div></div>`; }
+    return `<div class="card sec${s.id === 'simple_guidance' ? ' guidance' : ''}" lang="${esc(report.lang || 'en')}" style="animation:rise .5s ${i * 60}ms both"><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p></div>`;
   }).join('');
   $('rep-upsell').classList.toggle('hide', !anyLocked);
 }
+
+async function switchReportLang(l) {
+  segSet('rep-lang', l);
+  $('rep-headline').textContent = l === 'hi' ? 'हिंदी में तैयार हो रहा है…' : 'Preparing it in English…';
+  try {
+    report = await api('/api/report?lang=' + l, { method: 'POST' });
+    if (me.language !== l) { me.language = l; api('/api/me', { method: 'PATCH', body: { language: l } }).catch(() => {}); }
+    renderReport();
+  } catch (e) { toast(e.message); segSet('rep-lang', report ? report.lang : lang()); if (report) renderReport(); }
+}
+$('rep-lang').onclick = e => { const b = e.target.closest('[data-lang]'); if (b && report && b.dataset.lang !== report.lang) switchReportLang(b.dataset.lang); };
+
+/* voice briefing (ElevenLabs, Dr. Krish's voice) */
+function resetBriefing() {
+  const a = $('briefing'); a.pause(); a.removeAttribute('src');
+  $('btn-listen').className = 'play'; $('listen').classList.remove('playing');
+  const hi = report && report.lang === 'hi';
+  $('listen-title').textContent = hi ? 'अपनी ब्रीफ़िंग सुनें' : 'Listen to your briefing';
+  $('listen-sub').textContent = hi ? '2 मिनट, डॉ. कृष की AI आवाज़ में' : "2 minutes, in Dr. Krish's AI voice";
+}
+$('btn-listen').onclick = async () => {
+  const a = $('briefing'), btn = $('btn-listen');
+  if (a.src && !a.paused) { a.pause(); return; }
+  if (a.src) { a.play(); return; }
+  btn.className = 'play busy';
+  $('listen-sub').textContent = report.lang === 'hi' ? 'आपकी ब्रीफ़िंग तैयार हो रही है… (30 सेकंड तक)' : 'Preparing your briefing… (up to 30 seconds)';
+  try {
+    const r = await api('/api/report/audio?lang=' + (report.lang || 'en'), { method: 'POST' });
+    a.src = API + r.url; await a.play();
+  } catch (e) { btn.className = 'play'; $('listen-sub').textContent = e.message; }
+};
+$('briefing').onplay = () => { $('btn-listen').className = 'play on'; $('listen').classList.add('playing');
+  $('listen-sub').textContent = report && report.lang === 'hi' ? 'डॉ. कृष की AI आवाज़ में' : "In Dr. Krish's AI voice"; };
+$('briefing').onpause = $('briefing').onended = () => { $('btn-listen').className = 'play'; $('listen').classList.remove('playing'); };
 
 /* ── today ── */
 const MEANING = { 1: 'Initiation', 2: 'Cooperation', 3: 'Expression', 4: 'Foundation', 5: 'Change', 6: 'Harmony', 7: 'Introspection', 8: 'Achievement', 9: 'Completion', 11: 'Illumination', 22: 'Master building', 33: 'Master teaching' };
@@ -252,8 +299,92 @@ async function showCharts() {
     requestAnimationFrame(() => $('md-bar').style.width = pct.toFixed(0) + '%');
     $('ad-text').innerHTML = (ad ? `Antardasha: <strong>${esc(ad.lord)}</strong> (${esc(ad.start)} to ${esc(ad.end)}). ` : '') + `Birth nakshatra: ${esc(chart.dasha.birth_nakshatra)}. Next: ${esc(chart.dasha.next_mahadasha.lord)} from ${esc(chart.dasha.next_mahadasha.start)}.`;
     $('chart-notes').textContent = (chart.notes || []).join(' ');
-  } catch (e) { $('chart-notes').textContent = e.message; }
+    renderSkySimple();
+  } catch (e) { $('chart-notes').textContent = e.message; $('sky-simple-body').textContent = e.message; }
 }
+
+const PLANET_THEME = {
+  en: { Sun: 'confidence, career and recognition', Moon: 'emotions, home and peace of mind', Mars: 'energy, courage and property',
+    Mercury: 'learning, communication and business', Jupiter: 'growth, wisdom, children and good fortune', Venus: 'love, comfort, beauty and money',
+    Saturn: 'hard work, discipline and slow but lasting results', Rahu: 'ambition, change and foreign connections', Ketu: 'letting go, spirituality and inner work' },
+  hi: { Sun: 'आत्मविश्वास, करियर और मान-सम्मान', Moon: 'भावनाएँ, घर और मन की शांति', Mars: 'ऊर्जा, साहस और ज़मीन-जायदाद',
+    Mercury: 'पढ़ाई, बातचीत और व्यापार', Jupiter: 'तरक्क़ी, ज्ञान, संतान और भाग्य', Venus: 'प्यार, सुख-सुविधा, सुंदरता और पैसा',
+    Saturn: 'मेहनत, अनुशासन और धीरे-धीरे पक्का फल', Rahu: 'महत्वाकांक्षा, बदलाव और विदेश से जुड़ाव', Ketu: 'छोड़ना, आध्यात्म और अंदर का काम' } };
+const SIGN_HI = { Aries: 'मेष', Taurus: 'वृषभ', Gemini: 'मिथुन', Cancer: 'कर्क', Leo: 'सिंह', Virgo: 'कन्या', Libra: 'तुला', Scorpio: 'वृश्चिक', Sagittarius: 'धनु', Capricorn: 'मकर', Aquarius: 'कुंभ', Pisces: 'मीन' };
+const PLANET_HI = { Sun: 'सूर्य', Moon: 'चंद्र', Mars: 'मंगल', Mercury: 'बुध', Jupiter: 'गुरु', Venus: 'शुक्र', Saturn: 'शनि', Rahu: 'राहु', Ketu: 'केतु' };
+function renderSkySimple() {
+  if (!chart) return;
+  const hi = lang() === 'hi', T = PLANET_THEME[hi ? 'hi' : 'en'], sg = x => hi ? (SIGN_HI[x] || x) : x, pl = x => hi ? (PLANET_HI[x] || x) : x;
+  const md = chart.dasha.mahadasha, ad = chart.dasha.antardasha, yrs = new Date(md.end).getFullYear();
+  const rows = hi ? [
+    ['☾', `आपकी चंद्र राशि: ${sg(chart.natal.Moon.sign)}`, 'वैदिक ज्योतिष में चंद्र राशि आपके मन और भावनाओं को दिखाती है। रोज़ का राशिफल इसी से देखा जाता है।'],
+    chart.lagna ? ['↑', `आपका लग्न: ${sg(chart.lagna.sign)}`, 'लग्न यानी जन्म के समय पूर्व में उदित राशि। यह बताता है कि आप दुनिया के सामने कैसे आते हैं।'] : null,
+    ['◷', `अभी आप ${pl(md.lord)} की महादशा में हैं (${yrs} तक)`, `दशा जीवन का एक अध्याय है। यह दौर ${T[md.lord]} से जुड़ा माना जाता है।` + (ad ? ` इसके अंदर अभी ${pl(ad.lord)} का छोटा दौर चल रहा है: ${T[ad.lord]}।` : '')],
+    ['✦', `जन्म नक्षत्र: ${esc(chart.dasha.birth_nakshatra)}`, 'नक्षत्र चंद्रमा का सटीक तारा-समूह है। आपकी दशाओं का क्रम इसी से तय होता है।']
+  ] : [
+    ['☾', `Your Moon sign: ${chart.natal.Moon.sign}`, 'In Vedic astrology your Moon sign describes your mind and emotions. Daily horoscopes are read from it.'],
+    chart.lagna ? ['↑', `Your rising sign (Lagna): ${chart.lagna.sign}`, 'The sign rising in the east when you were born. It describes how you come across to the world.'] : null,
+    ['◷', `You are in your ${md.lord} period until ${yrs}`, `A Dasha is a chapter of life. This one is traditionally linked with ${T[md.lord]}.` + (ad ? ` Inside it, a shorter ${ad.lord} phase is running now: ${T[ad.lord]}.` : '')],
+    ['✦', `Birth star (Nakshatra): ${chart.dasha.birth_nakshatra}`, "The exact star group the Moon was in at birth. It sets the order of your life's chapters."]
+  ];
+  $('sky-simple-body').innerHTML = rows.filter(Boolean).map(([i, t, d]) => `<div class="row"><i>${i}</i><div><b>${esc(t)}</b>${esc(d)}</div></div>`).join('');
+}
+
+/* ── voice chat (Destiny Voice, ElevenLabs agent in Dr. Krish's voice) ── */
+let call = null, callSession = null;
+const VS = { en: { idle: 'Tap to start a call', connecting: 'Connecting…', listening: 'Listening…', speaking: 'Dr. Krish AI is speaking', ended: 'Call ended' },
+             hi: { idle: 'कॉल शुरू करने के लिए टैप करें', connecting: 'जुड़ रहे हैं…', listening: 'सुन रहे हैं…', speaking: 'डॉ. कृष AI बोल रहे हैं', ended: 'कॉल खत्म हुई' } };
+function vs(k) { $('voice-state').textContent = VS[lang()][k]; }
+function voiceMins(v) { if (v) $('voice-mins').textContent = `${v.left_minutes} of ${v.included} minutes left this month`; }
+function showVoice() {
+  if (!me.voice || !me.voice.enabled) {
+    $('voice-ui').classList.add('hide');
+    $('voice-lock').innerHTML = `<div class="card lockcard"><div class="ic">☏</div><h3>Talk to Dr. Krish's AI voice guide</h3>
+      <p class="muted">Ask about timing, decisions and your day, out loud, in Hindi or English. It answers in Dr. Krish's voice, using your numbers and your chart. 60 minutes a month.</p>
+      <button class="btn btn-dark js-upgrade">Get Destiny Voice · ₹999/month</button></div>`;
+    return;
+  }
+  $('voice-lock').innerHTML = ''; $('voice-ui').classList.remove('hide');
+  if (!call) vs('idle');
+  voiceMins(me.voice);
+  if (!me.voice.ready) { $('voice-btn').disabled = true; $('err-voice').textContent = "Voice calls aren't switched on yet. Please try again soon."; }
+}
+async function endCall() {
+  const c = call; call = null;
+  try { if (c) await c.endSession(); } catch (_) {}
+  $('orb').className = 'orb'; $('voice-btn').textContent = 'Start call'; $('voice-btn').disabled = false; vs('ended');
+  if (callSession) {
+    const sid = callSession.session_id, connected = callSession.connected; callSession = null;
+    try { voiceMins(await api(connected ? '/api/voice/ended' : '/api/voice/release', { method: 'POST', body: { session_id: sid } })); } catch (_) {}
+  }
+}
+$('voice-btn').onclick = async () => {
+  if (call) return endCall();
+  $('err-voice').textContent = '';
+  const btn = $('voice-btn'); btn.disabled = true; vs('connecting');
+  try {
+    await navigator.mediaDevices.getUserMedia({ audio: true });           // ask for the mic before spending a session
+  } catch (_) { btn.disabled = false; vs('idle'); $('err-voice').textContent = 'Please allow microphone access to talk.'; return; }
+  try {
+    callSession = await api('/api/voice/session', { method: 'POST' });
+    voiceMins(callSession);
+    const { Conversation } = await import('https://cdn.jsdelivr.net/npm/@elevenlabs/client/+esm');
+    call = await Conversation.startSession({
+      signedUrl: callSession.signed_url, dynamicVariables: callSession.dynamic_variables, overrides: callSession.overrides,
+      onConnect: () => { $('orb').className = 'orb listening'; vs('listening'); btn.textContent = 'End call'; btn.disabled = false; },
+      onModeChange: m => { const sp = m && m.mode === 'speaking'; $('orb').className = 'orb ' + (sp ? 'speaking' : 'listening'); vs(sp ? 'speaking' : 'listening'); },
+      onDisconnect: () => { if (call) endCall(); },
+      onError: () => { $('err-voice').textContent = 'The call dropped. Please try again.'; }
+    });
+    const cid = call.getId && call.getId();
+    if (cid && callSession) { callSession.connected = true; api('/api/voice/started', { method: 'POST', body: { session_id: callSession.session_id, conversation_id: cid } }).catch(() => {}); }
+  } catch (e) {
+    $('err-voice').textContent = e.message || 'Could not start the call.';
+    if (e.status === 402) openSub();
+    await endCall(); vs('idle');
+  }
+};
+window.addEventListener('beforeunload', () => { if (call) try { call.endSession(); } catch (_) {} });
 
 /* ── compass ── */
 let compass = null;
@@ -361,20 +492,28 @@ document.addEventListener('click', async e => {
 function showAccount() {
   $('acct-details').innerHTML = `<b>${esc(me.name)}</b><br>${esc(me.phone)}<br>Born ${esc(me.dob)}${me.birth_time ? ' at ' + esc(me.birth_time) : ''} · ${esc(me.city)}`;
   const p = me.plan, until = p.paid_until ? new Date(p.paid_until * 1000).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-  $('acct-plan').innerHTML = p.subscribed
-    ? `<p><b>Active</b>${until ? ` · paid until ${until}` : ''}</p><p class="muted small">₹599/month. If you cancel, you keep access until the end of the month you've paid for.</p><button class="btn btn-line sm" id="cancel-sub">Cancel subscription</button>`
-    : `<p class="muted small">You're on the free plan.</p><button class="btn btn-dark sm js-upgrade">Get Destiny Plus · ₹599/month</button>`;
+  const t = p.tier || (p.subscribed ? 'plus' : 'free');
+  $('acct-plan').innerHTML = t !== 'free'
+    ? `<p><b>${PLAN_NAME[t]}</b>${until ? ` · paid until ${until}` : ''}</p><p class="muted small">₹${p.plan.price_inr}/month. If you cancel, you keep access until the end of the month you've paid for.</p>
+       ${t === 'plus' ? '<button class="btn btn-dark sm js-upgrade">Add voice chat · ₹999/month</button> ' : ''}<button class="btn btn-line sm" id="cancel-sub">Cancel subscription</button>`
+    : `<p class="muted small">You're on the free plan.</p><button class="btn btn-dark sm js-upgrade">See plans</button>`;
+  segSet('acct-lang', lang());
   const c = $('cancel-sub'); if (c) c.onclick = cancelSub;
   $('goal').value = me.manifest_goal || ''; $('acct-wa').checked = me.whatsapp_optin;
 }
 $('save-goal').onclick = async e => {
   busy(e.target, true, 'Saving…');
-  try { await api('/api/me', { method: 'PATCH', body: { manifest_goal: $('goal').value, whatsapp_optin: $('acct-wa').checked } }); me.manifest_goal = $('goal').value; me.whatsapp_optin = $('acct-wa').checked; $('goal-saved').textContent = 'Saved.'; }
+  try {
+    const l = segVal('acct-lang'), changed = l !== lang();
+    await api('/api/me', { method: 'PATCH', body: { manifest_goal: $('goal').value, whatsapp_optin: $('acct-wa').checked, language: l } });
+    me.manifest_goal = $('goal').value; me.whatsapp_optin = $('acct-wa').checked; me.language = l; $('goal-saved').textContent = 'Saved.';
+    if (changed && me.has_report) { chart && renderSkySimple(); toast(l === 'hi' ? 'रिपोर्ट अब हिंदी में खुलेगी।' : 'Your report will now open in English.'); report = null; }
+  }
   catch (err) { $('goal-saved').textContent = err.message; }
   finally { busy(e.target, false); }
 };
 async function cancelSub() {
-  if (!confirm('Cancel Destiny Plus? You keep access until the end of the month you\'ve paid for.')) return;
+  if (!confirm(`Cancel ${PLAN_NAME[me.plan.tier] || 'your plan'}? You keep access until the end of the month you've paid for.`)) return;
   try { await api('/api/billing/cancel', { method: 'POST' }); await loadMe(); renderPlan(); showAccount(); toast('Cancelled. You keep access until your paid period ends.'); }
   catch (e) { toast(e.message); }
 }
@@ -387,18 +526,25 @@ $('delete').onclick = async () => {
 };
 
 /* ── subscribe ── */
-function openSub() { $('err-sub').textContent = ''; $('modal-sub').classList.remove('hide'); }
+function openSub() {
+  $('err-sub').textContent = '';
+  const t = (me && me.plan.tier) || 'free';
+  $('pp-plus').classList.toggle('current', t !== 'free');
+  $('pp-plus').querySelector('button').disabled = t !== 'free';
+  $('pp-plus').querySelector('button').textContent = t === 'free' ? 'Choose Plus' : 'Your current plan';
+  $('modal-sub').classList.remove('hide');
+}
 $('sub-close').onclick = () => $('modal-sub').classList.add('hide');
 $('modal-sub').onclick = e => { if (e.target.id === 'modal-sub') $('modal-sub').classList.add('hide'); };
 function loadCheckout() {
   if (window.Razorpay) return Promise.resolve();
   return new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://checkout.razorpay.com/v1/checkout.js'; s.onload = res; s.onerror = () => rej(new Error('Couldn\'t load the payment window. Check your connection.')); document.head.appendChild(s); });
 }
-$('sub-pay').onclick = async e => {
+document.querySelectorAll('[data-plan]').forEach(btn => btn.onclick = async () => {
   $('err-sub').textContent = '';
-  busy(e.target, true, 'Opening payment…');
+  busy(btn, true, 'Opening payment…');
   try {
-    const s = await api('/api/billing/subscribe', { method: 'POST' });
+    const s = await api('/api/billing/subscribe', { method: 'POST', body: { plan: btn.dataset.plan } });
     await loadCheckout();
     new Razorpay({ key: s.key_id, subscription_id: s.subscription_id, name: 'Destiny OS', description: s.description,
       prefill: { name: s.name, contact: s.phone }, theme: { color: '#15171F' },
@@ -406,14 +552,14 @@ $('sub-pay').onclick = async e => {
         try {
           await api('/api/billing/subscribe/verify', { method: 'POST', body: resp });
           await loadMe(); renderPlan(); $('modal-sub').classList.add('hide');
-          toast('Welcome to Destiny Plus ✨');
-          if (me.has_report) { report = await api('/api/report'); renderReport(); } else showReport(true);
-          page('report');
+          toast(`Welcome to ${PLAN_NAME[me.plan.tier]} ✨`);
+          if (me.has_report) { report = await api('/api/report?lang=' + lang()); renderReport(); } else showReport(true);
+          page(s.plan === 'voice' ? 'voice' : 'report');
         } catch (err) { $('err-sub').textContent = err.message; }
       } }).open();
   } catch (err) { $('err-sub').textContent = err.message; }
-  finally { busy(e.target, false); }
-};
+  finally { busy(btn, false); }
+});
 
 /* ── boot ── */
 (async function boot() {

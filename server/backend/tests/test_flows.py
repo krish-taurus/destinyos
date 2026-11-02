@@ -4,12 +4,13 @@ import hashlib, hmac, json, os, sys, tempfile
 os.environ.update({"DESTINY_DB": tempfile.mktemp(suffix=".db"), "COOKIE_SECURE": "0",
                    "SESSION_SECRET": "test-secret", "ANTHROPIC_API_KEY": "sk-ant-test",
                    "RAZORPAY_KEY_ID": "rzp_test_x", "RAZORPAY_KEY_SECRET": "ks", "RAZORPAY_PLAN_ID": "plan_x",
-                   "RAZORPAY_WEBHOOK_SECRET": "whs", "OTP_DEV_MODE": "1", "FREE_QUESTIONS": "3", "DAILY_QUESTIONS": "30"})
+                   "RAZORPAY_WEBHOOK_SECRET": "whs", "OTP_DEV_MODE": "1", "RAZORPAY_PLAN_ID_VOICE": "plan_voice",
+                   "ELEVENLABS_API_KEY": "el_test", "DESTINY_AUDIO_DIR": tempfile.mkdtemp(), "FREE_QUESTIONS": "3", "DAILY_QUESTIONS": "30"})
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 import pytest
 from fastapi.testclient import TestClient
-import auth, billing, db, main, reports
+import auth, billing, db, main, reports, voice
 
 SECTIONS = {k: f"{k} body sentence one. Sentence two." for k in reports.FREE_SECTIONS + reports.LOCKED_SECTIONS}
 CODES = {}
@@ -18,6 +19,11 @@ RZP = {"subs": {}}
 
 def fake_claude(system, messages, model=None, max_tokens=1500):
     text = json.dumps(messages[-1]["content"]) if messages else ""
+    if "Rewrite this Destiny OS report" in text:
+        lang = "hi" if "Hindi" in text else "en"
+        return json.dumps({"headline": f"[{lang}] headline", "sections": {k: f"[{lang}] {v}" for k, v in SECTIONS.items()}})
+    if "spoken voice briefing" in text:
+        return "Namaste Priya, this is your Destiny OS voice briefing."
     if "core report" in text:
         return json.dumps({"headline": "You build things that last", "sections": SECTIONS})
     if "compatibility" in text:
@@ -59,7 +65,7 @@ def sign(msg, secret):
     return hmac.new(secret.encode(), msg.encode(), hashlib.sha256).hexdigest()
 
 
-def signup(c, phone="9876543210", name="Priya Sharma", src="instagram"):
+def signup(c, phone="9876543210", name="Priya Sharma", src="instagram", language="en"):
     r = c.post("/api/auth/otp", json={"phone": phone}); assert r.status_code == 200, r.text
     p = r.json()["phone"]
     r = c.post("/api/auth/verify", json={"phone": phone, "code": CODES[p]}); assert r.status_code == 200
@@ -67,13 +73,13 @@ def signup(c, phone="9876543210", name="Priya Sharma", src="instagram"):
     if j["needs_registration"]:
         r = c.post("/api/auth/register", json={"signup_token": j["signup_token"], "name": name, "dob": "1994-08-17",
                                                 "birth_time": "06:30", "city": "Bengaluru", "consent": True,
-                                                "whatsapp_optin": True, "source": src})
+                                                "whatsapp_optin": True, "source": src, "language": language})
         assert r.status_code == 200, r.text
     return p
 
 
-def subscribe(c):
-    r = c.post("/api/billing/subscribe"); assert r.status_code == 200, r.text
+def subscribe(c, plan="plus"):
+    r = c.post("/api/billing/subscribe", json={"plan": plan}); assert r.status_code == 200, r.text
     sid = r.json()["subscription_id"]
     r = c.post("/api/billing/subscribe/verify", json={"razorpay_payment_id": "pay_1", "razorpay_subscription_id": sid,
                                                       "razorpay_signature": sign(f"pay_1|{sid}", "ks")})
@@ -343,3 +349,96 @@ def test_impossible_birth_date_is_a_clear_error():
     r = c.post("/api/auth/register", json={"signup_token": tok, "name": "Test Name", "dob": "1990-02-31",
                                            "city": "Bengaluru", "consent": True})
     assert r.status_code == 422 and "exist" in r.json()["detail"]
+
+
+
+# ── Language, voice briefing, Destiny Voice plan ──
+def test_hindi_report_and_switching_language_without_a_second_free_report():
+    c = TestClient(main.app)
+    signup(c, "9200000001", language="hi")
+    r = c.post("/api/report").json()
+    assert r["lang"] == "hi" and r["sections"][0]["id"] == "simple_guidance"
+    assert r["sections"][0]["title"] == reports.SECTION_TITLES["hi"]["simple_guidance"]
+    assert any(s["locked"] for s in r["sections"])
+    en = c.post("/api/report?lang=en")                       # free user switching language: allowed, still locked
+    assert en.status_code == 200 and en.json()["lang"] == "en"
+    assert all("body" not in s for s in en.json()["sections"] if s["locked"])
+    assert c.get("/api/report?lang=hi").json()["lang"] == "hi"
+    assert c.patch("/api/me", json={"language": "en"}).status_code == 200
+    assert c.get("/api/me").json()["language"] == "en"
+
+
+def test_voice_briefing_is_free_private_and_cached(monkeypatch):
+    calls = []
+    monkeypatch.setattr(voice, "synthesize", lambda text, lang, dest: (calls.append(lang), dest.parent.mkdir(parents=True, exist_ok=True), dest.write_bytes(b"ID3fake")))
+    a = TestClient(main.app); signup(a, "9200000002", language="hi"); a.post("/api/report")
+    r = a.post("/api/report/audio"); assert r.status_code == 200, r.text
+    url = r.json()["url"]
+    got = a.get(url); assert got.status_code == 200 and got.headers["content-type"] == "audio/mpeg"
+    a.post("/api/report/audio"); assert calls == ["hi"]           # generated once, then cached
+    b = TestClient(main.app); signup(b, "9200000003")
+    assert b.get(url).status_code == 404                         # nobody else's briefing
+    assert b.get("/api/report/audio").status_code == 404
+    a.delete("/api/me")
+    assert not list(voice.AUDIO_DIR.glob("u*-*.mp3")) or all("u%d-" % 0 not in f.name for f in voice.AUDIO_DIR.glob("*"))
+
+
+EL_CONV = {}
+
+
+def fake_el(method, path, **kw):
+    class R:
+        def __init__(self, d): self._d = d
+        def json(self): return self._d
+    if path == "/convai/conversation/get-signed-url":
+        return R({"signed_url": "wss://example/signed"})
+    if path == "/convai/conversations":
+        return R({"conversations": [{"conversation_id": k} for k in EL_CONV]})
+    if path.startswith("/convai/conversations/"):
+        cid = path.rsplit("/", 1)[1]
+        return R({"agent_id": voice.AGENT_ID, "status": "done", "metadata": {"call_duration_secs": EL_CONV.get(cid, 0)}})
+    raise AssertionError(path)
+
+
+def test_voice_plan_gates_meters_and_upgrades(monkeypatch):
+    monkeypatch.setattr(voice, "_el", fake_el)
+    EL_CONV.clear()
+    c = TestClient(main.app); signup(c, "9200000004")
+    assert c.post("/api/voice/session").status_code == 402            # free
+    subscribe(c, "plus")
+    assert c.post("/api/voice/session").status_code == 402            # Plus doesn't include voice
+    assert c.post("/api/billing/subscribe", json={"plan": "plus"}).status_code == 409
+    subscribe(c, "voice")                                              # upgrade
+    me = c.get("/api/me").json()
+    assert me["plan"]["tier"] == "voice" and me["voice"]["enabled"]
+    plus_rows = db.all_("SELECT status FROM subscriptions s JOIN users u ON u.id=s.user_id WHERE u.phone='+919200000004' AND plan='plus'")
+    assert all(r["status"] == "cancelled" for r in plus_rows)          # no double billing
+    assert c.post("/api/billing/subscribe", json={"plan": "voice"}).status_code == 409
+
+    s = c.post("/api/voice/session").json()
+    assert s["signed_url"].startswith("wss://") and s["overrides"]["agent"]["language"] == "en"
+    assert s["dynamic_variables"]["user_name"] == "Priya" and "Life Path" in s["dynamic_variables"]["profile"]
+    assert c.get("/api/me").json()["voice"]["used_minutes"] == 10.0     # assumed until confirmed
+    EL_CONV["conv_1"] = 125
+    c.post("/api/voice/started", json={"session_id": s["session_id"], "conversation_id": "conv_1"})
+    assert c.post("/api/voice/ended", json={"session_id": s["session_id"]}).json()["used_minutes"] == 2.1
+
+    # a second link can't be "released" while an unclaimed call exists on the agent
+    s2 = c.post("/api/voice/session").json()
+    EL_CONV["conv_sneaky"] = 600
+    assert c.post("/api/voice/release", json={"session_id": s2["session_id"]}).json()["released"] is False
+    EL_CONV.pop("conv_sneaky")
+    assert c.post("/api/voice/release", json={"session_id": s2["session_id"]}).json()["released"] is True
+
+    # the monthly allowance is enforced
+    monkeypatch.setattr(voice, "MINUTES", 3)
+    assert c.post("/api/voice/session").status_code == 402
+
+
+def test_voice_session_ids_are_private(monkeypatch):
+    monkeypatch.setattr(voice, "_el", fake_el)
+    a = TestClient(main.app); signup(a, "9200000005"); subscribe(a, "voice")
+    b = TestClient(main.app); signup(b, "9200000006"); subscribe(b, "voice")
+    s = a.post("/api/voice/session").json()
+    assert b.post("/api/voice/started", json={"session_id": s["session_id"], "conversation_id": "conv_x"}).status_code == 404
+    assert b.post("/api/voice/release", json={"session_id": s["session_id"]}).json()["released"] is False

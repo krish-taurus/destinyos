@@ -14,9 +14,10 @@ from timezonefinder import TimezoneFinder
 
 from astro import build_chart
 import db, numerology, reports
-import auth, billing
+import auth, billing, voice
+from fastapi.responses import FileResponse
 from auth import current_user
-from billing import is_subscriber, require_subscriber, plan_status
+from billing import is_subscriber, is_voice, require_subscriber, plan_status
 
 MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-5")
 FAST_MODEL = os.getenv("CLAUDE_FAST_MODEL", "claude-haiku-4-5-20251001")
@@ -35,12 +36,15 @@ app = FastAPI(title="Destiny OS API", version="1.0")
 logging.basicConfig(level=logging.INFO)
 app.include_router(auth.router)
 app.include_router(billing.router)
+app.include_router(voice.router)
 app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["GET", "POST", "PATCH", "DELETE"], allow_credentials=True,
                    allow_headers=["*"])
 
 # ── Rate limiting (in-memory; move to Redis when you scale past one instance) ──
 LIMITS = {"chart": (30, 3600), "brief": (20, 3600), "ask": (40, 3600),
-          "food": (15, 3600), "compass": (6, 3600), "otp": (10, 3600), "report": (6, 3600)}
+          "food": (15, 3600), "compass": (6, 3600), "otp": (10, 3600), "report": (6, 3600), "audio": (6, 3600)}
+LANG_RULE = {"en": "Reply in simple everyday English.",
+             "hi": "Reply in simple everyday Hindi (Devanagari script), the way ordinary people speak; avoid difficult Sanskrit words."}
 _hits: dict[tuple[str, str], deque] = defaultdict(deque)
 
 
@@ -91,7 +95,7 @@ def geocode(city: str) -> tuple[float, float, str]:
 GUARDRAILS = """Frame astrology and numerology as tradition ("in Jyotish, this transit is associated with…"), never as guaranteed fact.
 Never name specific stocks, funds or crypto; for investments suggest a SEBI-registered adviser.
 Never diagnose; for health red flags, advise seeing a doctor. No calorie targets under 1500, no crash diets, no moralising about food.
-English only. Be specific and practical, never vague."""
+Write in the language asked for below (English if none is given). Be specific and practical, never vague."""
 
 
 def _has_image(messages: list) -> bool:
@@ -277,6 +281,8 @@ def health():
 def me(u=Depends(current_user)):
     has_core = bool(db.one("SELECT 1 FROM reports WHERE user_id=? AND kind='core'", u["id"]))
     return {"name": u["name"], "phone": u["phone"], "dob": u["dob"], "birth_time": u["birth_time"], "city": u["city"],
+            "language": u.get("language") or "en",
+            "voice": {"enabled": is_voice(u["id"]), "ready": voice.configured(), **voice.minutes_status(u["id"])},
             "whatsapp_optin": bool(u["whatsapp_optin"]), "manifest_goal": u["manifest_goal"],
             "numerology": numerology.both(u["name"], u["dob"]),
             "has_report": has_core, "free_report_available": not has_core and not reports.free_already_used(u["phone"]),
@@ -287,6 +293,7 @@ def me(u=Depends(current_user)):
 class MePatch(BaseModel):
     manifest_goal: str | None = Field(default=None, max_length=300)
     whatsapp_optin: bool | None = None
+    language: str | None = Field(default=None, pattern=r"^(en|hi)$")
 
 
 @app.patch("/api/me")
@@ -296,6 +303,8 @@ def me_patch(body: MePatch, u=Depends(current_user)):
             c.execute("UPDATE users SET manifest_goal=? WHERE id=?", (body.manifest_goal.strip() or None, u["id"]))
         if body.whatsapp_optin is not None:
             c.execute("UPDATE users SET whatsapp_optin=? WHERE id=?", (int(body.whatsapp_optin), u["id"]))
+        if body.language is not None:
+            c.execute("UPDATE users SET language=? WHERE id=?", (body.language, u["id"]))
     return {"ok": True}
 
 
@@ -313,6 +322,7 @@ def me_delete(req: Request, u=Depends(current_user)):
     reports.remember_on_delete(u["phone"], had_report, u["free_questions_used"])
     for k in [k for k in _chart_cache if k[0] == u["id"]]:
         _chart_cache.pop(k, None)
+    voice.delete_user_audio(u["id"])
     with db.tx() as c:
         c.execute("DELETE FROM users WHERE id=?", (u["id"],))
         c.execute("DELETE FROM events WHERE user_id=?", (u["id"],))
@@ -321,37 +331,84 @@ def me_delete(req: Request, u=Depends(current_user)):
 
 
 # ── Core report: one free per phone number; locked sections need Destiny Plus ──
+def _lang(u: dict, lang: str | None) -> str:
+    return lang if lang in reports.LANGS else (u.get("language") or "en")
+
+
 @app.post("/api/report")
-def report_create(req: Request, u=Depends(current_user)):
-    existing = reports.get_core(u["id"])
+def report_create(req: Request, lang: str | None = None, u=Depends(current_user)):
+    lang = _lang(u, lang)
     sub = is_subscriber(u["id"])
-    if existing:
+    existing = reports.get_core(u["id"], lang)
+    if existing and existing.get("lang", "en") == lang:
         return reports.shape_core(existing, sub)
+    if existing:                                   # same report, other language: rewrite it, no new free report used
+        limit(req, "report")
+        out = parse_json(ask_claude(f"You translate Destiny OS reports.\n{GUARDRAILS}",
+                                    [{"role": "user", "content": reports.translate_prompt(existing, lang)}], max_tokens=6000))
+        if not isinstance(out, dict) or not isinstance(out.get("sections"), dict):
+            raise HTTPException(502, "The translation came back incomplete. Please try again.")
+        data = {**{k: v for k, v in existing.items() if k not in ("_id", "audio_script")},
+                "headline": out.get("headline", existing.get("headline")), "sections": out["sections"], "lang": lang}
+        reports.save_report(u["id"], "core", data)
+        return reports.shape_core(data, sub)
     if not sub and reports.free_already_used(u["phone"]):
         raise HTTPException(402, "A free report has already been created for this number. Subscribe to Destiny Plus to get your full report.")
     limit(req, "report")
     nums = numerology.both(u["name"], u["dob"])
     chart = user_chart(u)
     out = parse_json(ask_claude(f"You are the report writer of Destiny OS.\n{GUARDRAILS}",
-                                [{"role": "user", "content": reports.core_prompt(u, nums, chart_summary(chart))}],
-                                max_tokens=4000))
+                                [{"role": "user", "content": reports.core_prompt(u, nums, chart_summary(chart), lang)}],
+                                max_tokens=6000))
     if not isinstance(out, dict) or not isinstance(out.get("sections"), dict):
         raise HTTPException(502, "The report came back incomplete. Please try again.")
     out["numbers"] = nums
     out["chart_brief"] = slim_chart(chart)
     out["created_at"] = db.now()
+    out["lang"] = lang
     reports.save_report(u["id"], "core", out)
     reports.grant_free(u["phone"])
-    db.log_event(u["id"], "report_core", {"subscribed": sub})
+    db.log_event(u["id"], "report_core", {"subscribed": sub, "lang": lang})
     return reports.shape_core(out, sub)
 
 
 @app.get("/api/report")
-def report_get(u=Depends(current_user)):
-    r = reports.get_core(u["id"])
+def report_get(lang: str | None = None, u=Depends(current_user)):
+    r = reports.get_core(u["id"], _lang(u, lang))
     if not r:
         raise HTTPException(404, "No report yet.")
     return reports.shape_core(r, is_subscriber(u["id"]))
+
+
+# ── Free voice briefing in Dr. Krish's voice (ElevenLabs) ──
+@app.post("/api/report/audio")
+def report_audio(req: Request, lang: str | None = None, u=Depends(current_user)):
+    lang = _lang(u, lang)
+    r = reports.get_core(u["id"], lang)
+    if not r or r.get("lang", "en") != lang:
+        raise HTTPException(404, "Create your report in this language first.")
+    path = voice.audio_path(u["id"], r["_id"], lang)
+    if not path.exists():
+        if not voice.configured():
+            raise HTTPException(503, "Voice briefings aren't switched on yet. Please try again soon.")
+        limit(req, "audio")
+        script = r.get("audio_script") or ask_claude(
+            f"You write spoken scripts for Destiny OS.\n{GUARDRAILS}",
+            [{"role": "user", "content": reports.audio_script_prompt(r, u["name"], lang)}], max_tokens=1500).strip()
+        voice.synthesize(script, lang, path)
+        reports.update_report(r["_id"], {**r, "audio_script": script})
+        db.log_event(u["id"], "voice_briefing", {"lang": lang})
+    return {"url": f"/api/report/audio?lang={lang}&v={r['_id']}"}
+
+
+@app.get("/api/report/audio")
+def report_audio_file(lang: str | None = None, u=Depends(current_user)):
+    lang = _lang(u, lang)
+    r = reports.get_core(u["id"], lang)
+    path = voice.audio_path(u["id"], r["_id"], lang) if r else None
+    if not path or not path.exists():
+        raise HTTPException(404, "No voice briefing yet.")
+    return FileResponse(path, media_type="audio/mpeg", headers={"Cache-Control": "private, max-age=86400"})
 
 
 # ── Add-on reports (after payment) ──
@@ -417,12 +474,13 @@ _brief_cache: dict[str, dict] = {}
 @app.post("/api/brief")
 def brief(body: MealsIn, req: Request, u=Depends(require_subscriber)):
     ptxt = profile_text_for(u, body.meals)
-    key = hashlib.sha256(ptxt.encode()).hexdigest()
+    key = hashlib.sha256((ptxt + (u.get("language") or "en")).encode()).hexdigest()
     if key in _brief_cache:
         return _brief_cache[key]
     limit(req, "brief")
     pd = numerology.calc(u["name"], u["dob"])["personalDay"]
-    system = f"You are the daily-brief engine of Destiny OS.\n{GUARDRAILS}"
+    lang_rule = LANG_RULE.get(u.get("language") or "en", LANG_RULE["en"])
+    system = f"You are the daily-brief engine of Destiny OS.\n{GUARDRAILS}\n{lang_rule} Keep JSON keys in English; hex colours stay hex."
     prompt = f"""Build today's guidance for this person.
 {ptxt}
 
@@ -458,6 +516,7 @@ def ask(body: AskIn, req: Request, u=Depends(current_user)):
               f"key terms, sparing emojis, one concrete recommendation.\n{GUARDRAILS}\n"
               f"If the person mentions self-harm, suicide, abuse or a crisis, do not give a reading: respond with care, "
               f"encourage them to contact Tele-MANAS (14416, free, 24x7) or emergency services (112), and a trusted person.\n\n"
+              f"{LANG_RULE.get(u.get('language') or 'en', LANG_RULE['en'])}\n\n"
               f"User profile:\n{profile_text_for(u, body.meals)}")
     msgs = [{"role": t["role"], "content": str(t["content"])[:2000]} for t in turns]
     try:

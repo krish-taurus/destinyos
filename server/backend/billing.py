@@ -22,11 +22,20 @@ router = APIRouter(prefix="/api/billing")
 
 KEY_ID = os.getenv("RAZORPAY_KEY_ID", "")
 KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "")
-PLAN_ID = os.getenv("RAZORPAY_PLAN_ID", "")
+PLAN_ID = os.getenv("RAZORPAY_PLAN_ID", "")                # ₹599/month Destiny Plus
+PLAN_ID_VOICE = os.getenv("RAZORPAY_PLAN_ID_VOICE", "")    # ₹999/month Destiny Voice
 WEBHOOK_SECRET = os.getenv("RAZORPAY_WEBHOOK_SECRET", "")
 API = "https://api.razorpay.com/v1"
 
-PLAN = {"name": "Destiny Plus", "price_inr": 599, "period": "month"}
+PLANS = {
+    "plus":  {"name": "Destiny Plus", "price_inr": 599, "period": "month"},
+    "voice": {"name": "Destiny Voice", "price_inr": 999, "period": "month", "voice_minutes": 60},
+}
+PLAN = PLANS["plus"]
+
+
+def plan_id(plan: str) -> str:
+    return {"plus": PLAN_ID, "voice": PLAN_ID_VOICE}.get(plan, "")
 ADDONS = {   # amounts in paise
     "consultation":  {"name": "One-to-one consultation with Dr. Krish (45 min)", "amount": 299900},
     "compatibility": {"name": "Compatibility report", "amount": 99900},
@@ -78,12 +87,25 @@ def is_subscriber(user_id: int) -> bool:
     return any(_row_grants(s) for s in db.all_("SELECT * FROM subscriptions WHERE user_id=?", user_id))
 
 
+def is_voice(user_id: int) -> bool:
+    return any(_row_grants(s) for s in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan='voice'", user_id))
+
+
+def tier(user_id: int) -> str:
+    return "voice" if is_voice(user_id) else "plus" if is_subscriber(user_id) else "free"
+
+
 def plan_status(user_id: int) -> dict:
     s = subscription(user_id)
-    return {"subscribed": is_subscriber(user_id),
+    if is_voice(user_id):
+        s = next((r for r in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan='voice' "
+                                     "ORDER BY updated_at DESC", user_id) if _row_grants(r)), s)
+    t = tier(user_id)
+    return {"subscribed": t != "free", "tier": t,
             "status": s["status"] if s else None,
             "paid_until": s["current_end"] if s else None,
-            "plan": PLAN, "payments_ready": configured()}
+            "plan": PLANS.get(t, PLAN), "plans": PLANS,
+            "payments_ready": configured(), "voice_ready": bool(PLAN_ID_VOICE and configured())}
 
 
 def require_subscriber(user=Depends(current_user)) -> dict:
@@ -92,12 +114,30 @@ def require_subscriber(user=Depends(current_user)) -> dict:
     return user
 
 
-def _upsert_sub(user_id: int, sub_id: str, status: str, current_end: int | None):
+def require_voice(user=Depends(current_user)) -> dict:
+    if not is_voice(user["id"]):
+        raise HTTPException(402, "Voice chat is part of Destiny Voice. Upgrade for ₹999/month to talk to Dr. Krish's AI voice guide.")
+    return user
+
+
+def _upsert_sub(user_id: int, sub_id: str, status: str, current_end: int | None, plan: str | None = None):
     with db.tx() as c:
-        c.execute("INSERT INTO subscriptions(user_id, provider_sub_id, status, current_end, updated_at) "
-                  "VALUES (?,?,?,?,?) ON CONFLICT(provider_sub_id) DO UPDATE SET status=excluded.status, "
+        c.execute("INSERT INTO subscriptions(user_id, provider_sub_id, status, current_end, updated_at, plan) "
+                  "VALUES (?,?,?,?,?,?) ON CONFLICT(provider_sub_id) DO UPDATE SET status=excluded.status, "
                   "current_end=COALESCE(excluded.current_end, subscriptions.current_end), updated_at=excluded.updated_at",
-                  (user_id, sub_id, status, current_end, db.now()))
+                  (user_id, sub_id, status, current_end, db.now(), plan or "plus"))
+
+
+def _retire_plus(user_id: int):
+    """After an upgrade to Voice is paid, stop the old ₹599 plan so the customer isn't billed twice.
+    Voice includes everything in Plus, so access is unaffected."""
+    for r in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan='plus' AND status NOT IN ('cancelled','completed')", user_id):
+        try:
+            _rzp("POST", f"/subscriptions/{r['provider_sub_id']}/cancel", json={"cancel_at_cycle_end": 0})
+            _upsert_sub(user_id, r["provider_sub_id"], "cancelled", db.now())
+            db.log_event(user_id, "plus_retired_on_upgrade", {"sub": r["provider_sub_id"]})
+        except HTTPException:
+            log.error("could not cancel old Plus subscription %s on upgrade", r["provider_sub_id"])
 
 
 # ── Subscription ──
@@ -106,19 +146,28 @@ def status(user=Depends(current_user)):
     return plan_status(user["id"])
 
 
+class SubscribeIn(BaseModel):
+    plan: str = "plus"
+
+
 @router.post("/subscribe")
-def subscribe(user=Depends(current_user)):
-    if is_subscriber(user["id"]):
-        raise HTTPException(409, "You're already on Destiny Plus.")
-    if not configured():
+def subscribe(body: SubscribeIn | None = None, user=Depends(current_user)):
+    plan = (body.plan if body else "plus")
+    if plan not in PLANS:
+        raise HTTPException(404, "Unknown plan.")
+    t = tier(user["id"])
+    if t == "voice" or (t == "plus" and plan == "plus"):
+        raise HTTPException(409, f"You're already on {PLANS[t]['name']}.")
+    if not configured() or not plan_id(plan):
         raise HTTPException(503, "Payments aren't switched on yet. Please try again soon.")
     s = _rzp("POST", "/subscriptions", json={
-        "plan_id": PLAN_ID, "total_count": 120, "customer_notify": 1, "quantity": 1,
-        "notes": {"user_id": str(user["id"])}})
-    _upsert_sub(user["id"], s["id"], s.get("status", "created"), None)
-    db.log_event(user["id"], "subscribe_start", {"sub": s["id"]})
+        "plan_id": plan_id(plan), "total_count": 120, "customer_notify": 1, "quantity": 1,
+        "notes": {"user_id": str(user["id"]), "plan": plan}})
+    _upsert_sub(user["id"], s["id"], s.get("status", "created"), None, plan)
+    db.log_event(user["id"], "subscribe_start", {"sub": s["id"], "plan": plan})
+    p = PLANS[plan]
     return {"key_id": KEY_ID, "subscription_id": s["id"], "name": user["name"], "phone": user["phone"],
-            "description": f"{PLAN['name']} · ₹{PLAN['price_inr']}/month"}
+            "description": f"{p['name']} · ₹{p['price_inr']}/month", "plan": plan}
 
 
 class SubVerifyIn(BaseModel):
@@ -137,8 +186,10 @@ def subscribe_verify(body: SubVerifyIn, user=Depends(current_user)):
                               body.razorpay_signature, KEY_SECRET):
         raise HTTPException(400, "We couldn't verify that payment. If money was taken, it will be confirmed shortly.")
     s = _rzp("GET", f"/subscriptions/{body.razorpay_subscription_id}")
-    _upsert_sub(user["id"], s["id"], s.get("status", "active"), s.get("current_end"))
-    db.log_event(user["id"], "subscribe_paid", {"sub": s["id"], "status": s.get("status")})
+    _upsert_sub(user["id"], s["id"], s.get("status", "active"), s.get("current_end"), own["plan"])
+    db.log_event(user["id"], "subscribe_paid", {"sub": s["id"], "status": s.get("status"), "plan": own["plan"]})
+    if own["plan"] == "voice" and is_voice(user["id"]):
+        _retire_plus(user["id"])
     return plan_status(user["id"])
 
 
@@ -226,6 +277,9 @@ async def webhook(req: Request):
         if row:
             _upsert_sub(row["user_id"], s["id"], s.get("status", kind.split(".")[1]), s.get("current_end"))
             db.log_event(row["user_id"], "webhook_" + kind, {"status": s.get("status")})
+            sub = db.one("SELECT plan FROM subscriptions WHERE provider_sub_id=?", s["id"])
+            if sub and sub["plan"] == "voice" and kind in ("subscription.activated", "subscription.charged") and is_voice(row["user_id"]):
+                _retire_plus(row["user_id"])
     elif kind == "order.paid":
         o = payload.get("order", {}).get("entity", {})
         pay = payload.get("payment", {}).get("entity", {})

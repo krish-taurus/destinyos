@@ -135,6 +135,7 @@ class RegisterIn(BaseModel):
     consent: bool
     whatsapp_optin: bool = False
     source: str | None = Field(default=None, max_length=40)
+    language: str = Field(default="en", pattern=r"^(en|hi)$")
 
 
 @router.post("/otp")
@@ -200,9 +201,9 @@ def register(body: RegisterIn, resp: Response):
     with db.tx() as c:
         cur = c.execute(
             "INSERT INTO users(phone, name, dob, birth_time, city, source, consent_at, consent_text, "
-            "whatsapp_optin, free_questions_used, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            "whatsapp_optin, free_questions_used, created_at, language) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
             (phone, body.name.strip(), body.dob, body.birth_time, body.city.strip(), src, db.now(),
-             CONSENT_TEXT, int(body.whatsapp_optin), reports.questions_used_before(phone), db.now()))
+             CONSENT_TEXT, int(body.whatsapp_optin), reports.questions_used_before(phone), db.now(), body.language))
         uid = cur.lastrowid
     create_session(resp, uid)
     db.log_event(uid, "register", {"source": src})

@@ -81,6 +81,16 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS free_grants (
   phone_key TEXT PRIMARY KEY, at INTEGER NOT NULL, report_used INTEGER NOT NULL DEFAULT 0, questions_used INTEGER NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS voice_sessions (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  issued_at       INTEGER NOT NULL,
+  month           TEXT NOT NULL,                -- YYYY-MM (IST) the minutes count against
+  conversation_id TEXT UNIQUE,
+  seconds         INTEGER NOT NULL,             -- assumed 600 until ElevenLabs confirms the real length
+  final           INTEGER NOT NULL DEFAULT 0,
+  released        INTEGER NOT NULL DEFAULT 0
+);
 CREATE TABLE IF NOT EXISTS whatsapp_log (
   user_id INTEGER NOT NULL, day TEXT NOT NULL, status TEXT NOT NULL, detail TEXT,
   PRIMARY KEY (user_id, day)
@@ -113,8 +123,23 @@ def conn() -> sqlite3.Connection:
         if DB_PATH not in _schema_done:
             with _lock:
                 c.executescript(SCHEMA)
+                _migrate(c)
                 _schema_done.add(DB_PATH)
     return c
+
+
+MIGRATIONS = [   # (table, column, definition) added to databases created before the column existed
+    ("users", "language", "TEXT NOT NULL DEFAULT 'en'"),
+    ("subscriptions", "plan", "TEXT NOT NULL DEFAULT 'plus'"),
+]
+
+
+def _migrate(c: sqlite3.Connection):
+    for table, col, ddl in MIGRATIONS:
+        cols = {r[1] for r in c.execute(f"PRAGMA table_info({table})")}
+        if col not in cols:
+            c.execute(f"ALTER TABLE {table} ADD COLUMN {col} {ddl}")
+    c.commit()
 
 
 def reset_for_tests(path: str):
