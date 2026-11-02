@@ -6,10 +6,6 @@ Static pages for destinyos.in that live alongside the Destiny OS app.
 | --- | --- | --- |
 | `business/index.html` | https://destinyos.in/business | Brand naming and business numerology services, pricing and terms |
 
-## Before going live
-
-Replace `91XXXXXXXXXX` in `business/index.html` with the DestinyOS WhatsApp number (country code, no `+` or spaces).
-
 ## One-time server setup (DigitalOcean droplet, nginx)
 
 ```bash
