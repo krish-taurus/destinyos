@@ -1,0 +1,9 @@
+[Unit]
+Description=Send Destiny OS daily guidance at 7:00 IST
+
+[Timer]
+OnCalendar=*-*-* 07:00:00 Asia/Kolkata
+Persistent=true
+
+[Install]
+WantedBy=timers.target

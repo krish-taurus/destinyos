@@ -278,7 +278,8 @@ footer nav{display:flex;gap:20px;flex-wrap:wrap}
 <body>
 
 <!-- Free report link: change this one value when the registration flow is live -->
-<script>window.FREE_REPORT_URL = "/";</script>
+<script src="/config.js"></script>
+<script>window.FREE_REPORT_URL = window.DESTINY_SIGNUP_OPEN === false ? window.DESTINY_WHATSAPP : "/free-report/?src=website";</script>
 
 <header class="nav" id="nav">
   <div class="wrap nav-in">
@@ -289,7 +290,7 @@ footer nav{display:flex;gap:20px;flex-wrap:wrap}
     <nav class="links">
       <a href="#decode">Decode your name</a><a href="#concepts">Concepts</a><a href="#manifest">Manifestation</a><a href="#pricing">Pricing</a><a href="#about">Dr. Krish</a><a href="/business/">Business</a>
     </nav>
-    <a class="btn btn-dark js-free" href="/">Free report</a>
+    <span style="display:flex;gap:16px;align-items:center"><a href="/app/" class="signin" style="font-size:14.5px;color:var(--muted)">Sign in</a><a class="btn btn-dark js-free" href="/free-report/">Free report</a></span>
   </div>
 </header>
 
@@ -303,7 +304,7 @@ footer nav{display:flex;gap:20px;flex-wrap:wrap}
       <h1 class="serif rv d1">Your numbers,<br><span class="em">decoded.</span></h1>
       <p class="lead rv d2">One reading that brings together your numerology, your Vedic chart and the habits that shape your days. Start with a free report, then get guidance on WhatsApp every morning.</p>
       <div class="ctas rv d3">
-        <a class="btn btn-dark js-free" href="/">Get my free report <span class="arr">→</span></a>
+        <a class="btn btn-dark js-free" href="/free-report/">Get my free report <span class="arr">→</span></a>
         <a class="btn btn-line" href="#decode">Try the name decoder</a>
       </div>
       <div class="trust rv d4">
@@ -527,7 +528,7 @@ footer nav{display:flex;gap:20px;flex-wrap:wrap}
           <li>Your number for 2026</li>
           <li>Preview of the full report</li>
         </ul>
-        <a class="btn btn-line js-free" href="/">Get my free report</a>
+        <a class="btn btn-line js-free" href="/free-report/">Get my free report</a>
       </div>
       <div class="plan hot rv d1">
         <span class="tag">MOST POPULAR</span>
@@ -542,7 +543,7 @@ footer nav{display:flex;gap:20px;flex-wrap:wrap}
           <li>Life Compass and Food Lens</li>
           <li>Cancel anytime</li>
         </ul>
-        <a class="btn btn-dark js-free" href="/">Start with the free report</a>
+        <a class="btn btn-dark js-free" href="/free-report/">Start with the free report</a>
       </div>
       <div class="plan rv d2">
         <span class="tag">FOR FOUNDERS</span>
@@ -620,7 +621,7 @@ footer nav{display:flex;gap:20px;flex-wrap:wrap}
   <div class="wrap">
     <div class="eyebrow rv">Your blueprint is waiting</div>
     <h2 class="serif rv d1">Know your numbers.<br><span class="em">Own your days.</span></h2>
-    <a class="btn btn-dark rv d2 js-free" href="/">Get my free report <span class="arr">→</span></a>
+    <a class="btn btn-dark rv d2 js-free" href="/free-report/">Get my free report <span class="arr">→</span></a>
   </div>
 </section>
 </main>
@@ -635,7 +636,7 @@ footer nav{display:flex;gap:20px;flex-wrap:wrap}
 
 <script>
 // free report links
-document.querySelectorAll('.js-free').forEach(a => a.href = window.FREE_REPORT_URL);
+document.querySelectorAll('.js-free').forEach(a => { a.href = window.FREE_REPORT_URL; if (/^https:/.test(a.href)) { a.target = '_blank'; a.rel = 'noopener'; } });
 
 // nav border on scroll
 const nav = document.getElementById('nav');

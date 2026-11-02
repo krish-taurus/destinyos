@@ -1,0 +1,10 @@
+[Unit]
+Description=Destiny OS daily WhatsApp guidance
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=__USER__
+WorkingDirectory=/var/www/destinyos/backend
+EnvironmentFile=/etc/destinyos.env
+ExecStart=/var/www/destinyos/venv/bin/python daily_whatsapp.py
