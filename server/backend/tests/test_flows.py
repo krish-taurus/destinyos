@@ -252,3 +252,94 @@ def test_daily_whatsapp_only_opted_in_subscribers(monkeypatch, capsys):
     assert p in sent and p3 not in sent and "+919000000022" not in sent
     again = daily_whatsapp.run(dry=False)                                          # never twice a day
     assert sent.count(p) == 1 and again["skipped"] >= 1
+
+
+# ── Regression tests for the security review ──
+from concurrent.futures import ThreadPoolExecutor
+
+
+def test_parallel_requests_dont_crash_or_sign_out():
+    c = TestClient(main.app)
+    signup(c, "9100000001")
+    with ThreadPoolExecutor(32) as ex:
+        codes = list(ex.map(lambda _: c.get("/api/me").status_code, range(200)))
+    assert codes.count(200) == 200, {k: codes.count(k) for k in set(codes)}
+
+
+def test_parallel_free_questions_cannot_exceed_allowance(monkeypatch):
+    def slow(*a, **k):
+        import time; time.sleep(0.05); return "ok"
+    c = TestClient(main.app)
+    signup(c, "9100000002")
+    monkeypatch.setattr(main, "ask_claude", slow)
+    body = {"turns": [{"role": "user", "content": "q"}]}
+    with ThreadPoolExecutor(10) as ex:
+        codes = list(ex.map(lambda _: c.post("/api/ask", json=body).status_code, range(10)))
+    assert codes.count(200) == 3 and codes.count(402) == 7, codes
+    assert db.one("SELECT free_questions_used FROM users WHERE phone='+919100000002'")["free_questions_used"] == 3
+
+
+def test_failed_answer_gives_the_question_back(monkeypatch):
+    c = TestClient(main.app)
+    signup(c, "9100000003")
+    def boom(*a, **k):
+        raise main.HTTPException(502, "down")
+    monkeypatch.setattr(main, "ask_claude", boom)
+    assert c.post("/api/ask", json={"turns": [{"role": "user", "content": "q"}]}).status_code == 502
+    assert c.get("/api/me").json()["questions"]["left"] == 3
+
+
+def test_deleting_does_not_reset_free_questions():
+    c = TestClient(main.app)
+    signup(c, "9100000004")
+    for _ in range(3):
+        c.post("/api/ask", json={"turns": [{"role": "user", "content": "q"}]})
+    c.delete("/api/me")
+    signup(c, "9100000004")
+    assert c.get("/api/me").json()["questions"]["left"] == 0
+    assert c.post("/api/ask", json={"turns": [{"role": "user", "content": "q"}]}).status_code == 402
+
+
+def test_new_user_never_inherits_a_deleted_users_id_subscription_or_chart():
+    a = TestClient(main.app)
+    signup(a, "9100000005", name="Deleted Person")
+    sid = subscribe(a)
+    old_id = db.one("SELECT id FROM users WHERE phone='+919100000005'")["id"]
+    a.get("/api/chart")
+    a.delete("/api/me")
+    b = TestClient(main.app)
+    signup(b, "9100000006", name="New Person")
+    new_id = db.one("SELECT id FROM users WHERE phone='+919100000006'")["id"]
+    assert new_id != old_id
+    body = json.dumps({"event": "subscription.cancelled", "payload": {"subscription": {"entity": {
+        "id": sid, "status": "cancelled", "current_end": db.now() + 20 * 86400, "notes": {"user_id": str(new_id)}}}}})
+    b.post("/api/billing/webhook", content=body, headers={"x-razorpay-signature": sign(body, "whs")})
+    assert not b.get("/api/me").json()["plan"]["subscribed"]
+    assert not any(k[0] == old_id for k in main._chart_cache)
+
+
+def test_late_webhook_on_old_subscription_doesnt_hide_the_live_one():
+    c = TestClient(main.app)
+    signup(c, "9100000007")
+    old = c.post("/api/billing/subscribe").json()["subscription_id"]      # abandoned checkout
+    subscribe(c)                                                          # the real one
+    body = json.dumps({"event": "subscription.halted", "payload": {"subscription": {"entity": {
+        "id": old, "status": "halted", "current_end": None}}}})
+    c.post("/api/billing/webhook", content=body, headers={"x-razorpay-signature": sign(body, "whs")})
+    assert c.get("/api/me").json()["plan"]["subscribed"]
+
+
+def test_spoofed_forwarded_for_doesnt_dodge_otp_limit():
+    c = TestClient(main.app)
+    codes = [c.post("/api/auth/otp", json={"phone": f"98000{i:05d}"}, headers={"x-forwarded-for": f"1.2.3.{i}"}).status_code
+             for i in range(12)]
+    assert codes.count(429) >= 2, codes
+
+
+def test_impossible_birth_date_is_a_clear_error():
+    c = TestClient(main.app)
+    p = c.post("/api/auth/otp", json={"phone": "9100000008"}).json()["phone"]
+    tok = c.post("/api/auth/verify", json={"phone": p, "code": CODES[p]}).json()["signup_token"]
+    r = c.post("/api/auth/register", json={"signup_token": tok, "name": "Test Name", "dob": "1990-02-31",
+                                           "city": "Bengaluru", "consent": True})
+    assert r.status_code == 422 and "exist" in r.json()["detail"]

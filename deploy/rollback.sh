@@ -10,5 +10,6 @@ tar xzf "$B/code-$TS.tgz" -C "$APP"
 if [ -f "$B/db-$TS.sqlite" ]; then
   echo "Database left as it is (accounts created since are kept). Its backup is $B/db-$TS.sqlite."
 fi
-systemctl restart destinyos-api; sleep 2
-curl -fsS http://127.0.0.1:8100/api/health && echo "  restored $TS"
+systemctl restart destinyos-api
+for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8100/api/health >/dev/null 2>&1 && { echo "Restored $TS. API healthy."; exit 0; }; sleep 1; done
+echo "Restored $TS but the API isn't answering yet. Check: journalctl -u destinyos-api -n 50"; exit 1

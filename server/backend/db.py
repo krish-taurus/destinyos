@@ -8,11 +8,11 @@ import json, os, sqlite3, threading, time
 from contextlib import contextmanager
 
 DB_PATH = os.getenv("DESTINY_DB", "/var/lib/destinyos/destinyos.db")
-_lock = threading.Lock()
+_lock = threading.RLock()   # re-entrant: conn() may run the schema while tx() holds the lock
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (
-  id            INTEGER PRIMARY KEY,
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
   phone         TEXT UNIQUE NOT NULL,          -- E.164, e.g. +919876543210
   name          TEXT NOT NULL,
   dob           TEXT NOT NULL,                 -- YYYY-MM-DD
@@ -41,14 +41,14 @@ CREATE TABLE IF NOT EXISTS sessions (
   expires_at INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS reports (
-  id         INTEGER PRIMARY KEY,
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   kind       TEXT NOT NULL,                    -- 'core' | 'compatibility' | 'annual'
   data       TEXT NOT NULL,                    -- JSON
   created_at INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS subscriptions (
-  id              INTEGER PRIMARY KEY,
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   provider_sub_id TEXT UNIQUE NOT NULL,        -- Razorpay subscription id
   status          TEXT NOT NULL,               -- created|authenticated|active|pending|halted|cancelled|completed
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   updated_at      INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS purchases (
-  id               INTEGER PRIMARY KEY,
+  id               INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   item             TEXT NOT NULL,              -- consultation|compatibility|annual
   amount_paise     INTEGER NOT NULL,
@@ -74,7 +74,12 @@ CREATE TABLE IF NOT EXISTS usage (
   PRIMARY KEY (user_id, day, bucket)
 );
 CREATE TABLE IF NOT EXISTS events (
-  id INTEGER PRIMARY KEY, user_id INTEGER, kind TEXT NOT NULL, data TEXT, at INTEGER NOT NULL
+  id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, kind TEXT NOT NULL, data TEXT, at INTEGER NOT NULL
+);
+-- Survives account deletion: a keyed hash of the phone (not reversible), so deleting and re-registering
+-- doesn't give a second free report or more free questions.
+CREATE TABLE IF NOT EXISTS free_grants (
+  phone_key TEXT PRIMARY KEY, at INTEGER NOT NULL, report_used INTEGER NOT NULL DEFAULT 0, questions_used INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS whatsapp_log (
   user_id INTEGER NOT NULL, day TEXT NOT NULL, status TEXT NOT NULL, detail TEXT,
@@ -94,21 +99,28 @@ def _connect() -> sqlite3.Connection:
     return c
 
 
-_conn: sqlite3.Connection | None = None
+_local = threading.local()
+_generation = 0          # bumped by reset_for_tests so every thread reconnects
+_schema_done: set[str] = set()
 
 
 def conn() -> sqlite3.Connection:
-    global _conn
-    if _conn is None:
-        _conn = _connect()
-        _conn.executescript(SCHEMA)
-    return _conn
+    """One connection per thread: sqlite3 connections must not be shared across FastAPI's worker threads."""
+    c = getattr(_local, "c", None)
+    if c is None or getattr(_local, "gen", -1) != _generation:
+        c = _connect()
+        _local.c, _local.gen = c, _generation
+        if DB_PATH not in _schema_done:
+            with _lock:
+                c.executescript(SCHEMA)
+                _schema_done.add(DB_PATH)
+    return c
 
 
 def reset_for_tests(path: str):
-    global _conn, DB_PATH
+    global DB_PATH, _generation
     DB_PATH = path
-    _conn = None
+    _generation += 1
 
 
 @contextmanager

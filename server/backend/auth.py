@@ -15,6 +15,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
 
 import db
+import reports
 
 log = logging.getLogger("destinyos.auth")
 router = APIRouter(prefix="/api/auth")
@@ -183,17 +184,25 @@ def register(body: RegisterIn, resp: Response):
     phone = _check_signup_token(body.signup_token)
     if not body.consent:
         raise HTTPException(422, "Please tick the consent box to continue.")
-    if date.fromisoformat(body.dob) > date.today():
-        raise HTTPException(422, "Date of birth is in the future.")
+    try:
+        born = date.fromisoformat(body.dob)
+    except ValueError:
+        raise HTTPException(422, "That date of birth doesn't exist. Check the day and month.")
+    if born > date.today() or born.year < 1900:
+        raise HTTPException(422, "Check your date of birth.")
+    if body.birth_time:
+        hh, mm = (int(x) for x in body.birth_time.split(":"))
+        if hh > 23 or mm > 59:
+            raise HTTPException(422, "Check your birth time.")
     if db.one("SELECT id FROM users WHERE phone=?", phone):
         raise HTTPException(409, "This number is already registered. Sign in instead.")
     src = re.sub(r"[^a-z0-9_-]", "", (body.source or "").lower())[:40] or None
     with db.tx() as c:
         cur = c.execute(
             "INSERT INTO users(phone, name, dob, birth_time, city, source, consent_at, consent_text, "
-            "whatsapp_optin, created_at) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "whatsapp_optin, free_questions_used, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (phone, body.name.strip(), body.dob, body.birth_time, body.city.strip(), src, db.now(),
-             CONSENT_TEXT, int(body.whatsapp_optin), db.now()))
+             CONSENT_TEXT, int(body.whatsapp_optin), reports.questions_used_before(phone), db.now()))
         uid = cur.lastrowid
     create_session(resp, uid)
     db.log_event(uid, "register", {"source": src})

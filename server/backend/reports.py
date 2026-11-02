@@ -35,14 +35,21 @@ def phone_key(phone: str) -> str:
     return hmac.new(_SECRET.encode(), ("free|" + phone).encode(), hashlib.sha256).hexdigest()
 
 
-def ensure_tables():
-    with db.tx() as c:
-        c.execute("CREATE TABLE IF NOT EXISTS free_grants (phone_key TEXT PRIMARY KEY, at INTEGER NOT NULL)")
-
-
 def free_already_used(phone: str) -> bool:
-    ensure_tables()
-    return bool(db.one("SELECT 1 FROM free_grants WHERE phone_key=?", phone_key(phone)))
+    return bool(db.one("SELECT 1 FROM free_grants WHERE phone_key=? AND report_used=1", phone_key(phone)))
+
+
+def questions_used_before(phone: str) -> int:
+    r = db.one("SELECT questions_used FROM free_grants WHERE phone_key=?", phone_key(phone))
+    return r["questions_used"] if r else 0
+
+
+def remember_on_delete(phone: str, report_used: bool, questions_used: int):
+    with db.tx() as c:
+        c.execute("INSERT INTO free_grants(phone_key, at, report_used, questions_used) VALUES (?,?,?,?) "
+                  "ON CONFLICT(phone_key) DO UPDATE SET report_used=MAX(report_used, excluded.report_used), "
+                  "questions_used=MAX(questions_used, excluded.questions_used)",
+                  (phone_key(phone), db.now(), int(report_used), questions_used))
 
 
 def core_prompt(user: dict, nums: dict, chart_text: str) -> str:
@@ -115,9 +122,9 @@ def save_report(user_id: int, kind: str, data: dict) -> int:
 
 
 def grant_free(phone: str):
-    ensure_tables()
     with db.tx() as c:
-        c.execute("INSERT OR IGNORE INTO free_grants(phone_key, at) VALUES (?,?)", (phone_key(phone), db.now()))
+        c.execute("INSERT INTO free_grants(phone_key, at, report_used) VALUES (?,?,1) "
+                  "ON CONFLICT(phone_key) DO UPDATE SET report_used=1", (phone_key(phone), db.now()))
 
 
 def get_core(user_id: int) -> dict | None:

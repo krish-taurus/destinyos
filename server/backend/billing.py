@@ -56,13 +56,13 @@ def _sig_ok(message: str, signature: str, secret: str) -> bool:
 
 # ── Access ──
 def subscription(user_id: int) -> dict | None:
-    return db.one("SELECT * FROM subscriptions WHERE user_id=? ORDER BY updated_at DESC LIMIT 1", user_id)
+    """The subscription to show and manage: a qualifying one first, then the most recent."""
+    rows = db.all_("SELECT * FROM subscriptions WHERE user_id=? ORDER BY updated_at DESC, id DESC", user_id)
+    live = [r for r in rows if _row_grants(r)]
+    return (live or rows or [None])[0]
 
 
-def is_subscriber(user_id: int) -> bool:
-    s = subscription(user_id)
-    if not s:
-        return False
+def _row_grants(s: dict) -> bool:
     if s["status"] == "active":
         return True
     end = s["current_end"] or 0
@@ -71,6 +71,11 @@ def is_subscriber(user_id: int) -> bool:
     if s["status"] in ("pending", "halted") and end + GRACE_SECONDS > db.now():
         return True                                   # renewal being retried
     return False
+
+
+def is_subscriber(user_id: int) -> bool:
+    """Access if ANY of the user's subscriptions qualifies (a late webhook on an old one mustn't hide a live one)."""
+    return any(_row_grants(s) for s in db.all_("SELECT * FROM subscriptions WHERE user_id=?", user_id))
 
 
 def plan_status(user_id: int) -> dict:
@@ -216,11 +221,11 @@ async def webhook(req: Request):
     payload = ev.get("payload", {})
     if kind.startswith("subscription."):
         s = payload.get("subscription", {}).get("entity", {})
+        # Only subscriptions we created for a live account; never trust notes.user_id (ids of deleted users).
         row = db.one("SELECT user_id FROM subscriptions WHERE provider_sub_id=?", s.get("id", ""))
-        uid = row["user_id"] if row else int((s.get("notes") or {}).get("user_id", 0) or 0)
-        if uid and db.one("SELECT id FROM users WHERE id=?", uid):
-            _upsert_sub(uid, s["id"], s.get("status", kind.split(".")[1]), s.get("current_end"))
-            db.log_event(uid, "webhook_" + kind, {"status": s.get("status")})
+        if row:
+            _upsert_sub(row["user_id"], s["id"], s.get("status", kind.split(".")[1]), s.get("current_end"))
+            db.log_event(row["user_id"], "webhook_" + kind, {"status": s.get("status")})
     elif kind == "order.paid":
         o = payload.get("order", {}).get("entity", {})
         pay = payload.get("payment", {}).get("entity", {})

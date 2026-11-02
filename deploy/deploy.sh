@@ -19,12 +19,14 @@ git -C "$REPO" fetch -q origin "$BRANCH"
 git -C "$REPO" checkout -q -B deploy "origin/$BRANCH"
 echo "   at $(git -C "$REPO" log -1 --format='%h %s')"
 
-echo "== 2/7 test"
-"$APP/venv/bin/pip" install -q pytest >/dev/null
+echo "== 2/7 install packages and test (live site untouched so far)"
+[ -x "$APP/venv/bin/python" ] || python3 -m venv "$APP/venv"
+"$APP/venv/bin/pip" install -q -r "$REPO/server/backend/requirements.txt" pytest || { echo "PACKAGE INSTALL FAILED: nothing deployed."; exit 1; }
 (cd "$REPO/server/backend" && "$APP/venv/bin/python" -m pytest -q -p no:cacheprovider tests) || { echo "TESTS FAILED: nothing deployed."; exit 1; }
 
 echo "== 3/7 backup"
 TS=$(date +%Y%m%d-%H%M%S); mkdir -p /var/backups/destinyos; chmod 700 /var/backups/destinyos
+mkdir -p "$APP/frontend" "$APP/backend"
 tar czf "/var/backups/destinyos/code-$TS.tgz" -C "$APP" frontend backend
 if [ -f "$DATA/destinyos.db" ]; then
   "$APP/venv/bin/python" -c "import sqlite3,sys;s=sqlite3.connect(sys.argv[1]);d=sqlite3.connect(sys.argv[2]);s.backup(d)" \
@@ -45,7 +47,6 @@ echo "== 5/7 install"
 rsync -a --delete --exclude tests --exclude __pycache__ --exclude '.env*' "$REPO/server/backend/" "$APP/backend/"
 rsync -a --delete "$REPO/site/" "$APP/frontend/"
 chown -R www-data:www-data "$APP/frontend"; chown -R "$SVC_USER" "$APP/backend"
-"$APP/venv/bin/pip" install -q -r "$APP/backend/requirements.txt"
 
 echo "== 6/7 daily WhatsApp timer (7:00 IST)"
 sed "s/__USER__/$SVC_USER/" "$REPO/deploy/destinyos-daily.service" > /etc/systemd/system/destinyos-daily.service
@@ -54,7 +55,13 @@ systemctl daemon-reload
 systemctl enable -q --now destinyos-daily.timer
 
 echo "== 7/7 restart and check"
-systemctl restart destinyos-api; sleep 3
-curl -fsS http://127.0.0.1:8100/api/health && echo
+systemctl restart destinyos-api
+ok=0; for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8100/api/health >/dev/null 2>&1 && { ok=1; break; }; sleep 1; done
+if [ "$ok" != 1 ]; then
+  echo "API DID NOT COME BACK. Rolling back to $TS automatically…"
+  journalctl -u destinyos-api -n 30 --no-pager || true
+  bash "$REPO/deploy/rollback.sh" "$TS"; exit 1
+fi
+echo "   API healthy"
 for u in / /app/ /business/ /free-report/; do printf "   %-14s %s\n" "$u" "$(curl -s -o /dev/null -w '%{http_code}' "https://destinyos.in$u")"; done
 echo "DEPLOYED $(git -C "$REPO" log -1 --format=%h). If anything looks wrong: bash $REPO/deploy/rollback.sh $TS"

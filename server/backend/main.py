@@ -45,7 +45,9 @@ _hits: dict[tuple[str, str], deque] = defaultdict(deque)
 
 
 def limit(req: Request, bucket: str):
-    ip = req.headers.get("x-forwarded-for", req.client.host if req.client else "?").split(",")[0]
+    # uvicorn --proxy-headers already resolves the real client IP behind nginx (127.0.0.1 is the trusted proxy);
+    # never read X-Forwarded-For directly: its first entry is whatever the client sent.
+    ip = req.client.host if req.client else "?"
     n, window = LIMITS[bucket]
     q, now = _hits[(ip, bucket)], time.time()
     while q and q[0] < now - window:
@@ -233,6 +235,32 @@ def usage_today(user_id: int, bucket: str) -> int:
     return r["n"] if r else 0
 
 
+def reserve_question(u: dict) -> str:
+    """Count the question BEFORE answering, inside one locked transaction."""
+    day = date.today().isoformat()
+    with db.tx() as c:
+        if is_subscriber(u["id"]):
+            c.execute("INSERT OR IGNORE INTO usage(user_id, day, bucket, n) VALUES (?,?,'ask',0)", (u["id"], day))
+            cur = c.execute("UPDATE usage SET n=n+1 WHERE user_id=? AND day=? AND bucket='ask' AND n<?",
+                            (u["id"], day, DAILY_QUESTIONS))
+            if cur.rowcount == 0:
+                raise HTTPException(429, f"You've reached today's fair-use limit of {DAILY_QUESTIONS} questions. It resets at midnight.")
+            return "daily"
+        cur = c.execute("UPDATE users SET free_questions_used=free_questions_used+1 WHERE id=? AND free_questions_used<?",
+                        (u["id"], FREE_QUESTIONS))
+        if cur.rowcount == 0:
+            raise HTTPException(402, f"You've used your {FREE_QUESTIONS} free questions. Subscribe to Destiny Plus to ask as many as you like.")
+        return "free"
+
+
+def release_question(user_id: int, kind: str):
+    with db.tx() as c:
+        if kind == "daily":
+            c.execute("UPDATE usage SET n=MAX(n-1,0) WHERE user_id=? AND day=? AND bucket='ask'", (user_id, date.today().isoformat()))
+        else:
+            c.execute("UPDATE users SET free_questions_used=MAX(free_questions_used-1,0) WHERE id=?", (user_id,))
+
+
 def questions_left(u: dict) -> dict:
     if is_subscriber(u["id"]):
         return {"kind": "daily", "left": max(0, DAILY_QUESTIONS - usage_today(u["id"], "ask")), "of": DAILY_QUESTIONS}
@@ -280,8 +308,11 @@ def me_delete(req: Request, u=Depends(current_user)):
             billing._rzp("POST", f"/subscriptions/{s['provider_sub_id']}/cancel", json={"cancel_at_cycle_end": 0})
         except HTTPException:
             raise HTTPException(502, "We couldn't cancel your subscription just now, so nothing was deleted. Try again in a minute.")
-    if db.one("SELECT 1 FROM reports WHERE user_id=? AND kind='core'", u["id"]):
-        reports.grant_free(u["phone"])          # keep only a non-reversible marker so the free report isn't re-claimed
+    had_report = bool(db.one("SELECT 1 FROM reports WHERE user_id=? AND kind='core'", u["id"]))
+    # keep only a non-reversible marker so the free report and free questions can't be re-claimed
+    reports.remember_on_delete(u["phone"], had_report, u["free_questions_used"])
+    for k in [k for k in _chart_cache if k[0] == u["id"]]:
+        _chart_cache.pop(k, None)
     with db.tx() as c:
         c.execute("DELETE FROM users WHERE id=?", (u["id"],))
         c.execute("DELETE FROM events WHERE user_id=?", (u["id"],))
@@ -418,14 +449,10 @@ class AskIn(BaseModel):
 @app.post("/api/ask")
 def ask(body: AskIn, req: Request, u=Depends(current_user)):
     limit(req, "ask")
-    q = questions_left(u)
-    if q["left"] <= 0:
-        if q["kind"] == "free":
-            raise HTTPException(402, f"You've used your {FREE_QUESTIONS} free questions. Subscribe to Destiny Plus to ask as many as you like.")
-        raise HTTPException(429, f"You've reached today's fair-use limit of {DAILY_QUESTIONS} questions. It resets at midnight.")
     turns = [t for t in body.turns if t.get("role") in ("user", "assistant") and t.get("content")][-12:]
     if not turns or turns[-1]["role"] != "user":
         raise HTTPException(422, "Send a message first.")
+    kind = reserve_question(u)            # atomic: parallel requests can't exceed the allowance
     system = (f"You are Destiny OS, a guidance companion blending Vedic astrology, numerology, colour tradition, "
               f"evidence-based psychology and behavioural science. Reply under 150 words, WhatsApp style, *bold* for "
               f"key terms, sparing emojis, one concrete recommendation.\n{GUARDRAILS}\n"
@@ -433,12 +460,11 @@ def ask(body: AskIn, req: Request, u=Depends(current_user)):
               f"encourage them to contact Tele-MANAS (14416, free, 24x7) or emergency services (112), and a trusted person.\n\n"
               f"User profile:\n{profile_text_for(u, body.meals)}")
     msgs = [{"role": t["role"], "content": str(t["content"])[:2000]} for t in turns]
-    reply = ask_claude(system, msgs, model=FAST_MODEL, max_tokens=600)
-    if q["kind"] == "free":
-        with db.tx() as c:
-            c.execute("UPDATE users SET free_questions_used=free_questions_used+1 WHERE id=?", (u["id"],))
-    else:
-        bump_usage(u["id"], "ask")
+    try:
+        reply = ask_claude(system, msgs, model=FAST_MODEL, max_tokens=600)
+    except Exception:
+        release_question(u["id"], kind)   # don't charge a question for our failure
+        raise
     fresh = db.one("SELECT * FROM users WHERE id=?", u["id"])
     return {"reply": reply, "questions": questions_left(fresh)}
 
