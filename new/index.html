@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBFAF7">
+<title>Destiny OS — Your numbers, decoded</title>
+<meta name="description" content="Numerology, Vedic astrology and mindset guidance in one place, by Dr. Krish Bharggav. Get your free report, then daily guidance on WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBFAF7; --paper:#FFFFFF; --ink:#15171F; --muted:#6B6F7E; --line:#E9E6DE;
+  --gold:#B38A2E; --gold-2:#D9B45A; --gold-soft:#F6EEDB; --violet:#6B5BD6; --violet-soft:#EEEBFB;
+  --green:#2F8F6B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:400 16.5px/1.65 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.serif{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;letter-spacing:-.005em}
+.em{font-style:italic;color:var(--gold)}
+.mono{font-family:"DM Mono",monospace}
+.eyebrow{font:500 12px/1 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:22px;height:1px;background:currentColor}
+h2{font-size:clamp(34px,4.6vw,54px);line-height:1.05;margin:16px 0 14px}
+.sub{color:var(--muted);max-width:620px;font-size:17.5px}
+section{padding:110px 0}
+.center{text-align:center}.center .sub{margin-left:auto;margin-right:auto}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:600;font-size:15.5px;transition:transform .25s,box-shadow .25s,background .25s}
+.btn-dark{background:var(--ink);color:#fff;box-shadow:0 10px 30px -12px rgba(21,23,31,.5)}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 16px 36px -14px rgba(21,23,31,.55)}
+.btn-line{border:1px solid var(--line);background:var(--paper)}
+.btn-line:hover{border-color:var(--gold)}
+.btn .arr{transition:transform .25s}.btn:hover .arr{transform:translateX(4px)}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;background:rgba(251,250,247,.82);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid transparent;transition:border-color .3s}
+header.nav.scrolled{border-color:var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:11px}
+.logo span{font:600 21px/1 "Cormorant Garamond",serif;letter-spacing:.16em}
+.logo b{font-weight:600;color:var(--gold)}
+.links{display:flex;gap:28px;font-size:14.5px;color:var(--muted)}
+.links a:hover{color:var(--ink)}
+.nav .btn{padding:11px 20px;font-size:14px}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+
+/* HERO */
+.hero{padding:70px 0 90px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(46px,7vw,86px);line-height:.98;margin:22px 0 24px}
+.hero .lead{font-size:19px;color:var(--muted);max-width:540px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.trust{display:flex;flex-wrap:wrap;gap:22px;margin-top:38px;font-size:13.5px;color:var(--muted)}
+.trust span{display:flex;align-items:center;gap:8px}
+.trust i{width:6px;height:6px;border-radius:50%;background:var(--gold-2);display:inline-block}
+.orbit{position:relative;aspect-ratio:1;max-width:500px;margin-left:auto;width:100%}
+.orbit svg{width:100%;height:100%}
+.ring{transform-origin:250px 250px}
+.spin-slow{animation:spin 80s linear infinite}
+.spin-rev{animation:spin 60s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.num-node text{font:500 22px "Cormorant Garamond",serif;fill:var(--ink)}
+.pulse{animation:pulse 3.6s ease-in-out infinite;transform-origin:250px 250px}
+@keyframes pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.75;transform:scale(1.04)}}
+.hero-card{position:absolute;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 18px 40px -22px rgba(21,23,31,.25);font-size:13px;animation:float 6s ease-in-out infinite}
+.hero-card b{display:block;font:600 22px "DM Sans",system-ui,sans-serif;margin-top:2px}
+.hero-card small{color:var(--muted);font-size:11.5px}
+.hc1{left:-6%;top:17%}.hc2{left:-6%;bottom:12%;animation-delay:-3s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* HOW */
+.how{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:56px;position:relative}
+.steps .track{position:absolute;top:34px;left:12%;right:12%;height:2px;background:var(--line);overflow:hidden}
+.steps .track::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--gold-2),var(--violet));transform:scaleX(0);transform-origin:left;transition:transform 1.8s cubic-bezier(.2,.7,.2,1) .3s}
+.steps.in .track::after{transform:scaleX(1)}
+.step{text-align:center;position:relative;padding:0 10px}
+.step .bubble{width:68px;height:68px;border-radius:50%;margin:0 auto 22px;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;font:600 24px "Cormorant Garamond",serif;color:var(--gold);position:relative;z-index:1}
+.step h3{font-size:19px;margin-bottom:8px}
+.step p{color:var(--muted);font-size:15px;max-width:290px;margin:0 auto}
+
+/* DECODER */
+.decoder{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start;margin-top:56px}
+.input-card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:28px}
+.input-card label{display:block;font-size:13px;color:var(--muted);margin:0 0 8px}
+.input-card input{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font:500 18px "DM Sans",system-ui,sans-serif;color:var(--ink);background:var(--bg);outline:none;transition:border-color .2s}
+.input-card input:focus{border-color:var(--gold)}
+.input-card .row{margin-bottom:18px}
+.sys-toggle{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:22px}
+.sys-toggle button{border:0;background:none;padding:9px 16px;border-radius:999px;font:500 13.5px "DM Sans",system-ui,sans-serif;color:var(--muted);cursor:pointer;transition:.25s}
+.sys-toggle button.on{background:var(--ink);color:#fff}
+.hint{font-size:13px;color:var(--muted);margin-top:4px}
+.board{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:28px;min-height:420px}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;min-height:92px}
+.tile{width:48px;border-radius:12px;background:var(--bg);border:1px solid var(--line);text-align:center;padding:8px 0 6px;animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+.tile .l{font:600 17px "DM Sans",system-ui,sans-serif;display:block}
+.tile .n{font:500 15px "DM Mono",ui-monospace,monospace;color:var(--gold);display:block;border-top:1px dashed var(--line);margin-top:6px;padding-top:4px}
+.tile.space{width:16px;border:0;background:none}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.8)}to{opacity:1;transform:none}}
+.reduce{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:26px 0 8px;font:500 18px "DM Mono",ui-monospace,monospace;color:var(--muted)}
+.reduce .chip{padding:6px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);color:var(--ink);animation:pop .5s both}
+.reduce .eq{color:var(--line)}
+.result{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;margin-top:20px;padding-top:24px;border-top:1px solid var(--line)}
+.bignum{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;font:500 52px "Cormorant Garamond",serif;color:var(--gold);background:var(--gold-soft);position:relative}
+.bignum::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--gold-2);opacity:.5;animation:ring 2.6s ease-out infinite}
+@keyframes ring{from{transform:scale(.9);opacity:.7}to{transform:scale(1.25);opacity:0}}
+.result h4{font:600 19px "DM Sans",system-ui,sans-serif;margin-bottom:4px}
+.result p{color:var(--muted);font-size:15px}
+.result .label{font:500 11px "DM Mono",ui-monospace,monospace;letter-spacing:.1em;color:var(--violet);text-transform:uppercase}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.mini div{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px}
+.mini small{display:block;font:500 11px "DM Mono",ui-monospace,monospace;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.mini b{font:500 30px "Cormorant Garamond",serif;color:var(--ink)}
+.mini span{font-size:13px;color:var(--muted);display:block}
+
+/* NINE */
+.nine{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;margin-top:52px}
+.n9{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px 10px 18px;text-align:center;cursor:default;transition:transform .35s,border-color .35s,box-shadow .35s;position:relative;overflow:hidden}
+.n9 .d{font:500 46px/1 "Cormorant Garamond",serif;color:var(--ink);transition:color .3s}
+.n9 .w{font:600 12.5px "DM Sans",system-ui,sans-serif;margin-top:10px;display:block}
+.n9 .k{font-size:12px;color:var(--muted);margin-top:4px;display:block;line-height:1.4}
+.n9:hover{transform:translateY(-6px);border-color:var(--gold-2);box-shadow:0 20px 40px -26px rgba(179,138,46,.6)}
+.n9:hover .d{color:var(--gold)}
+.n9::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--gold-2),var(--violet));transform:scaleX(0);transition:transform .4s}
+.n9:hover::before{transform:scaleX(1)}
+
+/* CONCEPTS */
+.concepts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px}
+.cc{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:26px;transition:transform .35s,box-shadow .35s}
+.cc:hover{transform:translateY(-4px);box-shadow:0 26px 50px -34px rgba(21,23,31,.35)}
+.cc .viz{height:120px;border-radius:14px;background:var(--bg);margin-bottom:20px;display:grid;place-items:center;overflow:hidden}
+.cc .viz svg{width:100%;height:100%}
+.cc h3{font-size:19px;margin-bottom:6px}
+.cc .how-calc{font:500 12px "DM Mono",ui-monospace,monospace;color:var(--violet);margin-bottom:10px;display:block}
+.cc p{color:var(--muted);font-size:15px}
+.draw{stroke-dasharray:400;stroke-dashoffset:400}
+.in .draw{animation:draw 2.2s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.bar-grow{transform-origin:left;transform:scaleX(0)}
+.in .bar-grow{animation:grow 1.4s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes grow{to{transform:scaleX(1)}}
+.blink{animation:blink 2s ease-in-out infinite}
+@keyframes blink{50%{opacity:.25}}
+
+/* HOLISTIC */
+.holistic{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.venn-wrap{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:30px}
+.venn svg{width:100%;max-width:470px;margin:0 auto}
+.venn circle{transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.venn .c1{transform:translate(-40px,-30px)}.venn .c2{transform:translate(40px,-30px)}.venn .c3{transform:translate(0,40px)}
+.venn.in .c1,.venn.in .c2,.venn.in .c3{transform:none}
+.venn text{font:600 14px "DM Sans",system-ui,sans-serif;fill:var(--ink)}
+.venn .core{opacity:0;transition:opacity .8s 1.2s}.venn.in .core{opacity:1}
+.pillars{display:grid;gap:14px}
+.pillar{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
+.pillar .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font:600 18px "Cormorant Garamond",serif}
+.pillar h4{font-size:16.5px;margin-bottom:2px}
+.pillar p{font-size:14.5px;color:var(--muted)}
+
+/* MANIFEST */
+.manifest-grid{display:grid;grid-template-columns:1fr .9fr;gap:60px;align-items:center}
+.phone{width:320px;max-width:100%;margin:0 auto;background:#ECE5DD;border-radius:38px;padding:14px;box-shadow:0 40px 80px -40px rgba(21,23,31,.45);border:8px solid var(--ink)}
+.phone .top{display:flex;align-items:center;gap:10px;background:#075E54;color:#fff;margin:-14px -14px 12px;padding:16px 16px 12px;border-radius:30px 30px 0 0}
+.phone .av{width:34px;height:34px;border-radius:50%;background:var(--gold-2);display:grid;place-items:center;color:#fff;font:600 14px "DM Sans",system-ui,sans-serif}
+.phone .top b{font-size:14px;display:block}.phone .top small{font-size:11px;opacity:.8}
+.chat{display:flex;flex-direction:column;gap:8px;min-height:380px}
+.msg{background:#fff;border-radius:2px 12px 12px 12px;padding:9px 11px 6px;font-size:13.2px;line-height:1.45;max-width:92%;box-shadow:0 1px 1px rgba(0,0,0,.08);opacity:0;transform:translateY(10px) scale(.97);transition:opacity .5s,transform .5s}
+.msg.show{opacity:1;transform:none}
+.msg .t{display:block;text-align:right;font-size:10px;color:#999;margin-top:2px}
+.msg b{color:#075E54}
+.typing{background:#fff;border-radius:12px;padding:10px 14px;width:56px;display:none;gap:4px}
+.typing.on{display:flex}
+.typing i{width:6px;height:6px;border-radius:50%;background:#bbb;animation:bounce 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:none}30%{transform:translateY(-4px)}}
+.m-list{display:grid;gap:14px;margin-top:28px}
+.m-list div{display:grid;grid-template-columns:32px 1fr;gap:14px;align-items:start}
+.m-list .k{width:32px;height:32px;border-radius:50%;background:var(--violet-soft);color:var(--violet);display:grid;place-items:center;font:500 13px "DM Mono",ui-monospace,monospace}
+.m-list p{color:var(--muted);font-size:15px}.m-list b{color:var(--ink);display:block;font-size:16px}
+
+/* PRICING */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px;align-items:stretch}
+.plan{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:32px 28px;display:flex;flex-direction:column}
+.plan.hot{background:var(--ink);color:#fff;border-color:var(--ink);transform:translateY(-10px);box-shadow:0 40px 70px -40px rgba(21,23,31,.6)}
+.plan.hot .muted,.plan.hot li{color:#C9CBD6}
+.plan .tag{align-self:flex-start;font:500 11px "DM Mono",ui-monospace,monospace;letter-spacing:.1em;padding:6px 10px;border-radius:999px;background:var(--gold-soft);color:var(--gold);margin-bottom:16px}
+.plan.hot .tag{background:rgba(217,180,90,.18);color:var(--gold-2)}
+.plan h3{font:500 30px/1 "Cormorant Garamond",serif}
+.plan .muted{color:var(--muted);font-size:14.5px;margin:8px 0 22px}
+.plan .price{font:600 44px/1 "DM Sans",system-ui,sans-serif;letter-spacing:-.02em}
+.plan .price small{font-size:15px;font-weight:400;opacity:.65}
+.plan ul{list-style:none;display:grid;gap:11px;margin:26px 0 30px;flex:1;font-size:15px}
+.plan li{padding-left:28px;position:relative;color:#3A3D49}
+.plan li::before{content:"";position:absolute;left:0;top:4px;width:17px;height:17px;border-radius:50%;background:var(--gold-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.2l2.6 2.6L12 5.4' fill='none' stroke='%23B38A2E' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
+.plan.hot li::before{background-color:rgba(217,180,90,.18)}
+.plan.hot .btn-dark{background:var(--gold-2);color:var(--ink)}
+.plan .btn{width:100%}
+.addons{margin-top:30px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px 26px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.addons .chips{display:flex;flex-wrap:wrap;gap:10px}
+.addons .chips span{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:14px;background:var(--bg)}
+.addons .chips b{color:var(--gold)}
+.fine{font-size:13px;color:var(--muted);margin-top:16px}
+
+/* ABOUT */
+.about{background:var(--ink);color:#fff;border-radius:32px;margin:0 20px;padding:90px 0;position:relative;overflow:hidden}
+.about .eyebrow{color:var(--gold-2)}
+.about .sub{color:#B9BCC8}
+.about-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:60px;align-items:start}
+.quote{font:500 clamp(24px,2.6vw,32px)/1.3 "Cormorant Garamond",serif;margin-top:26px;color:#fff}
+.quote em{color:var(--gold-2)}
+.sig{margin-top:22px;display:flex;align-items:center;gap:14px}
+.sig .av{width:52px;height:52px;border-radius:50%;background:rgba(217,180,90,.18);border:1px solid var(--gold-2);display:grid;place-items:center;font:600 19px "Cormorant Garamond",serif;color:var(--gold-2)}
+.sig b{display:block}.sig small{color:#9EA1AE}
+.creds{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cred{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px;background:rgba(255,255,255,.03);transition:border-color .3s,background .3s}
+.cred:hover{border-color:var(--gold-2);background:rgba(217,180,90,.06)}
+.cred .y{font:500 11px "DM Mono",ui-monospace,monospace;letter-spacing:.1em;color:var(--gold-2);text-transform:uppercase}
+.cred b{display:block;font-size:16px;margin:6px 0 3px}
+.cred span{font-size:13.5px;color:#9EA1AE}
+.press{margin-top:20px;font-size:13px;color:#9EA1AE}
+.press a{color:#D7D9E2;border-bottom:1px solid rgba(255,255,255,.2)}
+.about .grid-bg{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(ellipse at 80% 20%,#000 0%,transparent 60%);pointer-events:none}
+
+/* FAQ */
+.faq{max-width:780px;margin:50px auto 0}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:22px 0;font:600 17px "DM Sans",system-ui,sans-serif;display:flex;justify-content:space-between;gap:20px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:400 24px/1 "DM Sans",system-ui,sans-serif;color:var(--gold);transition:transform .3s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{color:var(--muted);padding:0 0 22px;font-size:15.5px}
+
+/* CTA */
+.final{text-align:center;padding:120px 0}
+.final h2{font-size:clamp(40px,6vw,72px)}
+.final .btn{margin-top:30px}
+footer{border-top:1px solid var(--line);padding:34px 0 46px;font-size:13px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
+footer nav{display:flex;gap:20px;flex-wrap:wrap}
+.disc{max-width:1120px;margin:0 auto 20px;padding:0 20px;font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* responsive */
+@media (max-width:980px){
+  .hero-grid,.decoder,.venn-wrap,.manifest-grid,.about-grid{grid-template-columns:1fr}
+  .orbit{margin:20px auto 0;max-width:400px}
+  .nine{grid-template-columns:repeat(3,1fr)}
+  .concepts,.plans{grid-template-columns:1fr}
+  .plan.hot{transform:none}
+  .steps{grid-template-columns:1fr;gap:40px}.steps .track{display:none}
+  .links{display:none}
+  section{padding:80px 0}
+  .addons{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .creds,.mini{grid-template-columns:1fr}
+  .hc1{left:0;top:6%}.hc2{left:0;bottom:4%}
+  .about{margin:0 10px;border-radius:24px;padding:70px 0}
+  .nav .btn{padding:9px 14px;font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}.draw{stroke-dashoffset:0}.bar-grow{transform:none}
+  .venn .c1,.venn .c2,.venn .c3{transform:none}.venn .core{opacity:1}.msg{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Free report link: change this one value when the registration flow is live -->
+<script>window.FREE_REPORT_URL = "/";</script>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Destiny OS">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><path d="M16 2.5 28 9.5v13L16 29.5 4 22.5v-13L16 2.5Z" stroke="#B38A2E" stroke-width="1.5"/><circle cx="16" cy="16" r="3.4" fill="#B38A2E"/></svg>
+      <span>DESTINY <b>OS</b></span>
+    </a>
+    <nav class="links">
+      <a href="#decode">Decode your name</a><a href="#concepts">Concepts</a><a href="#manifest">Manifestation</a><a href="#pricing">Pricing</a><a href="#about">Dr. Krish</a><a href="/business/">Business</a>
+    </nav>
+    <a class="btn btn-dark js-free" href="/">Free report</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow rv">Numerology · Vedic astrology · Mindset</div>
+      <h1 class="serif rv d1">Your numbers,<br><span class="em">decoded.</span></h1>
+      <p class="lead rv d2">One reading that brings together your numerology, your Vedic chart and the habits that shape your days. Start with a free report, then get guidance on WhatsApp every morning.</p>
+      <div class="ctas rv d3">
+        <a class="btn btn-dark js-free" href="/">Get my free report <span class="arr">→</span></a>
+        <a class="btn btn-line" href="#decode">Try the name decoder</a>
+      </div>
+      <div class="trust rv d4">
+        <span><i></i>Pythagorean + Chaldean</span>
+        <span><i></i>Sidereal (Lahiri) Vedic chart</span>
+        <span><i></i>By Dr. Krish Bharggav, PhD</span>
+      </div>
+    </div>
+
+    <div class="orbit rv d2" aria-hidden="true">
+      <svg viewBox="0 0 500 500">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F6EEDB"/><stop offset="1" stop-color="#FBFAF7" stop-opacity="0"/></radialGradient>
+          <linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#D9B45A"/><stop offset="1" stop-color="#6B5BD6"/></linearGradient>
+        </defs>
+        <circle cx="250" cy="250" r="240" fill="url(#glow)"/>
+        <circle class="pulse" cx="250" cy="250" r="96" fill="none" stroke="#D9B45A" stroke-width="1"/>
+        <g class="ring spin-rev">
+          <circle cx="250" cy="250" r="150" fill="none" stroke="#E9E6DE" stroke-dasharray="2 7"/>
+          <g id="zod"></g>
+        </g>
+        <g class="ring">
+          <circle cx="250" cy="250" r="212" fill="none" stroke="#E9E6DE"/>
+          <g id="nums"></g>
+        </g>
+        <path d="M250 175 315 212.5v75L250 325 185 287.5v-75Z" fill="#fff" stroke="url(#gl)" stroke-width="1.6"/>
+        <text x="250" y="262" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="58" font-style="italic" fill="#B38A2E" id="heroNum">7</text>
+        <text x="250" y="292" text-anchor="middle" font-family="DM Mono, ui-monospace, monospace" font-size="10" letter-spacing="2" fill="#6B6F7E">LIFE PATH</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="wrap center">
+    <div class="eyebrow rv">How it works</div>
+    <h2 class="serif rv d1">Three steps to <span class="em">your blueprint.</span></h2>
+    <div class="steps rv" id="steps">
+      <div class="track"></div>
+      <div class="step"><div class="bubble">1</div><h3>Register in a minute</h3><p>Your name as given at birth, date, time and city of birth, and your phone number.</p></div>
+      <div class="step"><div class="bubble">2</div><h3>Get your free report</h3><p>Your core numbers in both systems, your Vedic chart and current Dasha, explained in plain language.</p></div>
+      <div class="step"><div class="bubble">3</div><h3>Go deeper every day</h3><p>Subscribe for the full report, unlimited questions, and daily guidance and manifestation reminders on WhatsApp.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DECODER -->
+<section id="decode">
+  <div class="wrap">
+    <div class="eyebrow rv">The power of numbers</div>
+    <h2 class="serif rv d1">Watch your name <span class="em">become numbers.</span></h2>
+    <p class="sub rv d2">Numerology gives every letter a number. Add them up, reduce to a single digit, and you have the number tradition links to how you express yourself. Type your name and see it happen, in either system.</p>
+
+    <div class="decoder">
+      <div class="input-card rv">
+        <div class="sys-toggle" role="tablist">
+          <button class="on" data-sys="py" role="tab">Pythagorean</button>
+          <button data-sys="ch" role="tab">Chaldean</button>
+        </div>
+        <div class="row">
+          <label for="nm">Your full name</label>
+          <input id="nm" value="Priya Sharma" maxlength="40" autocomplete="off">
+        </div>
+        <div class="row">
+          <label for="dob">Date of birth</label>
+          <input id="dob" type="date" value="1994-08-17">
+        </div>
+        <p class="hint" id="sysHint">Pythagorean maps letters A to Z onto 1 to 9 in sequence. It is the system most used in the West.</p>
+      </div>
+
+      <div class="board rv d2" aria-live="polite">
+        <div class="mono" style="font-size:11.5px;letter-spacing:.1em;color:var(--muted);margin-bottom:14px">LETTER → NUMBER</div>
+        <div class="tiles" id="tiles"></div>
+        <div class="reduce" id="reduce"></div>
+        <div class="result">
+          <div class="bignum" id="expr">0</div>
+          <div><span class="label">Expression number</span><h4 id="exprTitle"></h4><p id="exprText"></p></div>
+        </div>
+        <div class="mini">
+          <div><small>Life Path (from birth date)</small><b id="lp">0</b><span id="lpText"></span></div>
+          <div><small>Personal Year 2026</small><b id="py">0</b><span id="pyText"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NINE NUMBERS -->
+<section style="padding-top:20px">
+  <div class="wrap center">
+    <div class="eyebrow rv">How numbers work</div>
+    <h2 class="serif rv d1">Nine numbers, <span class="em">nine energies.</span></h2>
+    <p class="sub rv d2">Every calculation reduces to one of these. Each carries a traditional meaning, a ruling planet in Vedic numerology, and a colour.</p>
+    <div class="nine rv d2" id="nine"></div>
+  </div>
+</section>
+
+<!-- CONCEPTS -->
+<section id="concepts" style="padding-top:60px">
+  <div class="wrap">
+    <div class="eyebrow rv">Concepts explained</div>
+    <h2 class="serif rv d1">What your report <span class="em">actually reads.</span></h2>
+    <div class="concepts">
+      <div class="cc rv">
+        <div class="viz"><svg viewBox="0 0 300 120"><text x="40" y="70" font-family="DM Mono, ui-monospace, monospace" font-size="20" fill="#6B6F7E">17·08·1994</text><path class="draw" d="M150 62 C 190 62, 200 40, 236 40" stroke="#D9B45A" stroke-width="1.6" fill="none"/><circle cx="250" cy="40" r="20" fill="#F6EEDB"/><text x="250" y="48" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#B38A2E">3</text></svg></div>
+        <span class="how-calc">from your full birth date</span>
+        <h3>Life Path number</h3>
+        <p>The broad theme of your life, reduced from your complete date of birth. The number most readings start from.</p>
+      </div>
+      <div class="cc rv d1">
+        <div class="viz"><svg viewBox="0 0 300 120"><g font-family="DM Mono, ui-monospace, monospace" font-size="15" fill="#15171F"><text x="34" y="50">K R I S H</text><text x="34" y="80" fill="#B38A2E">2 9 9 1 8</text></g><path class="draw" d="M150 66 H 220" stroke="#6B5BD6" stroke-width="1.6"/><circle cx="246" cy="66" r="20" fill="#EEEBFB"/><text x="246" y="74" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#6B5BD6">2</text></svg></div>
+        <span class="how-calc">from every letter of your birth name</span>
+        <h3>Expression (Destiny) number</h3>
+        <p>How you naturally express your talents. Calculated from your full name exactly as given at birth.</p>
+      </div>
+      <div class="cc rv d2">
+        <div class="viz"><svg viewBox="0 0 300 120"><g font-family="DM Mono, ui-monospace, monospace" font-size="15"><text x="34" y="62" fill="#D9D5CA">K R </text><text x="70" y="62" fill="#B38A2E">I</text><text x="86" y="62" fill="#D9D5CA"> S H</text></g><circle class="blink" cx="77" cy="36" r="4" fill="#B38A2E"/><path class="draw" d="M150 58 H 220" stroke="#D9B45A" stroke-width="1.6"/><circle cx="246" cy="58" r="20" fill="#F6EEDB"/><text x="246" y="66" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#B38A2E">9</text></svg></div>
+        <span class="how-calc">from the vowels of your name</span>
+        <h3>Soul Urge number</h3>
+        <p>What you want most deeply. Drawn from the vowels alone, the sounds that carry a name.</p>
+      </div>
+      <div class="cc rv">
+        <div class="viz"><svg viewBox="0 0 300 120"><g font-family="DM Mono, ui-monospace, monospace" font-size="10" fill="#6B6F7E"><text x="30" y="98">2026</text><text x="250" y="98">2027</text></g><rect x="30" y="58" width="240" height="8" rx="4" fill="#E9E6DE"/><rect class="bar-grow" x="30" y="58" width="196" height="8" rx="4" fill="#D9B45A"/><circle cx="226" cy="62" r="7" fill="#fff" stroke="#B38A2E" stroke-width="2"/></svg></div>
+        <span class="how-calc">birth day + month + current year</span>
+        <h3>Personal Year, Month and Day</h3>
+        <p>Your numbers in motion. They run in nine-year cycles and set the theme for each year, month and day.</p>
+      </div>
+      <div class="cc rv d1">
+        <div class="viz"><svg viewBox="0 0 300 120"><g transform="translate(150 60)"><circle r="48" fill="none" stroke="#E9E6DE"/><circle r="30" fill="none" stroke="#E9E6DE"/><g class="spin-slow" style="transform-origin:0 0">
+          <g stroke="#E9E6DE"><line x1="0" y1="-48" x2="0" y2="48"/><line x1="-48" y1="0" x2="48" y2="0"/><line x1="-34" y1="-34" x2="34" y2="34"/><line x1="-34" y1="34" x2="34" y2="-34"/></g>
+          <circle cx="0" cy="-39" r="5" fill="#D9B45A"/><circle cx="34" cy="20" r="4" fill="#6B5BD6"/><circle cx="-28" cy="26" r="4" fill="#2F8F6B"/></g><circle r="5" fill="#15171F"/></g></svg></div>
+        <span class="how-calc">sidereal positions, Lahiri ayanamsa</span>
+        <h3>Your Vedic chart</h3>
+        <p>Where the nine grahas stood at your birth, in twelve houses. The map behind every Jyotish reading.</p>
+      </div>
+      <div class="cc rv d2">
+        <div class="viz"><svg viewBox="0 0 300 120"><g font-family="DM Mono, ui-monospace, monospace" font-size="9" fill="#6B6F7E"><text x="30" y="40">SATURN</text><text x="112" y="40">MERCURY</text><text x="206" y="40">KETU</text></g><rect x="30" y="52" width="76" height="16" rx="5" fill="#E9E6DE"/><rect class="bar-grow" x="112" y="52" width="88" height="16" rx="5" fill="#D9B45A"/><rect x="206" y="52" width="64" height="16" rx="5" fill="#E9E6DE"/><path d="M150 76 v16" stroke="#B38A2E" stroke-width="1.6"/><text x="150" y="106" text-anchor="middle" font-family="DM Mono, ui-monospace, monospace" font-size="9" fill="#B38A2E">YOU ARE HERE</text></svg></div>
+        <span class="how-calc">Vimshottari Dasha, 120-year cycle</span>
+        <h3>Dasha periods</h3>
+        <p>The planetary chapters of your life. Knowing which one you are in explains why some years feel so different.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOLISTIC -->
+<section class="holistic">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow rv">One holistic reading</div>
+      <h2 class="serif rv d1">Three lenses, <span class="em">one you.</span></h2>
+      <p class="sub rv d2">Most apps give you a horoscope. Destiny OS reads your numbers, your chart and your habits together, so the guidance fits the life you are actually living.</p>
+    </div>
+    <div class="venn-wrap">
+      <div class="venn rv" id="venn">
+        <svg viewBox="0 0 400 380">
+          <circle class="c1" cx="150" cy="150" r="110" fill="#B38A2E" fill-opacity=".09" stroke="#D9B45A"/>
+          <circle class="c2" cx="250" cy="150" r="110" fill="#6B5BD6" fill-opacity=".08" stroke="#6B5BD6" stroke-opacity=".6"/>
+          <circle class="c3" cx="200" cy="235" r="110" fill="#2F8F6B" fill-opacity=".07" stroke="#2F8F6B" stroke-opacity=".55"/>
+          <text x="96" y="118">Numerology</text>
+          <text x="248" y="118">Astrology</text>
+          <text x="166" y="306">Mindset</text>
+          <g class="core"><circle cx="200" cy="180" r="30" fill="#fff" stroke="#15171F"/><text x="200" y="185" text-anchor="middle" font-size="12">You</text></g>
+        </svg>
+      </div>
+      <div class="pillars">
+        <div class="pillar rv"><div class="ic" style="background:var(--gold-soft);color:var(--gold)">1–9</div><div><h4>Numerology</h4><p>Pythagorean and Chaldean, computed side by side and cross-checked. Your core numbers and your cycles.</p></div></div>
+        <div class="pillar rv d1"><div class="ic" style="background:var(--violet-soft);color:var(--violet)">☉</div><div><h4>Vedic astrology</h4><p>Classical Jyotish: your sidereal chart, Dasha periods and today's transits.</p></div></div>
+        <div class="pillar rv d2"><div class="ic" style="background:#E5F3EC;color:var(--green)">◎</div><div><h4>Mindset and habits</h4><p>Reflection prompts, energy, sleep and focus, so guidance turns into small daily actions.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFEST -->
+<section id="manifest">
+  <div class="wrap manifest-grid">
+    <div>
+      <div class="eyebrow rv">Manifestation, personalised</div>
+      <h2 class="serif rv d1">A daily intention, <span class="em">set by your numbers.</span></h2>
+      <p class="sub rv d2">Every morning subscribers get a short WhatsApp message: today's Personal Day, a colour to wear, and a manifestation practice matched to the day's energy.</p>
+      <div class="m-list">
+        <div class="rv"><span class="k">01</span><p><b>Matched to your cycle</b>A 1 day gets a starting ritual, an 8 day a money-focus practice, a 7 day a quiet reflection.</p></div>
+        <div class="rv d1"><span class="k">02</span><p><b>Techniques you can actually do</b>369 writing, scripting, visualisation and gratitude lists, in two minutes or less.</p></div>
+        <div class="rv d2"><span class="k">03</span><p><b>Your goal, your words</b>Tell Destiny what you are working towards and the affirmations are written around it.</p></div>
+      </div>
+    </div>
+    <div class="rv d2">
+      <div class="phone">
+        <div class="top"><div class="av">D</div><div><b>Destiny OS</b><small>online</small></div></div>
+        <div class="chat" id="chat">
+          <div class="msg"><b>Good morning, Priya ☀️</b><br>Today is a <b>Personal Day 5</b>: change, travel and new conversations.<span class="t">7:00 am</span></div>
+          <div class="msg">🎨 Wear: <b>light green</b><br>⏰ Best window: 11:00 am – 1:30 pm<span class="t">7:00 am</span></div>
+          <div class="msg">✨ <b>Today's practice (2 min)</b><br>Write 6 times: "I welcome new opportunities that move my career forward."<span class="t">7:01 am</span></div>
+          <div class="msg">Reply with any question. Ask as many as you like 🙏<span class="t">7:01 am</span></div>
+          <div class="typing" id="typing"><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="padding-top:40px">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow rv">Pricing</div>
+      <h2 class="serif rv d1">Start free. <span class="em">Go deeper when ready.</span></h2>
+    </div>
+    <div class="plans">
+      <div class="plan rv">
+        <span class="tag">START HERE</span>
+        <h3>Free report</h3>
+        <p class="muted">Your blueprint, once, after a quick registration</p>
+        <div class="price">₹0</div>
+        <ul>
+          <li>Life Path, Expression and Soul Urge numbers</li>
+          <li>Both Pythagorean and Chaldean</li>
+          <li>Your Vedic chart and current Dasha</li>
+          <li>Your number for 2026</li>
+          <li>Preview of the full report</li>
+        </ul>
+        <a class="btn btn-line js-free" href="/">Get my free report</a>
+      </div>
+      <div class="plan hot rv d1">
+        <span class="tag">MOST POPULAR</span>
+        <h3>Destiny Plus</h3>
+        <p class="muted">Everything, every day, on WhatsApp and the app</p>
+        <div class="price">₹599<small> / month</small></div>
+        <ul>
+          <li>The full numerology and astrology report</li>
+          <li>Ask Destiny: unlimited questions*</li>
+          <li>Daily guidance on WhatsApp</li>
+          <li>Personalised manifestation reminders</li>
+          <li>Life Compass and Food Lens</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a class="btn btn-dark js-free" href="/">Start with the free report</a>
+      </div>
+      <div class="plan rv d2">
+        <span class="tag">FOR FOUNDERS</span>
+        <h3>Business</h3>
+        <p class="muted">Brand naming and business numerology</p>
+        <div class="price">₹999<small> onwards</small></div>
+        <ul>
+          <li>Instant brand name check</li>
+          <li>Name audits and full naming packages</li>
+          <li>Launch and signing dates</li>
+          <li>Co-founder compatibility</li>
+          <li>Ongoing advisory retainer</li>
+        </ul>
+        <a class="btn btn-line" href="/business/">See business services</a>
+      </div>
+    </div>
+    <div class="addons rv">
+      <b>Add to any plan</b>
+      <div class="chips">
+        <span>One-to-one consultation with Dr. Krish · <b>from ₹2,999</b></span>
+        <span>Compatibility report · <b>₹999</b></span>
+        <span>Annual forecast · <b>₹1,999</b></span>
+      </div>
+    </div>
+    <p class="fine">*Fair use applies: up to 30 questions a day. Prices in INR; GST is not charged at present.</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about">
+  <div class="grid-bg"></div>
+  <div class="wrap about-grid">
+    <div>
+      <div class="eyebrow rv">Why Dr. Krish Bharggav</div>
+      <h2 class="serif rv d1">A data scientist <span class="em" style="color:var(--gold-2)">who reads numbers.</span></h2>
+      <p class="quote rv d2">"I've spent my career finding patterns in numbers: in banks, in analytics companies, in AI. Numerology is the oldest pattern system we have. I built Destiny OS to read it with the <em>same discipline</em>: documented systems, consistent rules, no guesswork."</p>
+      <div class="sig rv d3"><div class="av">KB</div><div><b>Dr. Krish Bharggav</b><small>Founder, Destiny OS</small></div></div>
+    </div>
+    <div>
+      <div class="creds">
+        <div class="cred rv"><span class="y">Education</span><b>PhD in Data Science</b><span>Research training in statistics, modelling and pattern-finding</span></div>
+        <div class="cred rv d1"><span class="y">London</span><b>London Business School</b><span>Master's in Entrepreneurship</span></div>
+        <div class="cred rv d2"><span class="y">Oxford</span><b>University of Oxford</b><span>Master's in Blockchain</span></div>
+        <div class="cred rv d3"><span class="y">Banking, UK</span><b>Lloyds Bank, London Bridge</b><span>Began his career as a bank manager in London</span></div>
+        <div class="cred rv"><span class="y">Analytics</span><b>Built analytics companies</b><span>Founded and ran several data and analytics businesses</span></div>
+        <div class="cred rv d1"><span class="y">Founder & CEO</span><b>BrowseJobs.ai and Taurus AI</b><span>IT training and placement, and an agentic AI employee platform</span></div>
+        <div class="cred rv d2"><span class="y">Host</span><b>The Offer Letter</b><span>Career-advice podcast and show</span></div>
+        <div class="cred rv d3"><span class="y">Speaker</span><b>TEDx and industry stages</b><span>On technology, careers and entrepreneurship</span></div>
+      </div>
+      <p class="press rv">As featured in <a href="https://bhaskardigital.com/dr-krish-bharggav-technology-data-science-and-entrepreneurship/" target="_blank" rel="noopener">Bhaskar Digital</a>, <a href="https://english.dainikjagranmpcg.com/business/from-data-science-to-ai-driven-recruitment-dr-krish-bharggav%E2%80%99s-work/article-34139" target="_blank" rel="noopener">Dainik Jagran</a>, <a href="https://pioneeredge.in/technology-skills-and-careers-how-dr-krish-bharggav-is-bridging-the-employment-gap/" target="_blank" rel="noopener">Pioneer Edge</a> and <a href="https://www.oneindia.com/partner-content/dr-krish-bharggavs-journey-technology-talent-entrepreneurship-career-insights-012-8218647.html" target="_blank" rel="noopener">Oneindia</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow rv">Questions</div>
+      <h2 class="serif rv d1">Good to <span class="em">know.</span></h2>
+    </div>
+    <div class="faq rv">
+      <details><summary>Is the report really free?</summary><p>Yes. Register with your birth details and phone number and you get one full free report. Destiny Plus at ₹599 a month unlocks the complete report, unlimited questions and daily WhatsApp guidance.</p></details>
+      <details><summary>Why both Pythagorean and Chaldean?</summary><p>They map letters to numbers differently and can give different results. Reading both and cross-checking them gives a fuller, more consistent picture than relying on one system.</p></details>
+      <details><summary>Is this predictive?</summary><p>No. Numerology and astrology are traditional, interpretive systems. Destiny OS uses documented methods and consistent rules, and offers guidance for reflection. It does not predict the future and is not a substitute for medical, legal, financial or mental-health advice.</p></details>
+      <details><summary>What does "unlimited questions" mean?</summary><p>Ask Destiny anything about your timing, decisions, colours or day, as often as you like, up to a fair-use limit of 30 questions a day.</p></details>
+      <details><summary>What happens to my birth details?</summary><p>They are used only to generate your guidance, never sold or shared, and you can delete your account and data at any time, in line with India's Digital Personal Data Protection Act, 2023.</p></details>
+      <details><summary>Can I cancel Destiny Plus?</summary><p>Yes, anytime from your customer panel. You keep access until the end of the month you have paid for.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="wrap">
+    <div class="eyebrow rv">Your blueprint is waiting</div>
+    <h2 class="serif rv d1">Know your numbers.<br><span class="em">Own your days.</span></h2>
+    <a class="btn btn-dark rv d2 js-free" href="/">Get my free report <span class="arr">→</span></a>
+  </div>
+</section>
+</main>
+
+<p class="disc">Destiny OS offers traditional numerology and astrology guidance for reflection and self-understanding. It is not predictive and does not replace medical, legal, financial or mental-health advice. If you are struggling, please reach out to Tele-MANAS on 14416 or a trusted person.</p>
+<footer>
+  <div class="wrap">
+    <span>© 2026 Destiny OS · by Dr. Krish Bharggav · Bengaluru</span>
+    <nav><a href="/business/">Business</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="https://wa.me/917975554666" target="_blank" rel="noopener">WhatsApp</a></nav>
+  </div>
+</footer>
+
+<script>
+// free report links
+document.querySelectorAll('.js-free').forEach(a => a.href = window.FREE_REPORT_URL);
+
+// nav border on scroll
+const nav = document.getElementById('nav');
+addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 10), {passive:true});
+
+// reveal on scroll
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.15});
+document.querySelectorAll('.rv,.cc,#venn,#steps').forEach(el => io.observe(el));
+
+// hero orbit numbers and zodiac glyphs
+const NS='http://www.w3.org/2000/svg';
+const numsG=document.getElementById('nums'), zodG=document.getElementById('zod');
+for(let i=1;i<=9;i++){
+  const a=((i-1)*40-80)*Math.PI/180, x=250+212*Math.cos(a), y=250+212*Math.sin(a);
+  const g=document.createElementNS(NS,'g'); g.setAttribute('class','num-node');
+  g.innerHTML=`<circle cx="${x}" cy="${y}" r="21" fill="#fff" stroke="#E9E6DE"/><text x="${x}" y="${y+7}" text-anchor="middle">${i}</text>`;
+  numsG.appendChild(g);
+}
+'♈♉♊♋♌♍♎♏♐♑♒♓'.split('').forEach((s,i)=>{
+  const a=i/12*Math.PI*2, x=250+150*Math.cos(a), y=250+150*Math.sin(a);
+  const t=document.createElementNS(NS,'text');
+  t.setAttribute('x',x);t.setAttribute('y',y+5);t.setAttribute('text-anchor','middle');
+  t.setAttribute('font-size','14');t.setAttribute('fill','#B9B4A6');t.textContent=s+'\uFE0E'; t.setAttribute('font-family','Segoe UI Symbol,Noto Sans Symbols 2,DejaVu Sans,serif'); zodG.appendChild(t);
+});
+const heroNum=document.getElementById('heroNum'); let hn=7;
+setInterval(()=>{ hn=hn%9+1; heroNum.style.opacity=0; setTimeout(()=>{heroNum.textContent=hn;heroNum.style.opacity=1;hl(hn)},300)},2600);
+function hl(n){numsG.querySelectorAll('circle').forEach((c,i)=>{c.setAttribute('stroke',i+1===n?'#D9B45A':'#E9E6DE');c.setAttribute('fill',i+1===n?'#F6EEDB':'#fff')})} hl(7);
+heroNum.style.transition='opacity .3s';
+
+// numerology engine
+const PY={a:1,j:1,s:1,b:2,k:2,t:2,c:3,l:3,u:3,d:4,m:4,v:4,e:5,n:5,w:5,f:6,o:6,x:6,g:7,p:7,y:7,h:8,q:8,z:8,i:9,r:9};
+const CH={a:1,i:1,j:1,q:1,y:1,b:2,k:2,r:2,c:3,g:3,l:3,s:3,d:4,m:4,t:4,e:5,h:5,n:5,x:5,u:6,v:6,w:6,o:7,z:7,f:8,p:8};
+const MEAN={
+ 1:['The Leader','Independent, driven and original. You start things and inspire others to follow.'],
+ 2:['The Diplomat','Sensitive, cooperative and intuitive. You bring people and ideas together.'],
+ 3:['The Communicator','Expressive, creative and warm. Words, art and ideas flow through you.'],
+ 4:['The Builder','Steady, practical and loyal. You turn plans into lasting structures.'],
+ 5:['The Explorer','Curious, adaptable and free. Change and new experiences fuel you.'],
+ 6:['The Nurturer','Caring, responsible and harmonious. Home, family and service matter most.'],
+ 7:['The Seeker','Analytical, spiritual and deep. You look for the truth beneath the surface.'],
+ 8:['The Achiever','Ambitious, capable and strategic. Money, power and results come into focus.'],
+ 9:['The Humanitarian','Compassionate, wise and generous. You see the bigger picture.'],
+ 11:['Master 11 · The Visionary','Highly intuitive and inspiring. A master number, kept unreduced in Pythagorean.'],
+ 22:['Master 22 · The Master Builder','Big vision with practical power. A master number, kept unreduced in Pythagorean.'],
+ 33:['Master 33 · The Master Teacher','Compassion at scale. A master number, kept unreduced in Pythagorean.']
+};
+const SHORT={1:'new beginnings',2:'patience and partnership',3:'expression and joy',4:'hard work and foundations',5:'change and freedom',6:'family and responsibility',7:'reflection and learning',8:'money and results',9:'completion and release',11:'intuition',22:'big building',33:'service'};
+const digits=n=>String(n).split('').reduce((s,d)=>s+ +d,0);
+function reduce(n,keepMaster){ const chain=[n]; while(n>9 && !(keepMaster&&[11,22,33].includes(n))){ n=digits(n); chain.push(n);} return chain; }
+
+let sys='py';
+const hints={py:'Pythagorean maps letters A to Z onto 1 to 9 in sequence. It is the system most used in the West.',
+             ch:'Chaldean, from ancient Babylon, assigns numbers by sound and never uses 9 for a letter, since 9 is considered sacred.'};
+const tilesEl=document.getElementById('tiles'), redEl=document.getElementById('reduce');
+function run(){
+  const map= sys==='py'?PY:CH;
+  const name=document.getElementById('nm').value;
+  tilesEl.innerHTML=''; let total=0, i=0;
+  for(const ch of name){
+    const k=ch.toLowerCase();
+    if(ch===' '){ tilesEl.insertAdjacentHTML('beforeend','<div class="tile space"></div>'); continue;}
+    if(!map[k]) continue;
+    total+=map[k];
+    tilesEl.insertAdjacentHTML('beforeend',`<div class="tile" style="animation-delay:${i++*45}ms"><span class="l">${ch.toUpperCase()}</span><span class="n">${map[k]}</span></div>`);
+  }
+  const chain= total? reduce(total, sys==='py') : [0];
+  redEl.innerHTML = total ? chain.map((c,j)=>`${j?'<span class="eq">→</span>':''}<span class="chip" style="animation-delay:${i*45+j*180}ms">${j===0?'Σ ':''}${c}</span>`).join('') : '<span>Type a name to begin</span>';
+  const fin=chain[chain.length-1]; document.getElementById('expr').textContent=fin||'–';
+  const m=MEAN[fin]; document.getElementById('exprTitle').textContent=m?m[0]:''; document.getElementById('exprText').textContent=m?m[1]:'';
+  // life path & personal year
+  const d=document.getElementById('dob').value;
+  if(d){ const [Y,M,D]=d.split('-').map(Number);
+    const lp=reduce(digits(D)+digits(M)+digits(Y),true).pop();
+    const py=reduce(digits(D)+digits(M)+digits(2026),false).pop();
+    document.getElementById('lp').textContent=lp; document.getElementById('lpText').textContent=(MEAN[lp]||['',''])[0];
+    document.getElementById('py').textContent=py; document.getElementById('pyText').textContent='A year of '+SHORT[py];
+  }
+}
+document.getElementById('nm').addEventListener('input',run);
+document.getElementById('dob').addEventListener('input',run);
+document.querySelectorAll('.sys-toggle button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.sys-toggle button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  sys=b.dataset.sys; document.getElementById('sysHint').textContent=hints[sys]; run();
+});
+run();
+
+// nine numbers
+const NINE=[[1,'Sun','Leadership'],[2,'Moon','Harmony'],[3,'Jupiter','Expression'],[4,'Rahu','Structure'],[5,'Mercury','Change'],[6,'Venus','Love'],[7,'Ketu','Wisdom'],[8,'Saturn','Ambition'],[9,'Mars','Compassion']];
+document.getElementById('nine').innerHTML=NINE.map(([n,p,w])=>`<div class="n9"><div class="d">${n}</div><span class="w">${w}</span><span class="k">${p}</span></div>`).join('');
+
+// whatsapp chat animation
+const msgs=[...document.querySelectorAll('#chat .msg')], typing=document.getElementById('typing');
+let chatStarted=false;
+new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting && !chatStarted){ chatStarted=true; o.disconnect(); playChat(); } },{threshold:.4}).observe(document.getElementById('chat'));
+function playChat(){
+  let t=300;
+  msgs.forEach(m=>{
+    setTimeout(()=>typing.classList.add('on'),t); t+=900;
+    setTimeout(()=>{ typing.classList.remove('on'); m.after(typing); m.classList.add('show'); },t); t+=700;
+  });
+}
+</script>
+</body>
+</html>

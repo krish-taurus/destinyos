@@ -5,6 +5,7 @@ Static pages for destinyos.in that live alongside the Destiny OS app.
 | Path | URL | What it is |
 | --- | --- | --- |
 | `business/index.html` | https://destinyos.in/business | Brand naming and business numerology services, pricing and terms |
+| `new/index.html` | https://destinyos.in/new | Preview of the new white homepage (replaces / once approved) |
 
 ## One-time server setup (DigitalOcean droplet, nginx)
 
