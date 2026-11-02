@@ -411,8 +411,8 @@ def test_voice_plan_gates_meters_and_upgrades(monkeypatch):
     subscribe(c, "voice")                                              # upgrade
     me = c.get("/api/me").json()
     assert me["plan"]["tier"] == "voice" and me["voice"]["enabled"]
-    plus_rows = db.all_("SELECT status FROM subscriptions s JOIN users u ON u.id=s.user_id WHERE u.phone='+919200000004' AND plan='plus'")
-    assert all(r["status"] == "cancelled" for r in plus_rows)          # no double billing
+    plus_rows = db.all_("SELECT cancel_requested FROM subscriptions s JOIN users u ON u.id=s.user_id WHERE u.phone='+919200000004' AND plan='plus'")
+    assert plus_rows and all(r["cancel_requested"] == 1 for r in plus_rows)   # stops renewing: no double billing
     assert c.post("/api/billing/subscribe", json={"plan": "voice"}).status_code == 409
 
     s = c.post("/api/voice/session").json()
@@ -423,8 +423,18 @@ def test_voice_plan_gates_meters_and_upgrades(monkeypatch):
     c.post("/api/voice/started", json={"session_id": s["session_id"], "conversation_id": "conv_1"})
     assert c.post("/api/voice/ended", json={"session_id": s["session_id"]}).json()["used_minutes"] == 2.1
 
-    # a second link can't be "released" while an unclaimed call exists on the agent
+    # calls longer than 10 minutes are charged in full
+    s3 = c.post("/api/voice/session").json()
+    EL_CONV["conv_long"] = 900
+    c.post("/api/voice/started", json={"session_id": s3["session_id"], "conversation_id": "conv_long"})
+    assert c.post("/api/voice/ended", json={"session_id": s3["session_id"]}).json()["used_minutes"] == 17.1
+
+    # a link can't be given back while it could still be used, nor if an unclaimed call happened meanwhile
     s2 = c.post("/api/voice/session").json()
+    assert c.post("/api/voice/session").status_code == 429              # one call starting at a time
+    assert c.post("/api/voice/release", json={"session_id": s2["session_id"]}).json()["released"] is False
+    with db.tx() as x:
+        x.execute("UPDATE voice_sessions SET issued_at=issued_at-? WHERE id=?", (voice.SIGNED_URL_TTL + 5, s2["session_id"]))
     EL_CONV["conv_sneaky"] = 600
     assert c.post("/api/voice/release", json={"session_id": s2["session_id"]}).json()["released"] is False
     EL_CONV.pop("conv_sneaky")
@@ -433,6 +443,42 @@ def test_voice_plan_gates_meters_and_upgrades(monkeypatch):
     # the monthly allowance is enforced
     monkeypatch.setattr(voice, "MINUTES", 3)
     assert c.post("/api/voice/session").status_code == 402
+
+
+def test_parallel_voice_sessions_cannot_overspend(monkeypatch):
+    import threading
+    monkeypatch.setattr(voice, "_el", fake_el)
+    monkeypatch.setattr(voice, "MINUTES", 15)
+    c = TestClient(main.app); signup(c, "9200000007"); subscribe(c, "voice")
+    codes = []
+    ts = [threading.Thread(target=lambda: codes.append(c.post("/api/voice/session").status_code)) for _ in range(6)]
+    [t.start() for t in ts]; [t.join() for t in ts]
+    assert codes.count(200) == 1
+
+
+def test_cancel_targets_voice_and_failed_plus_retirement_is_retried(monkeypatch):
+    c = TestClient(main.app); signup(c, "9200000008")
+    subscribe(c, "plus")
+    real = billing._rzp
+    def flaky(method, path, **kw):
+        if path.endswith("/cancel"):
+            raise billing.HTTPException(502, "down")
+        return real(method, path, **kw)
+    monkeypatch.setattr(billing, "_rzp", flaky)
+    subscribe(c, "voice")
+    q = "SELECT plan, cancel_requested FROM subscriptions s JOIN users u ON u.id=s.user_id WHERE u.phone='+919200000008'"
+    assert {r["plan"]: r["cancel_requested"] for r in db.all_(q)}["plus"] == 0
+    monkeypatch.setattr(billing, "_rzp", real)
+    c.get("/api/me")                                                   # retried here
+    assert {r["plan"]: r["cancel_requested"] for r in db.all_(q)}["plus"] == 1
+    assert c.post("/api/billing/cancel").status_code == 200
+    assert {r["plan"]: r["cancel_requested"] for r in db.all_(q)}["voice"] == 1
+    assert c.post("/api/billing/cancel").status_code == 409
+
+
+def test_briefing_always_ends_with_ai_disclosure():
+    assert voice.with_disclosure("Namaste.", "hi").endswith(voice.DISCLOSURE["hi"])
+    assert "AI voice" in voice.with_disclosure("Hello.", "en")
 
 
 def test_voice_session_ids_are_private(monkeypatch):

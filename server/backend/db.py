@@ -131,6 +131,7 @@ def conn() -> sqlite3.Connection:
 MIGRATIONS = [   # (table, column, definition) added to databases created before the column existed
     ("users", "language", "TEXT NOT NULL DEFAULT 'en'"),
     ("subscriptions", "plan", "TEXT NOT NULL DEFAULT 'plus'"),
+    ("subscriptions", "cancel_requested", "INTEGER NOT NULL DEFAULT 0"),   # we asked Razorpay to stop renewing it
 ]
 
 

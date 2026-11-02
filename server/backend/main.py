@@ -17,7 +17,7 @@ import db, numerology, reports
 import auth, billing, voice
 from fastapi.responses import FileResponse
 from auth import current_user
-from billing import is_subscriber, is_voice, require_subscriber, plan_status
+from billing import is_subscriber, is_voice, require_subscriber, plan_status, retire_plus_if_needed
 
 MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-5")
 FAST_MODEL = os.getenv("CLAUDE_FAST_MODEL", "claude-haiku-4-5-20251001")
@@ -279,6 +279,10 @@ def health():
 
 @app.get("/api/me")
 def me(u=Depends(current_user)):
+    try:
+        retire_plus_if_needed(u["id"])
+    except Exception:
+        logging.exception("retrying Plus retirement failed")
     has_core = bool(db.one("SELECT 1 FROM reports WHERE user_id=? AND kind='core'", u["id"]))
     return {"name": u["name"], "phone": u["phone"], "dob": u["dob"], "birth_time": u["birth_time"], "city": u["city"],
             "language": u.get("language") or "en",
@@ -395,7 +399,7 @@ def report_audio(req: Request, lang: str | None = None, u=Depends(current_user))
         script = r.get("audio_script") or ask_claude(
             f"You write spoken scripts for Destiny OS.\n{GUARDRAILS}",
             [{"role": "user", "content": reports.audio_script_prompt(r, u["name"], lang)}], max_tokens=1500).strip()
-        voice.synthesize(script, lang, path)
+        voice.synthesize(voice.with_disclosure(script, lang), lang, path)
         reports.update_report(r["_id"], {**r, "audio_script": script})
         db.log_event(u["id"], "voice_briefing", {"lang": lang})
     return {"url": f"/api/report/audio?lang={lang}&v={r['_id']}"}

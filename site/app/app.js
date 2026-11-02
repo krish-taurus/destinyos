@@ -320,7 +320,7 @@ function renderSkySimple() {
     ['☾', `आपकी चंद्र राशि: ${sg(chart.natal.Moon.sign)}`, 'वैदिक ज्योतिष में चंद्र राशि आपके मन और भावनाओं को दिखाती है। रोज़ का राशिफल इसी से देखा जाता है।'],
     chart.lagna ? ['↑', `आपका लग्न: ${sg(chart.lagna.sign)}`, 'लग्न यानी जन्म के समय पूर्व में उदित राशि। यह बताता है कि आप दुनिया के सामने कैसे आते हैं।'] : null,
     ['◷', `अभी आप ${pl(md.lord)} की महादशा में हैं (${yrs} तक)`, `दशा जीवन का एक अध्याय है। यह दौर ${T[md.lord]} से जुड़ा माना जाता है।` + (ad ? ` इसके अंदर अभी ${pl(ad.lord)} का छोटा दौर चल रहा है: ${T[ad.lord]}।` : '')],
-    ['✦', `जन्म नक्षत्र: ${esc(chart.dasha.birth_nakshatra)}`, 'नक्षत्र चंद्रमा का सटीक तारा-समूह है। आपकी दशाओं का क्रम इसी से तय होता है।']
+    ['✦', `जन्म नक्षत्र: ${chart.dasha.birth_nakshatra}`, 'नक्षत्र चंद्रमा का सटीक तारा-समूह है। आपकी दशाओं का क्रम इसी से तय होता है।']
   ] : [
     ['☾', `Your Moon sign: ${chart.natal.Moon.sign}`, 'In Vedic astrology your Moon sign describes your mind and emotions. Daily horoscopes are read from it.'],
     chart.lagna ? ['↑', `Your rising sign (Lagna): ${chart.lagna.sign}`, 'The sign rising in the east when you were born. It describes how you come across to the world.'] : null,

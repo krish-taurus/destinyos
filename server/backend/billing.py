@@ -104,6 +104,7 @@ def plan_status(user_id: int) -> dict:
     return {"subscribed": t != "free", "tier": t,
             "status": s["status"] if s else None,
             "paid_until": s["current_end"] if s else None,
+            "renews": bool(s and s["status"] == "active" and not s.get("cancel_requested")),
             "plan": PLANS.get(t, PLAN), "plans": PLANS,
             "payments_ready": configured(), "voice_ready": bool(PLAN_ID_VOICE and configured())}
 
@@ -129,15 +130,31 @@ def _upsert_sub(user_id: int, sub_id: str, status: str, current_end: int | None,
 
 
 def _retire_plus(user_id: int):
-    """After an upgrade to Voice is paid, stop the old ₹599 plan so the customer isn't billed twice.
-    Voice includes everything in Plus, so access is unaffected."""
-    for r in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan='plus' AND status NOT IN ('cancelled','completed')", user_id):
+    """After an upgrade to Voice is paid, stop the old ₹599 plan from renewing so the customer isn't billed
+    twice. It ends at the close of the period already paid for (no money lost); Voice covers everything in
+    Plus meanwhile. Safe to call repeatedly: /api/me retries it until Razorpay accepts."""
+    for r in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan='plus' AND cancel_requested=0 "
+                     "AND status NOT IN ('cancelled','completed','expired')", user_id):
         try:
-            _rzp("POST", f"/subscriptions/{r['provider_sub_id']}/cancel", json={"cancel_at_cycle_end": 0})
-            _upsert_sub(user_id, r["provider_sub_id"], "cancelled", db.now())
-            db.log_event(user_id, "plus_retired_on_upgrade", {"sub": r["provider_sub_id"]})
+            _rzp("POST", f"/subscriptions/{r['provider_sub_id']}/cancel", json={"cancel_at_cycle_end": 1})
         except HTTPException:
-            log.error("could not cancel old Plus subscription %s on upgrade", r["provider_sub_id"])
+            log.error("could not stop old Plus subscription %s on upgrade; will retry", r["provider_sub_id"])
+            db.log_event(user_id, "plus_retire_failed", {"sub": r["provider_sub_id"]})
+            continue
+        with db.tx() as c:
+            c.execute("UPDATE subscriptions SET cancel_requested=1, updated_at=? WHERE id=?", (db.now(), r["id"]))
+        db.log_event(user_id, "plus_retired_on_upgrade", {"sub": r["provider_sub_id"]})
+
+
+def retire_plus_if_needed(user_id: int):
+    """Called on /api/me: finish an upgrade whose Plus cancellation didn't go through the first time."""
+    if not configured() or not is_voice(user_id):
+        return
+    voice_live = db.one("SELECT 1 FROM subscriptions WHERE user_id=? AND plan='voice' AND status='active'", user_id)
+    pending = db.one("SELECT 1 FROM subscriptions WHERE user_id=? AND plan='plus' AND cancel_requested=0 "
+                     "AND status NOT IN ('cancelled','completed','expired')", user_id)
+    if voice_live and pending:
+        _retire_plus(user_id)
 
 
 # ── Subscription ──
@@ -195,12 +212,17 @@ def subscribe_verify(body: SubVerifyIn, user=Depends(current_user)):
 
 @router.post("/cancel")
 def cancel(user=Depends(current_user)):
-    s = subscription(user["id"])
-    if not s or s["status"] in ("cancelled", "completed"):
+    # cancel the plan the customer is paying for now: Voice first, then Plus; skip ones already stopping
+    rows = db.all_("SELECT * FROM subscriptions WHERE user_id=? AND cancel_requested=0 AND status NOT IN "
+                   "('cancelled','completed','expired') ORDER BY (plan='voice') DESC, updated_at DESC, id DESC", user["id"])
+    s = next((r for r in rows if _row_grants(r)), None)
+    if not s:
         raise HTTPException(409, "There's no active subscription to cancel.")
     r = _rzp("POST", f"/subscriptions/{s['provider_sub_id']}/cancel", json={"cancel_at_cycle_end": 1})
     # Razorpay keeps it 'active' until cycle end; mark our intent so the panel can say so
     db.log_event(user["id"], "subscribe_cancel", {"sub": s["provider_sub_id"]})
+    with db.tx() as c:
+        c.execute("UPDATE subscriptions SET cancel_requested=1 WHERE id=?", (s["id"],))
     _upsert_sub(user["id"], s["provider_sub_id"], r.get("status", s["status"]), r.get("current_end"))
     return {**plan_status(user["id"]), "cancel_at_period_end": True}
 
