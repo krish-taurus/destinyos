@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0B0F1A">
+<meta name="theme-color" content="#FBFAF7">
 <title>Destiny OS for Business — Brand Naming & Business Numerology</title>
 <meta name="description" content="Brand naming and business numerology for founders and SMEs by Dr. Krish Bharggav. Pythagorean and Chaldean systems, plus real branding checks. From ₹999.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,13 +11,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Mono:wght@400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B0F1A; --bg2:#111729; --card:#141B2E; --line:#26304A;
-    --text:#E8E6F0; --muted:#9AA0B8; --gold:#D9B45A; --gold-soft:rgba(217,180,90,.12);
-    --violet:#8B7CF6;
+    --bg:#FBFAF7; --bg2:#F4F1EA; --card:#FFFFFF; --line:#E9E6DE;
+    --text:#15171F; --muted:#6B6F7E; --gold:#B38A2E; --gold-soft:#F6EEDB;
+    --violet:#6B5BD6;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:radial-gradient(1200px 600px at 80% -10%,#1A1638 0%,transparent 60%),radial-gradient(900px 500px at -10% 40%,#0E2230 0%,transparent 60%),var(--bg);
+  body{background:var(--bg);
     color:var(--text);font:400 16px/1.65 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
   a{color:inherit}
   .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
@@ -36,9 +36,9 @@
   .nav-links a{text-decoration:none} .nav-links a:hover{color:var(--text)}
 
   /* buttons */
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;transition:.2s}
-  .btn-gold{background:var(--gold);color:#17120A} .btn-gold:hover{filter:brightness(1.08)}
-  .btn-ghost{border:1px solid var(--line);color:var(--text)} .btn-ghost:hover{border-color:var(--gold)}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;transition:.2s}
+  .btn-gold{background:var(--text);color:#fff;box-shadow:0 10px 30px -12px rgba(21,23,31,.5)} .btn-gold:hover{transform:translateY(-2px)}
+  .btn-ghost{border:1px solid var(--line);color:var(--text);background:var(--card)} .btn-ghost:hover{border-color:var(--gold)}
 
   /* hero */
   .hero{padding:56px 0 72px}
@@ -48,7 +48,7 @@
   .byline{margin-top:34px;display:flex;align-items:center;gap:14px;color:var(--muted);font-size:14px}
   .byline .dot{width:42px;height:42px;border-radius:50%;background:var(--gold-soft);border:1px solid var(--gold);display:grid;place-items:center;font:600 16px "Cormorant Garamond",serif;color:var(--gold)}
 
-  section{padding:64px 0;border-top:1px solid rgba(38,48,74,.6)}
+  section{padding:80px 0;border-top:1px solid var(--line)}
   h2{font-size:clamp(30px,4.4vw,44px);line-height:1.1;margin:14px 0 14px}
   .sub{color:var(--muted);max-width:640px}
 
@@ -56,21 +56,21 @@
   .method{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:34px}
   .m-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
   .m-card .n{font:400 12px "DM Mono",monospace;color:var(--gold)}
-  .m-card h3{font:600 17px/1.3 "DM Sans";margin:10px 0 8px}
+  .m-card h3{font:600 17px/1.3 "DM Sans",system-ui,sans-serif;margin:10px 0 8px}
   .m-card p{color:var(--muted);font-size:15px}
 
   /* tiers */
   .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:34px}
   .tier{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 22px;display:flex;flex-direction:column}
-  .tier.featured{border-color:var(--gold);background:linear-gradient(180deg,rgba(217,180,90,.08),var(--card) 40%)}
+  .tier.featured{border-color:var(--gold);background:linear-gradient(180deg,var(--gold-soft),var(--card) 45%);box-shadow:0 30px 60px -40px rgba(179,138,46,.5)}
   .tag{align-self:flex-start;font:400 11px "DM Mono",monospace;letter-spacing:.06em;padding:5px 9px;border-radius:6px;background:var(--gold-soft);color:var(--gold);margin-bottom:14px}
   .tier h3{font:500 26px/1.1 "Cormorant Garamond",serif}
   .tier .for{color:var(--muted);font-size:14px;margin:6px 0 18px}
-  .price{font:600 32px/1 "DM Sans";letter-spacing:-.01em}
+  .price{font:600 32px/1 "DM Sans",system-ui,sans-serif;letter-spacing:-.01em}
   .price small{font-size:14px;font-weight:400;color:var(--muted)}
   .turn{font:400 12px "DM Mono",monospace;color:var(--violet);margin:10px 0 18px}
-  .tier ul{list-style:none;display:grid;gap:9px;font-size:14.5px;margin-bottom:24px;flex:1}
-  .tier li{padding-left:20px;position:relative;color:#CFCDDA}
+  .tier ul{list-style:none;display:grid;align-content:start;gap:9px;font-size:14.5px;margin-bottom:24px;flex:1}
+  .tier li{padding-left:20px;position:relative;color:#3A3D49}
   .tier li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;transform:rotate(45deg);border:1px solid var(--gold)}
   .tier .btn{justify-content:center}
   .note{color:var(--muted);font-size:14px;margin-top:18px}
@@ -84,13 +84,13 @@
   td.svc{font-weight:600;white-space:nowrap}
   td.amt{font-weight:600;white-space:nowrap;color:var(--gold)}
   td.t{white-space:nowrap;color:var(--muted)}
-  td .d{color:#CFCDDA}
+  td .d{color:#3A3D49}
 
   /* retainer */
   .retainer{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:34px;margin-top:30px}
-  .retainer .big{font:600 40px/1 "DM Sans"} .retainer .big small{font-size:15px;font-weight:400;color:var(--muted)}
+  .retainer .big{font:600 40px/1 "DM Sans",system-ui,sans-serif} .retainer .big small{font-size:15px;font-weight:400;color:var(--muted)}
   .retainer ul{list-style:none;display:grid;gap:10px}
-  .retainer li{padding-left:20px;position:relative;color:#CFCDDA}
+  .retainer li{padding-left:20px;position:relative;color:#3A3D49}
   .retainer li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;transform:rotate(45deg);background:var(--gold)}
 
   /* steps */
@@ -126,13 +126,13 @@
 <div class="wrap">
   <nav>
     <a class="logo" href="/" aria-label="Destiny OS home">
-      <svg viewBox="0 0 32 32" fill="none"><path d="M16 2.5 28 9.5v13L16 29.5 4 22.5v-13L16 2.5Z" stroke="#D9B45A" stroke-width="1.4"/><circle cx="16" cy="16" r="3.2" fill="#D9B45A"/></svg>
+      <svg viewBox="0 0 32 32" fill="none"><path d="M16 2.5 28 9.5v13L16 29.5 4 22.5v-13L16 2.5Z" stroke="#B38A2E" stroke-width="1.4"/><circle cx="16" cy="16" r="3.2" fill="#B38A2E"/></svg>
       <span>DESTINY <b>OS</b></span>
     </a>
     <div class="nav-links">
       <a href="#method">Method</a><a href="#naming">Naming</a><a href="#services">Services</a><a href="#retainer">Retainer</a><a href="#terms">Terms</a>
     </div>
-    <a class="btn btn-ghost" href="/">Daily guidance app</a>
+    <a class="btn btn-ghost" href="/">Destiny OS home</a>
   </nav>
 
   <!-- HERO -->
@@ -305,7 +305,7 @@
 
 <footer><div class="wrap">
   <span>© 2026 Destiny OS · by Dr. Krish Bharggav · Bengaluru</span>
-  <a href="/">Back to the daily guidance app</a>
+  <a href="/">Back to Destiny OS home</a>
 </div></footer>
 
 </body>
