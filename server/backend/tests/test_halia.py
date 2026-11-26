@@ -396,3 +396,15 @@ def test_report_pdf_renders_hindi():
     assert c.post("/api/report", params={"lang": "hi"}).status_code == 200
     r = c.get("/api/report/pdf", params={"lang": "hi"})
     assert r.status_code == 200 and b"NotoSansDevanagari" in r.content           # the Devanagari font was needed and embedded
+
+
+def test_tithi_is_the_moon_sun_angle_in_twelve_degree_steps():
+    import astro
+    assert astro.tithi(100, 100.5)["label"] == "Shukla Pratipada" and astro.tithi(100, 100.5)["number"] == 1
+    assert astro.tithi(10, 10 + 179)["name"] == "Purnima" and astro.tithi(10, 10 + 181)["label"] == "Krishna Pratipada"
+    assert astro.tithi(350, 349)["name"] == "Amavasya" and astro.tithi(350, 349)["number"] == 30          # wraps past 360
+    t = astro.tithi(0, 90); assert (t["number"], t["label"], t["lit"]) == (8, "Shukla Ashtami", 0.5)
+    c = client("8111000050", consent=False)
+    ch = c.get("/api/chart").json()
+    sun, moon = ch["natal"]["Sun"]["longitude"], ch["natal"]["Moon"]["longitude"]
+    assert ch["tithi"]["number"] == int(((moon - sun) % 360) // 12) + 1 and ch["place"]["city"] == "Bengaluru"

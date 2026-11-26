@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D0A07">
+<title>The methods: numerology, the Vedic chart and tithi, explained — Destiny OS</title>
+<meta name="description" content="Pythagorean and Chaldean numerology, the Lo Shu grid, the sidereal zodiac, nakshatras, tithi, the rising sign and Dasha periods: what each is, how it is calculated, and what our research found.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/temple.css?v=2">
+<style>
+.hero{padding:6svh 0 30px}
+.hero h1{font-size:clamp(50px,11vw,118px);letter-spacing:-.03em;line-height:.92;max-width:10em}
+.toc{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:34px}
+@media(min-width:800px){.toc{grid-template-columns:repeat(4,1fr)}}
+.toc a{display:block;padding:16px 18px;background:var(--stone);text-decoration:none}.toc a:hover{background:var(--stone-2)}
+.toc b{display:block;font:600 22px/1.1 var(--serif);color:var(--lamp-2)}.toc span{font-size:14px;color:var(--dim)}
+.grp{padding:54px 0 0;font:600 17px var(--sans);color:var(--lamp)}
+section.m{padding:34px 0 60px;border-top:1.5px solid var(--carve);display:grid;gap:28px;align-items:center}
+.grp+section.m{margin-top:14px}
+@media(min-width:900px){section.m{grid-template-columns:1fr 1fr;gap:60px}section.m:nth-of-type(even) .fig{order:-1}}
+.m h2{font-size:clamp(38px,6.6vw,68px);letter-spacing:-.02em;line-height:.98}
+.m p{margin-top:14px;max-width:34em;font-size:18px;line-height:1.65;color:#E4D8C0}
+.m dl{margin-top:18px;display:grid;gap:8px;max-width:34em}
+.m dl div{padding:12px 14px;background:var(--stone-2);border-radius:4px}.m dt{font:600 14px var(--sans);color:var(--lamp)}.m dd{font-size:16px;color:#D9CDB6;margin-top:2px}
+.fig{padding:20px;border:1.5px solid var(--carve-2);border-radius:4px;background:radial-gradient(ellipse at 50% 0,rgba(231,180,90,.1),transparent 70%);min-width:0}
+.fig svg{display:block;width:100%;max-width:420px;margin:0 auto}
+.fig text{font-family:var(--sans);text-anchor:middle;dominant-baseline:middle;fill:var(--dim);font-size:10px}
+.read{margin-top:14px;text-align:center;font:600 clamp(20px,3.6vw,26px)/1.25 var(--serif);color:var(--lamp-2);min-height:2.5em}
+.read small{display:block;font:400 14.5px var(--sans);color:var(--dim);margin-top:2px}
+/* letter tables */
+.tbl{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;max-width:420px;margin:0 auto}
+.tbl div{aspect-ratio:1;display:grid;place-items:center;border:1.5px solid var(--carve-2);border-radius:4px;font:600 clamp(15px,4vw,21px) var(--serif);transition:background .25s,border-color .25s,color .25s}
+.tbl .n{border:0;color:var(--lamp);font:700 clamp(15px,4vw,20px) var(--sans)}.tbl .e{border-style:dashed;opacity:.45}
+.tbl .on{background:var(--lamp);border-color:var(--lamp);color:#1A1208}
+.word{display:flex;justify-content:center;gap:6px;margin-top:16px;flex-wrap:wrap}
+.word span{width:34px;text-align:center;font:600 22px var(--serif);color:var(--dim);transition:color .25s}.word span.on{color:var(--ivory)}
+.word i{display:block;font:600 14px var(--sans);font-style:normal;color:var(--lamp);opacity:0;transition:opacity .25s}.word span.on i{opacity:1}
+/* lo shu */
+.lo{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:280px;margin:0 auto}
+.lo div{aspect-ratio:1;display:grid;place-items:center;border:1.5px solid var(--carve-2);border-radius:4px;font:700 40px var(--serif);color:var(--dim);position:relative;transition:all .3s}
+.lo div.on{border-color:var(--lamp);color:var(--lamp);background:rgba(231,180,90,.14)}.lo div.has{color:var(--ivory)}.lo div.miss{opacity:.3}
+.lo sup{position:absolute;right:7px;top:5px;font:600 13px var(--sans);color:var(--lamp)}
+.found{margin-top:60px;padding:26px;border:1.5px solid var(--kumkum);border-radius:4px}
+.found h2{font-size:clamp(34px,6vw,56px)}.found p{margin-top:12px;max-width:44em;font-size:18px;color:#E4D8C0}
+.end{padding:50px 0 90px;display:flex;flex-wrap:wrap;gap:12px}
+</style>
+</head>
+<body>
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><a href="/report/">My report</a></nav>
+<main class="wrap">
+  <header class="hero">
+    <h1>The methods, one by one.</h1>
+    <p class="lead" style="margin-top:20px">Destiny OS uses two systems of numerology and five parts of the Vedic chart. Here is what each one is, how it is calculated, and where you see it in your report. The pictures move so you can watch each rule at work.</p>
+    <nav class="toc" aria-label="Methods">
+      <a href="#pythagorean"><b>Pythagorean</b><span>Numerology by the alphabet</span></a><a href="#chaldean"><b>Chaldean</b><span>Numerology by sound</span></a>
+      <a href="#loshu"><b>Lo Shu grid</b><span>Your birth date on a square</span></a><a href="#zodiac"><b>Rashi</b><span>The sidereal zodiac</span></a>
+      <a href="#nakshatra"><b>Nakshatra</b><span>27 lunar mansions</span></a><a href="#tithi"><b>Tithi</b><span>The lunar day</span></a>
+      <a href="#lagna"><b>Lagna</b><span>The rising sign</span></a><a href="#dasha"><b>Dasha</b><span>Periods of life</span></a>
+    </nav>
+  </header>
+
+  <p class="grp">Numerology: three ways to turn a name or a date into numbers</p>
+  <section class="m" id="pythagorean"><div>
+    <h2>Pythagorean numerology.</h2>
+    <p>The alphabet is written out in order and numbered 1 to 9, then 1 to 9 again. A is 1, I is 9, J goes back to 1. Add the numbers of your name and keep adding the digits until one is left.</p>
+    <dl><div><dt>What it needs</dt><dd>Your full name at birth, and your date of birth.</dd></div><div><dt>What it gives</dt><dd>Life Path, Expression, Soul Urge, Personality, Birth number and Personal Year.</dd></div><div><dt>In your report</dt><dd>The five large numbers at the top, and the Numerology reading.</dd></div></dl>
+  </div><div class="fig"><div class="tbl" id="t-py"></div><div class="word" id="w-py"></div><p class="read" id="r-py"></p></div></section>
+
+  <section class="m" id="chaldean"><div>
+    <h2>Chaldean numerology.</h2>
+    <p>An older system that numbers letters by their sound, not their place in the alphabet, and uses only 1 to 8. No letter is given 9. The two-digit total before reducing, the compound number, is read as well.</p>
+    <dl><div><dt>What it needs</dt><dd>The name you are known by. Chaldean readers often use the everyday name.</dd></div><div><dt>What it gives</dt><dd>Name number with its compound, Soul Urge and Personality.</dd></div><div><dt>In your report</dt><dd>Shown beside the Pythagorean numbers, with a note on where the two agree.</dd></div></dl>
+  </div><div class="fig"><div class="tbl" id="t-ch"></div><div class="word" id="w-ch"></div><p class="read" id="r-ch"></p></div></section>
+
+  <section class="m" id="loshu"><div>
+    <h2>The Lo Shu grid.</h2>
+    <p>A three-by-three square from China in which every row, column and diagonal adds to 15. The digits of your birth date are placed on their own squares. Numbers that repeat are read as strengths; empty squares as qualities to build.</p>
+    <dl><div><dt>What it needs</dt><dd>Your date of birth only.</dd></div><div><dt>What it gives</dt><dd>Which of 1 to 9 are present, repeated or missing.</dd></div><div><dt>In Destiny OS</dt><dd>Used in our early research. It is not part of your report today.</dd></div></dl>
+  </div><div class="fig"><div class="lo" id="lo"></div><p class="read" id="r-lo"></p></div></section>
+
+  <p class="grp">The Vedic chart: five things read from the sky at your birth</p>
+  <section class="m" id="zodiac"><div>
+    <h2>Rashi: the sidereal zodiac.</h2>
+    <p>The Sun's yearly path is cut into twelve signs of 30° each. Western astrology ties the signs to the seasons. Jyotisha ties them to the fixed stars. The Earth's axis slowly wobbles, so the two have drifted about 24° apart, and they keep drifting by one degree every 72 years.</p>
+    <dl><div><dt>What it needs</dt><dd>Date, time and place of birth.</dd></div><div><dt>What it gives</dt><dd>The sign each planet was in. Your Rashi is the sign of the Moon.</dd></div><div><dt>How we calculate it</dt><dd>Swiss Ephemeris positions, shifted with the Lahiri ayanamsa.</dd></div></dl>
+  </div><div class="fig"><svg viewBox="0 0 300 300" id="s-zod" role="img" aria-label="Two zodiac rings drifting 24 degrees apart"></svg><p class="read" id="r-zod"></p></div></section>
+
+  <section class="m" id="nakshatra"><div>
+    <h2>Nakshatra: the Moon's 27 houses.</h2>
+    <p>The same circle is also cut into 27 parts of 13°20′ each. The Moon crosses one roughly every day. The one it was in when you were born is your birth nakshatra, and it decides where your Dasha periods begin.</p>
+    <dl><div><dt>What it needs</dt><dd>The Moon's position, so date and time matter.</dd></div><div><dt>What it gives</dt><dd>One of 27 names, from Ashwini to Revati, each with a ruling planet.</dd></div><div><dt>In your report</dt><dd>In the Vedic chart reading, marked as a gold arc on the wheel.</dd></div></dl>
+  </div><div class="fig"><svg viewBox="0 0 300 300" id="s-nak" role="img" aria-label="The Moon moving through 27 nakshatras"></svg><p class="read" id="r-nak"></p></div></section>
+
+  <section class="m" id="tithi"><div>
+    <h2>Tithi: the lunar day.</h2>
+    <p>A tithi measures how far the Moon has pulled ahead of the Sun. Every 12° is one tithi, so there are 30 in a lunar month: 15 while the Moon grows (Shukla paksha, ending in Purnima, the full Moon) and 15 while it shrinks (Krishna paksha, ending in Amavasya, the new Moon).</p>
+    <dl><div><dt>The rule</dt><dd>Moon's longitude minus Sun's longitude, divided by 12, plus one.</dd></div><div><dt>What it gives</dt><dd>A number from 1 to 30 and a name, such as Shukla Ekadashi.</dd></div><div><dt>In your report</dt><dd>In the Vedic chart reading, with how much of the Moon was lit.</dd></div></dl>
+  </div><div class="fig"><svg viewBox="0 0 300 300" id="s-tit" role="img" aria-label="The Moon moving ahead of the Sun, twelve degrees per tithi"></svg><p class="read" id="r-tit"></p></div></section>
+
+  <section class="m" id="lagna"><div>
+    <h2>Lagna: the rising sign.</h2>
+    <p>As the Earth turns, the whole zodiac rises in the east and sets in the west once a day. The sign on the eastern horizon at the minute you were born is your Lagna. A new sign rises about every two hours, which is why the birth time matters so much.</p>
+    <dl><div><dt>What it needs</dt><dd>Exact time and place of birth.</dd></div><div><dt>What it gives</dt><dd>Your rising sign, and from it the twelve houses of the chart.</dd></div><div><dt>If you have no birth time</dt><dd>We leave the Lagna out. We do not guess it.</dd></div></dl>
+  </div><div class="fig"><svg viewBox="0 0 300 300" id="s-lag" role="img" aria-label="The zodiac turning past the eastern horizon through a day"></svg><p class="read" id="r-lag"></p></div></section>
+
+  <section class="m" id="dasha"><div>
+    <h2>Vimshottari Dasha.</h2>
+    <p>A calendar of life in nine periods adding up to 120 years. Your birth nakshatra decides which period you were born into, and how far the Moon had moved through it decides how much of that period was already used up. Each period is split into nine sub-periods in the same proportions.</p>
+    <dl><div><dt>What it needs</dt><dd>The Moon's exact position at birth.</dd></div><div><dt>What it gives</dt><dd>Your Mahadasha and Antardasha now, with their dates.</dd></div><div><dt>In your report</dt><dd>The gold strip on every year of the three-year report.</dd></div></dl>
+  </div><div class="fig"><svg viewBox="0 0 300 150" id="s-das" role="img" aria-label="A lifetime moving through the nine Dasha periods"></svg><p class="read" id="r-das"></p></div></section>
+
+  <div class="found">
+    <h2>What our research found.</h2>
+    <p>We tested three of these as predictors: numerology numbers, zodiac sign and the phase of the Moon at birth. Added to a model that already knew a person's history, they changed its score from 79.7 to 79.6, which is no change. So we present all of these methods as what they are: traditions with exact rules, offered for reflection. Practical guidance comes from HALIA, which uses none of them.</p>
+    <p><a class="gold" href="/guide/#evidence" style="font-weight:600">See the full results</a></p>
+  </div>
+  <div class="end"><a class="btn" href="/report/">Open my free readings</a><a class="btn line" href="/guide/">How to read your report</a></div>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id), NS = 'http://www.w3.org/2000/svg', still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const el = (p, tag, a, txt) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); if (txt != null) n.textContent = txt; p.appendChild(n); return n; };
+  const pol = (cx, cy, r, deg) => [cx + r * Math.cos(deg * Math.PI / 180), cy - r * Math.sin(deg * Math.PI / 180)];
+  const AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', PY = Object.fromEntries([...AZ].map((c, i) => [c, i % 9 + 1]));
+  const CH = { A: 1, B: 2, C: 3, D: 4, E: 5, F: 8, G: 3, H: 5, I: 1, J: 1, K: 2, L: 3, M: 4, N: 5, O: 7, P: 8, Q: 1, R: 2, S: 3, T: 4, U: 6, V: 6, W: 6, X: 5, Y: 1, Z: 7 };
+  const SIGNS = ['Ari', 'Tau', 'Gem', 'Can', 'Leo', 'Vir', 'Lib', 'Sco', 'Sag', 'Cap', 'Aqu', 'Pis'], FULL = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+  const NAK = ['Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashira', 'Ardra', 'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni', 'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha', 'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta', 'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'];
+  const TIT = ['Pratipada', 'Dwitiya', 'Tritiya', 'Chaturthi', 'Panchami', 'Shashthi', 'Saptami', 'Ashtami', 'Navami', 'Dashami', 'Ekadashi', 'Dwadashi', 'Trayodashi', 'Chaturdashi'];
+  const ORD = [['Ketu', 7], ['Venus', 20], ['Sun', 6], ['Moon', 10], ['Mars', 7], ['Rahu', 18], ['Jupiter', 16], ['Saturn', 19], ['Mercury', 17]];
+  const reduce = n => { const s = [n]; while (n > 9) { n = String(n).split('').reduce((a, b) => a + +b, 0); s.push(n); } return s.join(' → '); };
+  const seen = new Map(), io = new IntersectionObserver(es => es.forEach(e => seen.set(e.target.id, e.isIntersecting)), { threshold: .15 });
+  document.querySelectorAll('section.m').forEach(s => io.observe(s)); const on = id => still || seen.get(id);
+
+  // ── letter tables: a word is spelled out, each letter lighting its square ──
+  function table(id, map, word, wid, rid, note) {
+    const cols = {}; for (const c of AZ) (cols[map[c]] ||= []).push(c); const rows = Math.max(...Object.values(cols).map(v => v.length));
+    let h = ''; for (let n = 1; n <= 9; n++) h += `<div class="n">${n}</div>`;
+    for (let r = 0; r < rows; r++) for (let n = 1; n <= 9; n++) { const c = (cols[n] || [])[r]; h += c ? `<div data-c="${c}">${c}</div>` : `<div class="e"></div>`; }
+    $(id).innerHTML = h; $(wid).innerHTML = [...word].map(c => `<span>${c}<i>${map[c]}</i></span>`).join('');
+    const sq = Object.fromEntries([...$(id).querySelectorAll('[data-c]')].map(d => [d.dataset.c, d])), ws = [...$(wid).children], total = [...word].reduce((a, c) => a + map[c], 0);
+    return step => { const k = step % (word.length + 5); Object.values(sq).forEach(d => d.classList.remove('on')); ws.forEach((w, i) => w.classList.toggle('on', i < k));
+      if (k > 0 && k <= word.length) sq[word[k - 1]].classList.add('on');
+      const sum = [...word].slice(0, Math.min(k, word.length)).reduce((a, c) => a + map[c], 0);
+      $(rid).innerHTML = k <= word.length ? `${k ? sum : 'D E S T I N Y'}<small>${k ? 'adding each letter' : 'watch each letter find its number'}</small>` : `${reduce(total)}<small>${note(total)}</small>`; }; }
+  const tPy = table('t-py', PY, 'DESTINY', 'w-py', 'r-py', () => 'add the digits until one is left');
+  const tCh = table('t-ch', CH, 'DESTINY', 'w-ch', 'r-ch', t => `the compound number ${t} is read too; no letter is 9`);
+
+  // ── Lo Shu ──
+  const LO = [4, 9, 2, 3, 5, 7, 8, 1, 6], LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]], DOB = '17081994'.replace(/0/g, '');
+  $('lo').innerHTML = LO.map(n => `<div data-n="${n}">${n}<sup></sup></div>`).join(''); const cells = [...$('lo').children];
+  function loshu(step) { const k = step % (LINES.length + DOB.length + 5); cells.forEach(c => { c.className = ''; c.lastChild.textContent = ''; });
+    if (k < LINES.length) { LINES[k].forEach(i => cells[i].classList.add('on')); $('r-lo').innerHTML = `${LINES[k].map(i => LO[i]).join(' + ')} = 15<small>every line adds to fifteen</small>`; return; }
+    const n = Math.min(k - LINES.length + 1, DOB.length), count = {}; [...DOB].slice(0, n).forEach(d => count[d] = (count[d] || 0) + 1);
+    cells.forEach(c => { const v = count[c.dataset.n]; if (v) { c.classList.add('has'); if (v > 1) c.lastChild.textContent = '×' + v; } else if (n === DOB.length) c.classList.add('miss'); });
+    if (n < DOB.length || k < LINES.length + DOB.length) cells.find(c => c.dataset.n === DOB[n - 1]).classList.add('on');
+    $('r-lo').innerHTML = n < DOB.length ? `17 · 08 · 1994<small>placing the digit ${DOB[n - 1]}</small>` : `1 and 9 repeat. 2, 3, 5 and 6 are empty<small>for a birth date of 17 August 1994</small>`; }
+
+  // ── zodiac: tropical ring outside, sidereal ring inside, drifting apart ──
+  const Z = $('s-zod'); el(Z, 'circle', { cx: 150, cy: 150, r: 138, fill: 'none', stroke: '#3A2E20', 'stroke-width': 1.5 }); el(Z, 'circle', { cx: 150, cy: 150, r: 108, fill: 'none', stroke: '#3A2E20', 'stroke-width': 1.5 }); el(Z, 'circle', { cx: 150, cy: 150, r: 78, fill: 'none', stroke: '#E7B45A', 'stroke-width': 1.5 });
+  for (let i = 0; i < 12; i++) { const [x1, y1] = pol(150, 150, 108, i * 30), [x2, y2] = pol(150, 150, 138, i * 30), [tx, ty] = pol(150, 150, 123, i * 30 + 15); el(Z, 'line', { x1, y1, x2, y2, stroke: '#3A2E20', 'stroke-width': 1.5 }); el(Z, 'text', { x: tx, y: ty }, SIGNS[i]); }
+  const zin = el(Z, 'g', { style: 'transform-origin:150px 150px' });
+  for (let i = 0; i < 12; i++) { const [x1, y1] = pol(150, 150, 78, i * 30), [x2, y2] = pol(150, 150, 108, i * 30), [tx, ty] = pol(150, 150, 93, i * 30 + 15); el(zin, 'line', { x1, y1, x2, y2, stroke: '#E7B45A', 'stroke-width': 1.5 }); el(zin, 'text', { x: tx, y: ty, style: 'fill:#F6D99A;font-weight:600' }, SIGNS[i]); }
+  el(Z, 'text', { x: 150, y: 143, style: 'font-size:11px' }, 'outer: seasons'); el(Z, 'text', { x: 150, y: 158, style: 'font-size:11px;fill:#E7B45A' }, 'inner: stars');
+  // ── nakshatra ──
+  const N = $('s-nak'); el(N, 'circle', { cx: 150, cy: 150, r: 120, fill: 'none', stroke: '#3A2E20', 'stroke-width': 14 });
+  const segs = NAK.map((_, i) => { const a = i * 360 / 27, b = (i + 1) * 360 / 27 - 1.6, [x1, y1] = pol(150, 150, 120, a), [x2, y2] = pol(150, 150, 120, b); return el(N, 'path', { d: `M${x1} ${y1}A120 120 0 0 0 ${x2} ${y2}`, fill: 'none', stroke: '#5A4520', 'stroke-width': 12 }); });
+  const nMoon = el(N, 'circle', { r: 9, fill: '#F3E9D6' }), nNo = el(N, 'text', { x: 150, y: 150, style: 'font:700 44px Cormorant Garamond,serif;fill:#E7B45A' });
+  // ── tithi ──
+  const T = $('s-tit'); el(T, 'circle', { cx: 150, cy: 150, r: 96, fill: 'none', stroke: '#3A2E20', 'stroke-width': 1.5 });
+  for (let i = 0; i < 30; i++) { const [x1, y1] = pol(150, 150, 96, i * 12), [x2, y2] = pol(150, 150, i % 15 ? 102 : 110, i * 12); el(T, 'line', { x1, y1, x2, y2, stroke: '#5A4520', 'stroke-width': 1.5 }); }
+  el(T, 'circle', { cx: 150, cy: 150, r: 7, fill: '#5E7FA8' }); el(T, 'text', { x: 150, y: 168 }, 'Earth');
+  el(T, 'circle', { cx: 268, cy: 150, r: 15, fill: '#F6D99A' }); el(T, 'text', { x: 268, y: 176 }, 'Sun'); el(T, 'line', { x1: 150, y1: 150, x2: 252, y2: 150, stroke: '#F6D99A', 'stroke-width': 1, 'stroke-dasharray': '3 4' });
+  const tArc = el(T, 'path', { fill: 'rgba(231,180,90,.2)', stroke: '#E7B45A', 'stroke-width': 1.5 }), tLine = el(T, 'line', { x1: 150, y1: 150, stroke: '#F3E9D6', 'stroke-width': 1 }), tMoon = el(T, 'circle', { r: 8, fill: '#F3E9D6' });
+  el(T, 'circle', { cx: 44, cy: 44, r: 26, fill: '#1B150E', stroke: '#3A2E20', 'stroke-width': 1.5 }); const tPh = el(T, 'path', { fill: '#F3E9D6' });
+  // ── lagna ──
+  const Lg = $('s-lag'); const lring = el(Lg, 'g', { style: 'transform-origin:150px 150px' }); el(lring, 'circle', { cx: 150, cy: 150, r: 122, fill: 'none', stroke: '#3A2E20', 'stroke-width': 1.5 }); el(lring, 'circle', { cx: 150, cy: 150, r: 92, fill: 'none', stroke: '#3A2E20', 'stroke-width': 1.5 });
+  for (let i = 0; i < 12; i++) { const [x1, y1] = pol(150, 150, 92, i * 30), [x2, y2] = pol(150, 150, 122, i * 30), [tx, ty] = pol(150, 150, 107, i * 30 + 15); el(lring, 'line', { x1, y1, x2, y2, stroke: '#3A2E20', 'stroke-width': 1.5 }); el(lring, 'text', { x: tx, y: ty, style: 'fill:#CFC3AC;font-weight:600' }, SIGNS[i]); }
+  el(Lg, 'rect', { x: 0, y: 150, width: 300, height: 150, fill: '#0D0A07', opacity: .82 }); el(Lg, 'line', { x1: 6, y1: 150, x2: 294, y2: 150, stroke: '#E7B45A', 'stroke-width': 2 });
+  el(Lg, 'text', { x: 26, y: 164, style: 'fill:#E7B45A;font-weight:600' }, 'EAST'); el(Lg, 'text', { x: 274, y: 164 }, 'WEST'); el(Lg, 'text', { x: 150, y: 200, style: 'font-size:11px' }, 'below the horizon');
+  el(Lg, 'circle', { cx: 28, cy: 150, r: 6, fill: '#C8442B' });
+  // ── dasha ──
+  const Dv = $('s-das'); let x = 6; const dsegs = ORD.map(([l, y], i) => { const w = 288 * y / 120, r = el(Dv, 'rect', { x, y: 40, width: w - 1.5, height: 34, fill: i % 2 ? '#B98A3C' : '#E7B45A' }); el(Dv, 'text', { x: x + w / 2, y: 57, style: 'fill:#1A1208;font-weight:600;font-size:8.5px' }, w > 22 ? l.slice(0, 3) : ''); el(Dv, 'text', { x: x + w / 2, y: 86 }, y); const o = { x, w, r, l, y }; x += w; return o; });
+  const dCur = el(Dv, 'path', { d: 'M0 22l7 12h-14z', fill: '#F3E9D6' }), dSub = el(Dv, 'g', {});
+  el(Dv, 'text', { x: 6, y: 14, style: 'text-anchor:start' }, 'birth'); el(Dv, 'text', { x: 294, y: 14, style: 'text-anchor:end' }, '120 years');
+
+  function frame(ms) { const t = ms / 1000;
+    if (on('pythagorean')) tPy(Math.floor(t / .75)); if (on('chaldean')) tCh(Math.floor(t / .75)); if (on('loshu')) loshu(Math.floor(t / 1.15));
+    if (on('zodiac')) { const d = 12 - 12 * Math.cos(t * .7); zin.style.transform = `rotate(${d.toFixed(2)}deg)`; $('r-zod').innerHTML = `${d.toFixed(0)}° apart<small>${d > 23 ? 'where the two zodiacs stand today' : 'about 1,700 years ago they matched'}</small>`; }
+    if (on('nakshatra')) { const a = (t * 20) % 360, i = Math.floor(a / (360 / 27)), [mx, my] = pol(150, 150, 120, a); nMoon.setAttribute('cx', mx); nMoon.setAttribute('cy', my);
+      segs.forEach((s, k) => s.setAttribute('stroke', k === i ? '#E7B45A' : '#5A4520')); nNo.textContent = i + 1; $('r-nak').innerHTML = `${NAK[i]}<small>nakshatra ${i + 1} of 27, ruled by ${ORD[i % 9][0]}</small>`; }
+    if (on('tithi')) { const a = (t * 18) % 360, n = Math.floor(a / 12) + 1, [mx, my] = pol(150, 150, 96, a), [ax, ay] = pol(150, 150, 40, a); tMoon.setAttribute('cx', mx); tMoon.setAttribute('cy', my); tLine.setAttribute('x2', mx); tLine.setAttribute('y2', my);
+      tArc.setAttribute('d', `M150 150L190 150A40 40 0 ${a > 180 ? 1 : 0} 0 ${ax} ${ay}Z`);
+      const r = 24, k = Math.cos(a * Math.PI / 180), wax = a < 180; tPh.setAttribute('d', `M44 ${44 - r}A${r} ${r} 0 0 ${wax ? 1 : 0} 44 ${44 + r}A${Math.abs(k) * r} ${r} 0 0 ${(k > 0) === wax ? 0 : 1} 44 ${44 - r}Z`);
+      const name = n === 15 ? 'Purnima' : n === 30 ? 'Amavasya' : `${n <= 15 ? 'Shukla' : 'Krishna'} ${TIT[(n - 1) % 15]}`; $('r-tit').innerHTML = `Tithi ${n}: ${name}<small>Moon ${a.toFixed(0)}° ahead of the Sun · ${a.toFixed(0)} ÷ 12 = ${(a / 12).toFixed(1)}</small>`; }
+    if (on('lagna')) { const day = (t * 1.6) % 24, rot = day * 15; lring.style.transform = `rotate(${rot.toFixed(1)}deg)`; const sign = Math.floor((((180 + rot) % 360) + 360) % 360 / 30);
+      $('r-lag').innerHTML = `${FULL[sign]} is rising<small>${Math.floor(day)} hours into the day · a new sign about every two hours</small>`; }
+    if (on('dasha')) { const age = (t * 6) % 120; let acc = 0, cur = dsegs[0]; for (const s of dsegs) { if (age < acc + s.y) { cur = s; break; } acc += s.y; }
+      dCur.setAttribute('transform', `translate(${(6 + 288 * age / 120).toFixed(1)},0)`); dsegs.forEach(s => s.r.setAttribute('opacity', s === cur ? 1 : .35));
+      if (dSub.dataset.l !== cur.l) { dSub.dataset.l = cur.l; dSub.innerHTML = ''; let sx = 6; const st = ORD.findIndex(o => o[0] === cur.l); for (let k = 0; k < 9; k++) { const o = ORD[(st + k) % 9], w = 288 * o[1] / 120; el(dSub, 'rect', { x: sx, y: 108, width: w - 1.5, height: 20, fill: k % 2 ? '#5A4520' : '#7A5A2A' }); el(dSub, 'text', { x: sx + w / 2, y: 118, style: 'fill:#F3E9D6;font-size:7.5px' }, w > 22 ? o[0].slice(0, 3) : ''); sx += w; } el(dSub, 'text', { x: 150, y: 140 }, `the ${cur.l} period, divided into nine`); }
+      $('r-das').innerHTML = `Age ${Math.floor(age)}: ${cur.l} Mahadasha<small>${cur.y} years long, if born at the start of Ketu</small>`; }
+    if (!still) requestAnimationFrame(frame); }
+  if (still) { document.querySelectorAll('section.m').forEach(s => seen.set(s.id, true)); frame(9000); } else requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

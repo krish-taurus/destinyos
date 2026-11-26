@@ -90,8 +90,49 @@ article.sec h2{font-size:clamp(32px,5.6vw,52px);max-width:16em}
 .step{margin-top:28px;padding:22px 24px;border:1.5px solid var(--lamp);border-radius:4px;max-width:640px;background:radial-gradient(ellipse at 0 0,rgba(231,180,90,.16),transparent 70%)}
 .step p{font:600 clamp(24px,4.4vw,32px)/1.25 var(--serif);margin-top:8px}
 .code-i{margin-top:6px;min-height:48px;font-size:17px;text-transform:uppercase}
+.hub{padding:44px 0 10px;border-top:1.5px solid var(--carve)}
+.hub h2,.calc h2{font-size:clamp(36px,7vw,64px)}
+.hubs{display:grid;gap:12px;margin-top:24px}
+@media(min-width:800px){.hubs{grid-template-columns:repeat(3,1fr)}}
+.hubs button{position:relative;text-align:left;padding:22px 22px 24px;border:1.5px solid var(--lamp);border-radius:4px;background:radial-gradient(ellipse at 0 0,rgba(231,180,90,.16),transparent 70%);cursor:pointer;color:inherit;transition:box-shadow .3s,transform .15s}
+.hubs button:hover{box-shadow:0 0 30px rgba(231,180,90,.35)}.hubs button:active{transform:scale(.985)}
+.hubs b{display:block;font:600 30px/1.05 var(--serif);color:var(--lamp-2)}.hubs span{display:block;margin-top:8px;font-size:16px;color:#CFC3AC;max-width:17em}
+.hubs em{position:absolute;right:16px;top:16px;font:600 12.5px var(--sans);font-style:normal;color:#1A1208;background:var(--lamp);padding:2px 9px;border-radius:99px}
+.calc{padding:40px 0;border-top:1.5px solid var(--lamp);margin-top:34px}
+.calc-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.log{list-style:none;margin-top:18px;max-width:640px;font:500 15.5px/1.5 ui-monospace,Menlo,monospace;color:#CFC3AC}
+.log li{padding:5px 0 5px 22px;position:relative;animation:in .35s both}.log li::before{content:"";position:absolute;left:2px;top:13px;width:8px;height:8px;rotate:45deg;background:var(--lamp)}
+.log li b{color:var(--lamp-2);font-weight:600}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+/* numerology stage */
+.letters{display:flex;flex-wrap:wrap;gap:6px;margin-top:22px}
+.lt{width:44px;text-align:center}.lt.sp{width:14px}
+.lt b{display:grid;place-items:center;height:48px;border:1.5px solid var(--carve-2);border-radius:4px;font:600 26px var(--serif);transition:border-color .3s,background .3s}
+.lt.on b{border-color:var(--lamp);background:rgba(231,180,90,.14)}
+.lt i,.lt u{display:block;font-style:normal;text-decoration:none;height:24px;font:600 17px var(--sans);opacity:0;transform:translateY(-8px);transition:opacity .3s,transform .3s}
+.lt i{color:var(--lamp);margin-top:5px}.lt u{color:var(--dim)}.lt.on i,.lt.on u{opacity:1;transform:none}
+.sum{margin-top:18px;display:grid;gap:8px;max-width:640px;font:500 16px ui-monospace,Menlo,monospace}
+.sum div{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;background:var(--stone-2);border-radius:4px}.sum b{color:var(--lamp-2)}
+.res{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:22px}
+.res div{padding:16px;border:1.5px solid var(--carve-2);border-radius:4px;animation:in .5s both}.res div.big{border-color:var(--lamp)}
+.res b{display:block;font:700 54px/.9 var(--serif);color:var(--lamp)}.res span{display:block;margin-top:8px;font:600 16px var(--sans)}.res small{display:block;font-size:13.5px;color:var(--dim);margin-top:2px}
+.res-h{font:600 26px var(--serif);margin-top:30px}
+/* chart stage */
+.sky{display:grid;gap:22px;margin-top:20px;align-items:start}
+@media(min-width:860px){.sky{grid-template-columns:minmax(0,520px) 1fr}}
+.sky svg{width:100%;max-width:520px;display:block;margin:0 auto}
+.sky text{font-family:var(--sans);fill:var(--dim);font-size:9px;text-anchor:middle;dominant-baseline:middle}
+.sky .sg{fill:#CFC3AC;font-size:8.5px;font-weight:600}.sky .pl{fill:var(--ivory);font-size:9px;font-weight:600}
+.sky .dot{transition:transform 1s cubic-bezier(.2,.8,.2,1),opacity .4s}.sky .arc{transition:stroke-dashoffset 1.2s ease-out,opacity .5s}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.facts div{padding:12px 14px;background:var(--stone-2);border-radius:4px;animation:in .5s both}.facts span{display:block;font-size:13.5px;color:var(--dim)}.facts b{font:600 21px/1.2 var(--serif);color:var(--lamp-2)}
+.moonph{width:54px;height:54px;border-radius:50%;background:#2A2117;position:relative;overflow:hidden;box-shadow:0 0 0 1.5px var(--carve-2)}
+.dstrip{display:flex;height:34px;border-radius:4px;overflow:hidden;margin-top:8px;border:1.5px solid var(--carve-2)}
+.dstrip i{display:grid;place-items:center;font:600 12px var(--sans);font-style:normal;color:#1A1208;min-width:0;overflow:hidden;border-right:1.5px solid var(--stone)}
+.dstrip i:nth-child(odd){background:var(--lamp)}.dstrip i:nth-child(even){background:#B98A3C}.dstrip i.now{outline:2.5px solid var(--ivory);outline-offset:-2.5px}
+.snap .lv i::after{transition:width 1s cubic-bezier(.2,.7,.2,1)}.snap.wait .lv i::after{width:0}.snap.wait .step{opacity:0;transform:translateY(14px)}.snap .step{transition:opacity .6s .2s,transform .6s .2s}
 .more{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 60px}
-@media print{body{background:#fff;color:#111}nav.top,.offer,.more,.noprint,.locked,.prep{display:none!important}.lp b,.yhead b,.price,.gold{color:#7A5310;text-shadow:none}.body,.cols p,.stand p,.offer li{color:#222}.stand,.two div,.locks div{background:#F6F1E6}.year{break-before:page}}
+@media print{body{background:#fff;color:#111}nav.top,.offer,.more,.noprint,.locked,.prep,.hub,.calc{display:none!important}.lp b,.yhead b,.price,.gold{color:#7A5310;text-shadow:none}.body,.cols p,.stand p,.offer li{color:#222}.stand,.two div,.locks div{background:#F6F1E6}.year{break-before:page}}
 </style>
 </head>
 <body>
@@ -108,6 +149,25 @@ article.sec h2{font-size:clamp(32px,5.6vw,52px);max-width:16em}
     </header>
 
     <p class="noprint" style="margin:-10px 0 30px"><button class="btn line pdf" style="margin-right:16px">Download as PDF</button><a class="gold" href="/guide/" style="font-weight:600">How to read this report</a> <span class="err pdf-e" role="alert" style="display:block"></span></p>
+
+    <section class="hub" id="hub">
+      <h2>Your free readings.</h2>
+      <p class="lead" style="margin-top:12px">Each one is calculated in front of you, step by step.</p>
+      <div class="hubs">
+        <button data-calc="halia"><b>HALIA report</b><span>Where your life stands today, and one step to take</span><em>Free</em></button>
+        <button data-calc="num"><b>Numerology</b><span>Chaldean and Pythagorean, every letter and digit shown</span><em>Free</em></button>
+        <button data-calc="chart"><b>Vedic chart</b><span>Planets, nakshatra, tithi, rising sign and Dasha</span><em>Free</em></button>
+      </div>
+      <p class="cap" style="margin-top:14px"><a class="gold" href="/methods/">What each method is and how it works</a></p>
+    </section>
+
+    <section class="calc hide" id="calc" aria-live="polite">
+      <div class="calc-top"><h2 id="calc-h"></h2><button class="link" id="calc-again">Play again</button></div>
+      <p class="cap" id="calc-sub"></p>
+      <div id="calc-stage"></div>
+      <ol class="log" id="calc-log"></ol>
+      <div id="calc-out"></div>
+    </section>
 
     <section class="snap hide" id="snap"></section>
 
@@ -172,6 +232,7 @@ article.sec h2{font-size:clamp(32px,5.6vw,52px);max-width:16em}
     <div class="more"><a class="btn line" href="/app/">Ask Destiny and daily guidance</a><a class="btn line" href="/halia/">Open HALIA chat</a><a class="btn line" href="/match/">HALIA Match</a></div>
   </div>
 </main>
-<script src="/report.js?v=3"></script>
+<script src="/report.js?v=4"></script>
+<script src="/calc.js?v=1"></script>
 </body>
 </html>

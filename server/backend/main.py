@@ -219,7 +219,7 @@ def user_chart(u: dict) -> dict | None:
 def slim_chart(c: dict | None) -> dict | None:
     if not c:
         return None
-    return {k: c.get(k) for k in ("time_known", "lagna", "natal", "dasha", "transits", "moon_today", "notes", "place")}
+    return {k: c.get(k) for k in ("time_known", "lagna", "natal", "dasha", "tithi", "transits", "moon_today", "notes", "place")}
 
 
 def profile_text_for(u: dict, meals: list[dict] | None = None, chart: dict | None = None) -> str:

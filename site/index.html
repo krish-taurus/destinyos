@@ -92,7 +92,7 @@ nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
 .rays{position:absolute;left:50%;top:41%;width:210vmax;height:210vmax;translate:-50% -50%;border-radius:50%;background:repeating-conic-gradient(rgba(246,217,154,.2) 0 4deg,transparent 4deg 14deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 62%);mask:radial-gradient(circle,#000 0,transparent 62%);opacity:calc(var(--open)*.9);animation:turn 90s linear infinite}
 .aura{position:absolute;left:50%;top:41%;width:70vmin;height:70vmin;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,244,214,.75),rgba(231,180,90,.3) 34%,transparent 66%);opacity:var(--open);animation:breathe 5s ease-in-out infinite}
 @keyframes breathe{50%{scale:1.14}}
-.hero{position:absolute;left:0;right:0;bottom:0;height:29svh;padding-bottom:calc(1.6svh + 46px);display:flex;flex-direction:column;justify-content:center;text-align:center;background:linear-gradient(transparent,#0D0A07 22%);opacity:calc(1 - var(--p)*5);pointer-events:none}
+.hero{position:absolute;left:0;right:0;bottom:0;height:29svh;padding-bottom:calc(1.6svh + 54px);display:flex;flex-direction:column;justify-content:center;text-align:center;background:linear-gradient(transparent,#0D0A07 22%);opacity:calc(1 - var(--p)*5);pointer-events:none}
 .hero .title{font-size:clamp(31px,8.2vw,62px);line-height:1}
 .hero .lead{font-size:clamp(15.5px,2vw,19px);line-height:1.45;margin-inline:auto;max-width:30em}
 .hero .title{animation:rise 1.5s .5s cubic-bezier(.2,.8,.2,1) both}
@@ -180,11 +180,11 @@ nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
 .puff{position:absolute;bottom:-9%;left:var(--x);width:var(--s);aspect-ratio:1;margin-left:calc(var(--s)/-2);border-radius:50%;background:radial-gradient(circle,rgba(255,244,220,.62),rgba(255,236,200,.22) 45%,transparent 68%);filter:blur(7px);opacity:0;animation:puff var(--t) var(--d) linear infinite;will-change:transform,opacity}
 @keyframes puff{0%{transform:translate(0,12%) scale(.35);opacity:0}18%{opacity:.95}70%{opacity:.5}100%{transform:translate(var(--dx),var(--dy)) scale(1.9);opacity:0}}
 .static .smoke{display:none}
-.snd{position:absolute;left:50%;translate:-50% 0;bottom:1.6svh;z-index:3;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px;border-radius:99px;border:1.5px solid rgba(231,180,90,.6);background:rgba(13,10,7,.7);color:var(--lamp-2);font:500 14px var(--sans);cursor:pointer;opacity:calc(1 - var(--p)*4)}
-.snd{white-space:nowrap}
-@media(max-height:700px){.hero .lead{display:none}.hero{padding-bottom:calc(1.6svh + 42px)}}
-.snd::before{content:"";width:13px;height:15px;background:var(--lamp);clip-path:polygon(50% 0,58% 12%,82% 30%,88% 72%,100% 84%,0 84%,12% 72%,18% 30%,42% 12%)}
-.snd[aria-pressed=true]{border-color:var(--lamp);color:var(--lamp)}
+.enter{position:absolute;left:0;right:0;bottom:1.6svh;z-index:3;display:flex;justify-content:center;align-items:center;gap:10px;opacity:calc(1 - var(--p)*5)}
+.enter .btn{min-height:46px;padding:9px 26px}
+.mute{min-height:46px;padding:8px 14px;border-radius:4px;border:1.5px solid rgba(231,180,90,.5);background:rgba(13,10,7,.7);color:var(--lamp-2);font:500 14px var(--sans);cursor:pointer;white-space:nowrap}
+.mute[aria-pressed=false]{color:var(--dim);border-color:var(--carve)}
+@media(max-height:700px){.hero .lead{display:none}}
 /* 7. consultation */
 .consult{padding:110px 0;background:radial-gradient(ellipse at 50% 0,rgba(231,180,90,.16),transparent 60%)}
 .consult .card{border:1.5px solid var(--lamp);padding:clamp(26px,5vw,50px);margin-top:38px;display:grid;gap:26px}
@@ -259,7 +259,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 <canvas id="embers" aria-hidden="true"></canvas>
 <nav class="top"><a class="brand" href="/">DESTINY OS</a><span class="links"><a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#match">Match</a><a href="#pricing">Pricing</a><a href="/sign-in/">Sign in</a></span><a class="gold cta" href="#ask">Reveal my chart</a><button class="menu-b" id="menu-b" aria-expanded="false" aria-controls="menu">Menu</button></nav>
 <div class="menu" id="menu" hidden>
-  <a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#match">HALIA Match</a><a href="#pricing">Pricing</a><a href="/guide/">How to read your report</a><a href="/sign-in/">Sign in</a>
+  <a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#match">HALIA Match</a><a href="#pricing">Pricing</a><a href="/methods/">The methods</a><a href="/guide/">How to read your report</a><a href="/sign-in/">Sign in</a>
   <a class="btn" href="#ask" style="margin-top:18px">Reveal my chart</a>
 </div>
 
@@ -283,9 +283,9 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
   <div class="hero"><div class="wrap">
     <h1 class="title">Enter the temple of time.</h1>
     <p class="lead">Three thousand years of reading the sky. Walk through how it began, then see your own chart.</p>
-    <p class="hint">Scroll to open the doors</p>
+    <p class="hint">Scroll, or tap to enter</p>
   </div></div>
-  <button class="snd" id="snd" aria-pressed="false">Tap for the temple bell</button>
+  <div class="enter"><button class="btn" id="snd">Enter the temple</button><button class="mute" id="mute" aria-pressed="true" aria-label="Bell sound">Bell on</button></div>
 </div></section>
 <div class="frieze"></div>
 
@@ -552,7 +552,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
   <p>Destiny OS offers traditional numerology and astrology guidance for reflection and self-understanding. It is not predictive and does not replace medical, legal, financial or mental-health advice. If you are struggling, please reach out to Tele-MANAS on 14416 or a trusted person.</p>
   <p>History drawn from the Vedanga Jyotisha, the Brihat Jataka and the Brihat Parashara Hora Shastra, with the dates scholars give for the texts as they survive.</p>
   <p>© 2026 Destiny OS · by Dr. Krish Bharggav · Bengaluru</p>
-  <nav><a href="/guide/">How to read your report</a><a href="/halia/how-it-works/">HALIA</a><a href="/match/">HALIA Match</a><a href="/business/">Business</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/sign-in/">Sign in</a><a href="https://wa.me/917975554666" target="_blank" rel="noopener">WhatsApp</a></nav>
+  <nav><a href="/methods/">The methods</a><a href="/guide/">How to read your report</a><a href="/halia/how-it-works/">HALIA</a><a href="/match/">HALIA Match</a><a href="/business/">Business</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/sign-in/">Sign in</a><a href="https://wa.me/917975554666" target="_blank" rel="noopener">WhatsApp</a></nav>
 </div></footer>
 
 <script>
@@ -609,8 +609,17 @@ const Bell = { on: false, ctx: null,
       const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = 392 * ratio * (1 + (Math.random() - .5) * .004);
       g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(amp, when + .006); g.gain.exponentialRampToValueAtTime(.0001, when + dur);
       o.connect(g).connect(out); o.start(when); o.stop(when + dur + .05); }); },
-  ring() { if (!this.on || !this.ctx || this.ctx.state !== 'running') return; const t = this.ctx.currentTime + .02; this.strike(t, .2); this.strike(t + 1.05, .13); for (const b of bells) b.w += 1.4; } };
-$('snd').onclick = () => { Bell.on = !Bell.on; if (Bell.on) Bell.arm(); $('snd').setAttribute('aria-pressed', Bell.on); $('snd').textContent = Bell.on ? 'Bell on' : 'Bell off'; if (Bell.on) { Bell.ring(); } };
+  ring() { if (!this.on) return; if (!this.ctx) this.arm(); if (!this.ctx || this.ctx.state !== 'running') return; const t = this.ctx.currentTime + .02; this.strike(t, .2); this.strike(t + 1.05, .13); for (const b of bells) b.w += 1.4; } };
+Bell.on = true;
+// Browsers allow sound only after a tap, click or key press, never after scrolling alone. So every such gesture arms the bell,
+// and "Enter the temple" is itself a tap: it opens the doors and the bell rings with them.
+['pointerdown', 'touchend', 'keydown', 'click'].forEach(ev => addEventListener(ev, () => Bell.on && Bell.arm(), { passive: true }));
+$('mute').onclick = () => { Bell.on = !Bell.on; $('mute').setAttribute('aria-pressed', Bell.on); $('mute').textContent = Bell.on ? 'Bell on' : 'Bell off'; };
+$('snd').onclick = () => { Bell.arm(); const sc = document.querySelector('[data-scene=gate]'), from = scrollY, to = sc.offsetTop + sc.offsetHeight - innerHeight * .04;
+  if (still) return scrollTo(0, to);
+  const t0 = performance.now(), ms = 6500; let stop = false; const halt = () => stop = true;
+  ['wheel', 'touchstart', 'keydown'].forEach(ev => addEventListener(ev, halt, { once: true, passive: true }));
+  (function go(t) { const k = clamp((t - t0) / ms), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; scrollTo(0, from + (to - from) * e); if (k < 1 && !stop) requestAnimationFrame(go); })(t0); };
 const flames = [...document.querySelectorAll('.temple .fl')].map(e => ({ e, w: 0, r: .05 + Math.random() * .13, ph: Math.random() * 6.3, f: 2.2 + Math.random() * 2.4, k: .7 + Math.random() * .7 }));
 const bells = [...document.querySelectorAll('.bell')].map(e => ({ e, w: 0, r: .03 + Math.random() * .04, ph: Math.random() * 6.3 }));
 let wind = 0, lastY = scrollY, gateOn = true;

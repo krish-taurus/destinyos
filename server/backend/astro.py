@@ -1,5 +1,6 @@
 """Vedic (sidereal, Lahiri) chart, Vimshottari dasha and daily transits via Swiss Ephemeris."""
 from __future__ import annotations
+import math
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import swisseph as swe
@@ -111,6 +112,20 @@ def dasha_window(moon_lon: float, birth_utc: datetime, start: datetime, end: dat
     return out
 
 
+TITHI_NAMES = ["Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami",
+               "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi"]
+
+
+def tithi(sun_lon: float, moon_lon: float) -> dict:
+    """The lunar day: how far the Moon is ahead of the Sun, in steps of 12 degrees. 1-15 waxing (Shukla), 16-30 waning (Krishna)."""
+    angle = (moon_lon - sun_lon) % 360
+    n = int(angle // 12) + 1
+    paksha = "Shukla" if n <= 15 else "Krishna"
+    name = "Purnima" if n == 15 else "Amavasya" if n == 30 else TITHI_NAMES[(n - 1) % 15]
+    return {"number": n, "paksha": paksha, "name": name, "label": name if n in (15, 30) else f"{paksha} {name}",
+            "angle": round(angle, 2), "lit": round((1 - math.cos(math.radians(angle))) / 2, 3)}
+
+
 def whole_sign_house(planet_sign: str, lagna_sign: str) -> int:
     return (SIGNS.index(planet_sign) - SIGNS.index(lagna_sign)) % 12 + 1
 
@@ -140,6 +155,7 @@ def build_chart(dob: str, time: str | None, lat: float, lon: float, tz: str) -> 
         "lagna": asc,
         "natal": natal,
         "dasha": vimshottari(natal["Moon"]["longitude"], birth_utc, now),
+        "tithi": tithi(natal["Sun"]["longitude"], natal["Moon"]["longitude"]),
         "transits": transits,
         "moon_today": transits["Moon"],
         "generated_at": now.isoformat(),

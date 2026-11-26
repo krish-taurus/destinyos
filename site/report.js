@@ -132,8 +132,17 @@
         <div class="step"><span class="cap">One step for today, about ${esc(s.minutes)} minutes</span><p>${esc(s.step)}</p></div>
         <p class="cap" style="margin-top:14px;max-width:44em">${esc(s.note)} <button class="link" id="snap-go" style="padding:0;font-size:14.5px">Update my answers</button></p>`;
     }
-    S.classList.remove('hide'); $('snap-go').onclick = () => prep(null); if (scroll) S.scrollIntoView();
+    S.classList.remove('hide'); $('snap-go').onclick = () => prep(null); if (scroll) { S.scrollIntoView(); playSnap(); }
+    return s;
   }
+
+  // the snapshot bars draw themselves, one after another
+  function playSnap() { const S = $('snap'); if (still || !S.querySelector('.lv')) return; S.classList.add('wait');
+    S.querySelectorAll('.lv i').forEach((b, k) => b.style.setProperty('--d', k)); void S.offsetWidth;
+    const st = document.createElement('style'); st.textContent = '.snap .lv div:nth-child(2) i::after{transition-delay:.25s}.snap .lv div:nth-child(3) i::after{transition-delay:.5s}.snap .lv div:nth-child(4) i::after{transition-delay:.75s}.snap .lv div:nth-child(5) i::after{transition-delay:1s}';
+    if (!document.getElementById('snap-st')) { st.id = 'snap-st'; document.head.appendChild(st); }
+    setTimeout(() => S.classList.remove('wait'), 120); }
+  window.DOS = { api, esc, still, me: () => me, halia: async () => { const s = await snapshot(false); if (s && s.answered) { $('snap').scrollIntoView(); playSnap(); } else prep(null); } };
 
   // ── PDF download ──
   async function pdf(btn) { const was = btn.textContent, E = btn.parentNode.querySelector('.pdf-e'); btn.disabled = true; btn.textContent = 'Preparing your PDF…'; if (E) E.textContent = '';

@@ -67,5 +67,5 @@ if [ "$ok" != 1 ]; then
   bash "$REPO/deploy/rollback.sh" "$TS"; exit 1
 fi
 echo "   API healthy"
-for u in / /sign-in/ /sign-up/ /report/ /guide/ /match/ /admin/ /app/ /halia/ /halia/how-it-works/ /business/ /free-report/; do printf "   %-14s %s\n" "$u" "$(curl -s -o /dev/null -w '%{http_code}' "https://destinyos.in$u")"; done
+for u in / /sign-in/ /sign-up/ /report/ /guide/ /methods/ /match/ /admin/ /app/ /halia/ /halia/how-it-works/ /business/ /free-report/; do printf "   %-14s %s\n" "$u" "$(curl -s -o /dev/null -w '%{http_code}' "https://destinyos.in$u")"; done
 echo "DEPLOYED $(git -C "$REPO" log -1 --format=%h). If anything looks wrong: bash $REPO/deploy/rollback.sh $TS"
