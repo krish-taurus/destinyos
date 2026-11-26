@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D0A07">
+<title>How to read your report — Destiny OS</title>
+<meta name="description" content="How Destiny OS works out your numbers, your chart and your Dasha periods, how HALIA decides what you should work on, how the match score is calculated, and what none of it can tell you.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/temple.css?v=2">
+<style>
+.hero{padding:6svh 0 30px}
+.hero h1{font-size:clamp(50px,11vw,118px);letter-spacing:-.03em;line-height:.92;max-width:9em}
+.toc{display:grid;gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:36px}
+@media(min-width:760px){.toc{grid-template-columns:repeat(3,1fr)}}
+.toc a{display:block;padding:18px 20px;background:var(--stone);text-decoration:none}
+.toc a:hover{background:var(--stone-2)}.toc b{display:block;font:600 24px/1.15 var(--serif);color:var(--lamp-2)}.toc span{font-size:15px;color:var(--dim)}
+section.part{padding:64px 0;border-top:1.5px solid var(--carve)}
+.part>h2{font-size:clamp(40px,8vw,84px);letter-spacing:-.025em;line-height:.95;max-width:11em}
+.part h3{font-size:clamp(28px,4.6vw,40px);margin-top:44px}
+.part p.t{margin-top:16px;max-width:36em;font-size:19px;line-height:1.7;color:#E4D8C0}
+.two{display:grid;gap:16px;margin-top:30px}
+@media(min-width:800px){.two{grid-template-columns:1fr 1fr}}
+.two>div{padding:24px;border:1.5px solid var(--carve-2);border-radius:4px}
+.two>div.h{border-color:var(--lamp);background:radial-gradient(ellipse at 0 0,rgba(231,180,90,.14),transparent 70%)}
+.two h4{font:600 30px/1.1 var(--serif)}.two p{margin-top:10px;color:#D9CDB6;font-size:17px}.two small{display:block;margin-top:12px;color:var(--dim);font-size:14.5px}
+/* calculator */
+.calc{margin-top:28px;padding:24px;border:1.5px solid var(--lamp);border-radius:4px;background:var(--stone-2)}
+.calc .row2{max-width:640px;gap:14px 16px}
+.work{margin-top:24px;display:grid;gap:14px}
+.w{display:grid;gap:8px 20px;padding:16px 0;border-top:1px solid var(--carve);align-items:center}
+@media(min-width:760px){.w{grid-template-columns:96px 1fr}}
+.w>b{font:700 72px/.85 var(--serif);color:var(--lamp)}
+.w h4{font:600 24px var(--serif)}.w p{color:#D9CDB6;font-size:16.5px;margin-top:2px}
+.w code{display:block;margin-top:8px;font:500 15.5px/1.6 ui-monospace,Menlo,monospace;color:var(--lamp-2);overflow-wrap:anywhere}
+table.letters{border-collapse:collapse;margin-top:16px;font:500 16px var(--sans)}
+table.letters td{border:1px solid var(--carve-2);padding:6px 0;width:38px;text-align:center}table.letters td:first-child{width:auto;padding:6px 12px;color:var(--lamp);font-weight:700}
+.tw{overflow-x:auto}
+/* dasha */
+.cycle{display:flex;height:64px;margin-top:22px;border:1.5px solid var(--carve-2);border-radius:4px;overflow:hidden}
+.cycle i{display:grid;place-items:center;font:600 13px/1.1 var(--sans);font-style:normal;color:#1A1208;text-align:center;border-right:1.5px solid var(--stone);min-width:0;overflow:hidden}
+.cycle i:nth-child(odd){background:var(--lamp)}.cycle i:nth-child(even){background:#B98A3C}
+.cycle.sub{height:40px;max-width:520px}
+ol.steps{list-style:none;counter-reset:s;margin-top:20px;max-width:40em}
+ol.steps li{counter-increment:s;position:relative;padding:14px 0 14px 60px;border-bottom:1px solid var(--carve);font-size:18px;line-height:1.55;color:#E4D8C0}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:8px;font:700 44px/1 var(--serif);color:var(--lamp)}
+/* halia demo */
+.demo{margin-top:28px;padding:24px;border:1.5px solid var(--lamp);border-radius:4px;background:var(--stone-2)}
+.lvl{display:grid;grid-template-columns:8.4em 1fr;gap:10px 14px;align-items:center;margin-top:12px;font-size:16.5px}
+.lvl{grid-template-columns:6.6em 1fr}.lvl .seg{gap:6px;flex-wrap:nowrap}.lvl .seg label{min-width:0}.lvl .seg span{min-height:44px;padding:4px}
+.out{margin-top:22px;padding:20px 22px;border-left:3px solid var(--lamp);background:var(--stone)}
+.out p{font:600 clamp(23px,4vw,30px)/1.25 var(--serif);margin-top:6px}
+/* anatomy */
+.anat{margin-top:26px;display:grid;gap:10px;max-width:760px}
+.anat>div{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:14px 16px;background:var(--stone-2);border-radius:4px;align-items:start}
+.anat b{font:700 30px/1 var(--serif);color:var(--lamp);min-width:1.6em}.anat h4{font:600 21px var(--serif)}.anat p{font-size:16px;color:#CFC3AC;margin-top:2px}
+.tag{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;font:600 12.5px var(--sans);vertical-align:middle}
+.tag.c{background:rgba(143,208,138,.16);color:#A9D6A4}.tag.t{background:rgba(231,180,90,.16);color:var(--lamp-2)}.tag.a{background:rgba(200,68,43,.2);color:#F0A794}
+/* match weights */
+.wl{display:grid;gap:10px;margin-top:22px;max-width:640px}
+.wl div{display:grid;grid-template-columns:9.6em 1fr 1.6em;gap:12px;align-items:center;font-size:16px}
+.wl i{height:14px;border-radius:9px;background:var(--carve);overflow:hidden}.wl i::after{content:"";display:block;height:100%;width:var(--w);background:var(--lamp)}
+.wl b{color:var(--lamp-2);text-align:right}
+table.ex{border-collapse:collapse;margin-top:20px;font-size:16px;min-width:560px}
+table.ex th{text-align:left;font:600 14px var(--sans);color:var(--dim);padding:8px 12px 8px 0}table.ex td{padding:10px 12px 10px 0;border-top:1px solid var(--carve)}
+table.ex tr:last-child td{font-weight:600;color:var(--lamp-2)}
+ul.no{list-style:none;margin-top:20px;max-width:40em}
+ul.no li{position:relative;padding:12px 0 12px 30px;border-bottom:1px solid var(--carve);font-size:18px;color:#E4D8C0}
+ul.no li::before{content:"";position:absolute;left:2px;top:22px;width:14px;height:2.5px;background:var(--kumkum)}
+.end{padding:60px 0 90px;border-top:1.5px solid var(--carve);display:flex;flex-wrap:wrap;gap:12px}
+</style>
+</head>
+<body>
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><a href="/report/">My report</a></nav>
+<main class="wrap">
+  <header class="hero">
+    <h1>How to read your report.</h1>
+    <p class="lead" style="margin-top:20px">What each number means, exactly how it is calculated, how HALIA decides what you should work on, and what none of it can tell you.</p>
+    <nav class="toc" aria-label="On this page">
+      <a href="#two"><b>Two ways of seeing</b><span>Tradition and HALIA, kept apart</span></a>
+      <a href="#numbers"><b>Your numbers</b><span>Worked out live from a name and date</span></a>
+      <a href="#chart"><b>Your chart and Dasha</b><span>Where the planets and periods come from</span></a>
+      <a href="#halia"><b>How HALIA works</b><span>Five areas, your lowest, one step</span></a>
+      <a href="#years"><b>The three-year report</b><span>How to read one year</span></a>
+      <a href="#match"><b>The match score</b><span>What 0 to 100 means</span></a>
+    </nav>
+  </header>
+
+  <section class="part" id="two">
+    <h2>Two ways of seeing, kept apart.</h2>
+    <p class="t">Your report has two kinds of content. They come from different places and should be read differently, so every part is marked with which one it is.</p>
+    <div class="two">
+      <div><h4>Tradition</h4><p>Your numerology numbers, your birth chart and your Dasha periods. They are calculated from your name, date, time and place of birth by fixed, documented rules.</p><small>Read it as reflection. The calculation is exact; what the result means is a matter of tradition, and it is not a prediction.</small></div>
+      <div class="h"><h4>HALIA</h4><p>Where your life stands today and one step to take. It is built only from the answers you give about your work, relationships, money, happiness and health.</p><small>Read it as a plan. It uses no birth details, no numerology and no astrology.</small></div>
+    </div>
+    <h3>Who does what</h3>
+    <div class="anat">
+      <div><b>1</b><div><h4>Calculated by fixed rules <span class="tag c">exact</span></h4><p>Every number, planet position, Dasha date, HALIA focus and match score. The same input always gives the same result.</p></div></div>
+      <div><b>2</b><div><h4>Written by an AI model <span class="tag a">wording</span></h4><p>The paragraphs of your report. The model is given the calculated facts and writes them in plain words. It is not allowed to invent positions or dates, or to predict death, illness, accidents or divorce.</p></div></div>
+      <div><b>3</b><div><h4>Read by a person <span class="tag t">optional</span></h4><p>A personal session with Dr. Krish, if you book one.</p></div></div>
+    </div>
+  </section>
+
+  <section class="part" id="numbers">
+    <h2>Your numbers.</h2>
+    <p class="t">Numerology turns your name and birth date into single digits. Type any name and date to see every step. Nothing you type here is sent or saved.</p>
+    <div class="calc">
+      <div class="row2"><label class="f" style="margin-top:0"><span>Full name at birth</span><input class="in" id="c-name" value="Priya Sharma" maxlength="80"></label>
+        <label class="f" style="margin-top:0"><span>Date of birth</span><input class="in" id="c-dob" type="date" value="1994-08-17"></label></div>
+      <div class="work" id="work" aria-live="polite"></div>
+    </div>
+    <h3>The letter tables</h3>
+    <p class="t">Each letter has a value. We calculate with both systems and tell you where they agree. The headline numbers in your report use the Pythagorean table.</p>
+    <div class="tw"><table class="letters" id="tb-p"></table></div><div class="tw"><table class="letters" id="tb-c"></table></div>
+    <h3>The rules</h3>
+    <ol class="steps">
+      <li>To reduce a number, add its digits and repeat until one digit is left. 1994 becomes 1+9+9+4 = 23, then 2+3 = 5.</li>
+      <li>11, 22 and 33 are master numbers. For Life Path, Expression, Soul Urge and Personality we stop when we reach one of them.</li>
+      <li>Soul Urge uses only the vowels of your name (A, E, I, O, U). Personality uses only the consonants.</li>
+      <li>Personal Year changes every 1 January. It uses your birth day and month with the current year.</li>
+    </ol>
+  </section>
+
+  <section class="part" id="chart">
+    <h2>Your chart and Dasha.</h2>
+    <p class="t">Your chart is a map of where the Sun, Moon and planets were at the moment and place you were born.</p>
+    <ol class="steps">
+      <li>Your birth city gives a latitude, longitude and time zone. Your birth time is converted to universal time.</li>
+      <li>The position of each planet is computed with the Swiss Ephemeris, a widely used astronomical library built on NASA JPL data.</li>
+      <li>Positions are shifted to the sidereal zodiac with the Lahiri ayanamsa, the standard used in Jyotisha and by the Indian government's almanac.</li>
+      <li>The sky is cut into 12 signs of 30° each and 27 nakshatras of 13°20' each. Your Moon sign and birth nakshatra are wherever the Moon falls.</li>
+      <li>Your Lagna is the sign rising on the eastern horizon. It moves through a sign in about two hours, so it needs your birth time. Without a time we leave it out instead of guessing.</li>
+    </ol>
+    <h3>How a Dasha period is calculated</h3>
+    <p class="t">Vimshottari Dasha divides 120 years among nine lords, always in this order and with these lengths:</p>
+    <div class="cycle" id="cycle" role="img" aria-label="The 120-year Vimshottari cycle"></div>
+    <p class="cap" style="margin-top:8px">Ketu 7 years, Venus 20, Sun 6, Moon 10, Mars 7, Rahu 18, Jupiter 16, Saturn 19, Mercury 17. Together, 120.</p>
+    <ol class="steps">
+      <li>Your birth nakshatra decides which lord's period you were born into. The 27 nakshatras repeat the nine lords three times.</li>
+      <li>How far the Moon had moved through that nakshatra decides how much of that first period had already passed at your birth.</li>
+      <li>From there the periods follow in order. This long period is your Mahadasha.</li>
+      <li>Each Mahadasha is split into nine shorter Antardashas in the same proportions, starting with its own lord. Your report names both, for example "Moon–Jupiter".</li>
+    </ol>
+    <p class="t">If you did not give a birth time, the Moon's position can be off by a few degrees, so Dasha dates may shift by up to a few months. Your report says so when that applies.</p>
+  </section>
+
+  <section class="part" id="halia">
+    <h2>How HALIA works.</h2>
+    <p class="t">HALIA starts from a finding in our research: the best guide to where your work, money or wellbeing will be next year is where it is today, together with your situation. Your birth date added nothing we could measure. So HALIA asks about today.</p>
+    <ol class="steps">
+      <li>You rate five areas of your life from 1 (very low) to 5 (very good): career, relationships, money, happiness and health.</li>
+      <li>HALIA finds your lowest area. That is where a small change usually helps most, so it becomes your focus. If you tell it what you want to work on, your choice wins.</li>
+      <li>You say how much time you have each day. HALIA gives one step for your focus that fits that time.</li>
+      <li>It asks again every 30 days, because your levels change. One short question a day on WhatsApp, if you want it.</li>
+    </ol>
+    <div class="demo">
+      <h4 style="font:600 28px var(--serif)">Try it</h4><p class="cap">Change the ratings and the time. This is the same rule your report uses.</p>
+      <div id="lv"></div>
+      <div class="lvl"><span>Time each day</span><div class="seg" id="tm" style="flex-wrap:wrap"></div></div>
+      <div class="out" aria-live="polite"><span class="cap" id="o-why"></span><p id="o-step"></p></div>
+    </div>
+    <h3>Reading "Where you stand today"</h3>
+    <div class="anat">
+      <div><b>▬</b><div><h4>The five bars</h4><p>Your own ratings. The red bar is your lowest area.</p></div></div>
+      <div><b>→</b><div><h4>One step for today</h4><p>Chosen by rule from your focus and your time. Do it, then answer again next month and watch the bar.</p></div></div>
+    </div>
+    <p class="t"><a class="gold" href="/halia/how-it-works/">See the research behind HALIA, step by step</a></p>
+  </section>
+
+  <section class="part" id="years">
+    <h2>The three-year report.</h2>
+    <p class="t">Each of the three years has the same layout. Here is what every part is and where it comes from.</p>
+    <div class="anat">
+      <div><b>1</b><div><h4>The year and its Personal Year number <span class="tag c">calculated</span></h4><p>Your birth day and month plus that year, reduced to one digit. It sets the traditional theme: 1 begins, 4 builds, 9 completes.</p></div></div>
+      <div><b>2</b><div><h4>The gold strip <span class="tag c">calculated</span></h4><p>January to December, left to right. Each block is one Dasha period, and its width is the share of the year it covers. The dates are listed underneath.</p></div></div>
+      <div><b>3</b><div><h4>Work and money, relationships, energy <span class="tag t">tradition</span></h4><p>What that Personal Year and those Dasha periods are traditionally associated with, in plain words. For reflection.</p></div></div>
+      <div><b>4</b><div><h4>Supportive months and "go slowly" <span class="tag t">tradition</span></h4><p>Months tradition treats as better for starting or for waiting. A guide for planning, not a promise.</p></div></div>
+      <div><b>5</b><div><h4>Three steps for the year <span class="tag c">HALIA</span></h4><p>Built from the answers you gave before the report was written. If you skipped the questions, the steps are general and the report tells you.</p></div></div>
+    </div>
+  </section>
+
+  <section class="part" id="match">
+    <h2>The match score.</h2>
+    <p class="t">On HALIA Match, the number on a card is how closely two people's answers agree, from 0 to 100. It compares 13 questions in five areas. Areas that matter more for a shared life count for more:</p>
+    <div class="wl" role="img" aria-label="Weight of each area in the score: life goals 9, home and values 5, money 3, day to day 3, handling disagreement 2">
+      <div><span>Life goals</span><i style="--w:100%"></i><b>9</b></div><div><span>Home and values</span><i style="--w:55.6%"></i><b>5</b></div>
+      <div><span>Money</span><i style="--w:33.3%"></i><b>3</b></div><div><span>Day to day</span><i style="--w:33.3%"></i><b>3</b></div><div><span>Handling disagreement</span><i style="--w:22.2%"></i><b>2</b></div></div>
+    <ol class="steps">
+      <li>For a choice question, such as whether you want children, the same answer scores full marks and a different answer scores none. "Open either way" or "Flexible" agrees with anything.</li>
+      <li>For a scale question, such as saver to spender, the closer your answers the higher the marks. Neighbouring answers score half.</li>
+      <li>Each question's marks are multiplied by its weight. The total is divided by the highest total possible for the questions you both answered.</li>
+      <li>No number is shown until you have both answered at least 6 of the same questions covering 60% of the weight. Until then the card says "New".</li>
+    </ol>
+    <h3>A worked example</h3>
+    <div class="tw"><table class="ex">
+      <tr><th>Question</th><th>You</th><th>Them</th><th>Marks</th><th>Weight</th><th>Points</th></tr>
+      <tr><td>Children</td><td>I want children</td><td>Open either way</td><td>1</td><td>3</td><td>3 of 3</td></tr>
+      <tr><td>Where to live</td><td>A big city</td><td>Abroad</td><td>0</td><td>2</td><td>0 of 2</td></tr>
+      <tr><td>Saver or spender</td><td>Saver</td><td>Balanced</td><td>0.5</td><td>2</td><td>1 of 2</td></tr>
+      <tr><td>Disagreements</td><td>Talk at once</td><td>Talk at once</td><td>1</td><td>2</td><td>2 of 2</td></tr>
+      <tr><td colspan="5">Score on these four</td><td>6 of 9 = 67</td></tr>
+    </table></div>
+    <p class="t">After you match, you both see the questions where your answers differ most, under "Worth talking about". A high score means you agree on what you said matters. It does not predict how a relationship will go, and a low score on one question is something to talk about, not a verdict.</p>
+  </section>
+
+  <section class="part" id="limits">
+    <h2>What it cannot tell you.</h2>
+    <ul class="no">
+      <li>It cannot predict events. No date for a job, a marriage, a child or money.</li>
+      <li>Numerology and astrology are traditions. In our own tests on public data, birth-based numbers did not improve predictions.</li>
+      <li>HALIA only knows what you tell it. If your answers are out of date, so is its advice.</li>
+      <li>A match score compares answers. It knows nothing about chemistry, kindness or effort.</li>
+      <li>Nothing here replaces a doctor, a lawyer, a financial adviser or a counsellor.</li>
+    </ul>
+  </section>
+
+  <div class="end"><a class="btn" href="/report/">Open my report</a><a class="btn line" href="/halia/how-it-works/">The research behind HALIA</a><a class="btn line" href="/match/">HALIA Match</a></div>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // ── numerology, the same rules as the server ──
+  const AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', PY = Object.fromEntries([...AZ].map((c, i) => [c, i % 9 + 1]));
+  const CH = { A: 1, B: 2, C: 3, D: 4, E: 5, F: 8, G: 3, H: 5, I: 1, J: 1, K: 2, L: 3, M: 4, N: 5, O: 7, P: 8, Q: 1, R: 2, S: 3, T: 4, U: 6, V: 6, W: 6, X: 5, Y: 1, Z: 7 };
+  const digits = n => String(n).split('').reduce((a, b) => a + +b, 0), MASTER = [11, 22, 33];
+  function chain(n, keep) { const s = [n]; while (n > 9 && !(keep && MASTER.includes(n))) { n = digits(n); s.push(n); } return s; }   // every step of a reduction
+  const show = (n, keep) => { const c = chain(n, keep); return c.length > 1 ? c.join(' → ') : String(n); };
+  const last = (n, keep) => chain(n, keep).pop();
+  function letters(name, part) { const L = [...name.toUpperCase()].filter(c => PY[c] && (part === 'v' ? 'AEIOU'.includes(c) : part === 'c' ? !'AEIOU'.includes(c) : true));
+    const sum = L.reduce((a, c) => a + PY[c], 0); return { text: L.length ? L.map(c => `${c}${PY[c]}`).join(' + ') + ` = ${show(sum, true)}` : 'no letters', n: L.length ? last(sum, true) : 0 }; }
+  function calc() { const name = $('c-name').value, dob = $('c-dob').value, W = $('work'); if (!dob) return W.innerHTML = '<p class="cap">Choose a date of birth.</p>';
+    const [y, m, d] = dob.split('-').map(Number), yr = new Date().getFullYear();
+    const lp = last(m, true) + last(d, true) + last(y, true), py = last(m) + last(d) + last(yr);
+    const ex = letters(name), su = letters(name, 'v'), pe = letters(name, 'c');
+    const rows = [[last(lp, true), 'Life Path', 'The main theme of your life. From your full date of birth.', `day ${show(d, true)}   month ${show(m, true)}   year ${show(y, true)}<br>${last(d, true)} + ${last(m, true)} + ${last(y, true)} = ${show(lp, true)}`],
+      [last(d), 'Birth number', 'Your natural style. From the day you were born.', `day ${show(d)}`],
+      [ex.n, 'Expression', 'What you are built to do. From every letter of your name.', esc(ex.text)],
+      [su.n, 'Soul Urge', 'What you want underneath. From the vowels.', esc(su.text)],
+      [pe.n, 'Personality', 'How others first see you. From the consonants.', esc(pe.text)],
+      [last(py), 'Personal Year ' + yr, 'What this calendar year is about for you.', `day ${show(d)}   month ${show(m)}   year ${show(yr)}<br>${last(d)} + ${last(m)} + ${last(yr)} = ${show(py)}`]];
+    W.innerHTML = rows.map(([n, t, w, how]) => `<div class="w"><b>${n || '–'}</b><div><h4>${t}</h4><p>${w}</p><code>${how}</code></div></div>`).join(''); }
+  $('c-name').oninput = $('c-dob').oninput = calc; $('c-dob').max = new Date().toISOString().slice(0, 10); calc();
+  const table = (id, label, map) => { const rows = {}; for (const c of AZ) (rows[map[c]] ||= []).push(c);
+    $(id).innerHTML = `<tr><td>${label}</td>${Object.keys(rows).map(k => `<td><b>${k}</b></td>`).join('')}</tr>` + [0, 1, 2, 3, 4].map(r => Object.values(rows).some(v => v[r]) ? `<tr><td></td>${Object.values(rows).map(v => `<td>${v[r] || ''}</td>`).join('')}</tr>` : '').join(''); };
+  table('tb-p', 'Pythagorean', PY); table('tb-c', 'Chaldean', CH);
+  // ── the 120-year cycle ──
+  $('cycle').innerHTML = [['Ketu', 7], ['Venus', 20], ['Sun', 6], ['Moon', 10], ['Mars', 7], ['Rahu', 18], ['Jupiter', 16], ['Saturn', 19], ['Mercury', 17]].map(([l, y]) => `<i style="flex:${y}">${l}<br>${y}</i>`).join('');
+  // ── HALIA, the same rule and the same steps as the engine ──
+  const STEPS = {"career": ["Write down the one work task you keep postponing and do its first 5 minutes today.", "Spend 15 minutes on the one task that would move your work forward most this week.", "Give 30 minutes to the skill your next role needs: one lesson, then one practice problem.", "Block one hour for your most important piece of work before you open any messages."], "relationships": ["Send one honest, kind message to someone you have been meaning to contact.", "Call one person who matters to you and listen for 15 minutes without fixing anything.", "Spend 30 minutes with someone close, phones away.", "Plan one unhurried hour this week with the person you most want to be closer to."], "money": ["Write down everything you spent yesterday. Only look; change nothing yet.", "Take 15 minutes to list your fixed monthly costs and what is left after them.", "Spend 30 minutes setting one automatic transfer to savings, however small.", "Give one hour to a simple monthly budget: income, fixed costs, savings, the rest."], "happiness": ["Write three things that went right today, however small.", "Spend 15 minutes on something you enjoy purely for itself.", "Take a 30-minute walk without your phone.", "Keep one hour this week for the thing you used to love and stopped doing."], "health": ["Drink a glass of water and take a 5-minute walk now.", "Walk for 15 minutes after your next meal.", "Move for 30 minutes today, and set a fixed bedtime for tonight.", "Give an hour to your body today: 40 minutes of movement and 20 to prepare tomorrow's meals."]};
+  const P = [['career', 'Career', 4], ['relationships', 'Relationships', 4], ['money', 'Money', 2], ['happiness', 'Happiness', 3], ['health', 'Health', 4]], T = [['5', '5 min'], ['15', '15 min'], ['30', '30 min'], ['60', 'An hour']];
+  $('lv').innerHTML = P.map(([k, n, v]) => `<div class="lvl"><span>${n}</span><div class="seg">${[1, 2, 3, 4, 5].map(i => `<label><input type="radio" name="l-${k}" value="${i}"${i === v ? ' checked' : ''} aria-label="${n} ${i} of 5"><span>${i}</span></label>`).join('')}</div></div>`).join('');
+  $('tm').innerHTML = T.map(([c, l], i) => `<label><input type="radio" name="tm" value="${i}"${i === 1 ? ' checked' : ''}><span>${l}</span></label>`).join('');
+  function halia() { const val = k => +document.querySelector(`input[name=l-${k}]:checked`).value; let low = P[0];
+    for (const p of P) if (val(p[0]) < val(low[0])) low = p;                    // the first lowest area, in this order
+    const t = +document.querySelector('input[name=tm]:checked').value;
+    $('o-why').textContent = `${low[1]} is the lowest at ${val(low[0])} of 5, so HALIA starts there. One step, about ${T[t][1].replace('An hour', '60 min')}:`; $('o-step').textContent = STEPS[low[0]][t]; }
+  document.querySelectorAll('.demo input').forEach(i => i.onchange = halia); halia();
+})();
+</script>
+</body>
+</html>

@@ -240,3 +240,16 @@ def test_strong_yes_puts_you_first_and_leaving_erases_everything():
     assert a.get("/api/match/deck").json()["cards"] == [] and db.one("SELECT 1 FROM match_profiles WHERE user_id=?", uid("8222000042")) is None
     a.delete("/api/me")
     assert db.one("SELECT 1 FROM match_profiles WHERE user_id=?", ia) is None
+
+
+def test_the_public_guide_shows_the_engines_own_steps_and_weights():
+    from pathlib import Path
+    page = (Path(__file__).resolve().parents[3] / "site" / "guide" / "index.html").read_text()
+    assert all(step.replace('"', '\\"') in page or step in page for steps in eng.STEPS.values() for step in steps)
+    weights = {a["name"]: sum(i["weight"] for i in a["items"]) for a in eng.DOMAINS["couple"]["areas"]}
+    assert list(weights.values()) == [9, 5, 3, 3, 2] and sum(len(a["items"]) for a in eng.DOMAINS["couple"]["areas"]) == 13
+    assert eng.DOMAINS["couple"]["min_items"] == 6 and eng.DOMAINS["couple"]["min_coverage"] == 0.6      # what the guide states
+    it = {i["field"]: i for a in eng.DOMAINS["couple"]["areas"] for i in a["items"]}
+    pts = (3 * eng._item_score(it["FAMILY_PLAN"], "want", "open") + 2 * eng._item_score(it["LIVING"], "metro", "abroad")
+           + 2 * eng._item_score(it["MONEY_STYLE"], "saver", "balanced") + 2 * eng._item_score(it["CONFLICT"], "talk", "talk"))
+    assert pts == 6 and round(100 * pts / 9) == 67                                                      # the worked example
