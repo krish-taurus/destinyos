@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBFAF7">
+<title>How HALIA works — Destiny OS</title>
+<meta name="description" content="HALIA is the guidance engine of Destiny OS. What it does, how the alignment score is worked out, the research behind it, and what has not been proven yet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBFAF7;--paper:#fff;--ink:#15171F;--muted:#6B6F7E;--line:#E4E1D9;
+  --sans:"DM Sans",system-ui,sans-serif;--mono:"DM Mono",ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:680px;margin:0 auto;padding:20px 20px 90px}
+header{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0 22px;border-bottom:1px solid var(--ink)}
+header a{text-decoration:none}
+.brand{font:500 13px var(--mono);letter-spacing:.18em}
+.lbl{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font:600 clamp(36px,9vw,56px)/1.05 var(--sans);letter-spacing:-.03em;margin:44px 0 18px}
+h2{font:600 clamp(25px,6vw,32px)/1.15 var(--sans);letter-spacing:-.02em;margin:10px 0 16px}
+h3{font:600 18px/1.3 var(--sans);margin-bottom:4px}
+p{margin-bottom:14px}.lead{font-size:20px;line-height:1.5}.muted{color:var(--muted)}.small{font-size:14.5px}
+section{padding:46px 0;border-bottom:1px solid var(--line)}
+.btn{display:inline-block;padding:14px 24px;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;text-decoration:none;margin-top:8px}
+.grid{display:grid;gap:26px 28px;margin-top:22px}
+@media(min-width:600px){.grid{grid-template-columns:1fr 1fr}}
+.grid p{margin:0;color:var(--muted);font-size:15.5px}
+ol.steps{list-style:none;counter-reset:s;margin-top:20px}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;padding:16px 0;border-top:1px solid var(--line)}
+ol.steps li::before{content:counter(s,decimal-leading-zero);font:500 13px var(--mono);color:var(--muted);padding-top:4px}
+ol.steps p{margin:0;color:var(--muted);font-size:15.5px}
+.find{padding:26px 0;border-top:1px solid var(--line)}.find:first-of-type{border-top:0;padding-top:8px}
+.bars{margin:16px 0 10px}
+.bar{display:grid;grid-template-columns:1fr 52px;gap:10px;align-items:center;margin-bottom:10px;font-size:15px}
+.bar .t{grid-column:1/-1;margin-bottom:-4px}
+.bar .track{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.bar .track i{display:block;height:100%;background:var(--ink)}
+.bar .track i.dim{background:#A9A8A2}
+.bar b{text-align:right;font:500 15px var(--mono)}
+.src{font-size:13.5px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:15px}
+th,td{text-align:left;padding:10px 8px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+td:last-child,th:last-child{text-align:right;padding-right:0;white-space:nowrap}
+.big{font:600 64px/1 var(--sans);letter-spacing:-.03em}
+ul.plain{list-style:none}ul.plain li{padding:12px 0;border-top:1px solid var(--line)}ul.plain li:first-child{border-top:0}
+.note{font-size:14.5px;color:var(--muted);border-left:2px solid var(--ink);padding-left:14px;margin:18px 0}
+footer{padding-top:30px;font-size:13.5px;color:var(--muted)}footer p{margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><a class="brand" href="/">DESTINY OS</a><a class="lbl" href="/halia/">Open HALIA</a></header>
+
+  <section style="padding-top:0">
+    <h1>Guidance built on your life, not your birth chart.</h1>
+    <p class="lead">HALIA is the guidance engine of Destiny OS. It learns from what you tell it, a little each day, and turns that into small practical actions and honest comparisons with the people and jobs in your life.</p>
+    <p class="muted">It is an AI. It does not predict your future, and it will tell you when it doesn't know enough.</p>
+    <a class="btn" href="/halia/">Try HALIA</a>
+  </section>
+
+  <section>
+    <div class="lbl">What it does</div>
+    <h2>Six things, all from the same profile.</h2>
+    <div class="grid">
+      <div><h3>Chat</h3><p>Ask about work, money, relationships or your day. You get a short answer and one thing to do today.</p></div>
+      <div><h3>One question a day</h3><p>A single tap-to-answer question, in the app or on WhatsApp. Skip any of them. This is how HALIA gets to know you without a long form.</p></div>
+      <div><h3>Compare with a partner</h3><p>Send a link. When they accept, you both see how your answers align across five areas, and what is worth talking about.</p></div>
+      <div><h3>Compare with a co-founder</h3><p>The same idea for business: commitment, risk, roles and working style.</p></div>
+      <div><h3>Job fit</h3><p>Your skills, experience and working preferences against what a role asks for.</p></div>
+      <div><h3>Scan to chat</h3><p>A QR code opens HALIA on WhatsApp, with the same daily allowance as the app.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="lbl">How it works</div>
+    <h2>Five steps, repeated every day.</h2>
+    <ol class="steps">
+      <li><div><h3>You agree to how your answers are used</h3><p>Adults only. This is separate from signing up, and you can withdraw it at any time.</p></div></li>
+      <li><div><h3>HALIA asks one useful question</h3><p>It starts with what you want to improve and how things stand today, then fills in the rest over time. A skipped question rests for a week.</p></div></li>
+      <li><div><h3>Your answers become your profile</h3><p>Each answer is stored with its date. "How are things going" questions are asked again every month, so HALIA sees the direction you are moving in.</p></div></li>
+      <li><div><h3>Guidance uses only that profile</h3><p>Chat replies and comparisons draw on what you declared. Your date of birth, name and chart are never sent to HALIA.</p></div></li>
+      <li><div><h3>You stay in control</h3><p>See every answer HALIA holds, remove any of them, or delete everything in one tap.</p></div></li>
+    </ol>
+  </section>
+
+  <section>
+    <div class="lbl">The science</div>
+    <h2>Why HALIA asks about your life today.</h2>
+    <p>Before building HALIA we tested what predicts how people's careers and earnings turn out, using public datasets. Three findings shaped the design.</p>
+
+    <div class="find">
+      <h3>1. Where you are now is the strongest signal</h3>
+      <p class="muted">We asked a model to predict whether a person would earn above the median next year. A coin flip scores 50%.</p>
+      <div class="bars">
+        <div class="bar"><span class="t">Background only (education, ethnicity)</span><span class="track"><i class="dim" style="width:62%"></i></span><b>62%</b></div>
+        <div class="bar"><span class="t">Plus current context (job, hours, household)</span><span class="track"><i class="dim" style="width:66%"></i></span><b>66%</b></div>
+        <div class="bar"><span class="t">Plus current level (what they earn today)</span><span class="track"><i style="width:83%"></i></span><b>83%</b></div>
+      </div>
+      <p class="src">545 men followed for eight years in a public US wage panel from the 1980s, tested on people the model had not seen. This is why HALIA asks how each part of your life stands right now, and asks again each month.</p>
+    </div>
+
+    <div class="find">
+      <h3>2. Predictions fade with distance</h3>
+      <p class="muted">The same model, looking three to four years ahead instead of one, dropped from 83% to 77%. HALIA therefore stays close to the present: small actions for today and this week, not forecasts for your life.</p>
+    </div>
+
+    <div class="find">
+      <h3>3. Birth details added nothing measurable</h3>
+      <p class="muted">We added numerology numbers, zodiac sign and lunar phase to a model that already knew a person's track record, across about 3,600 held-out seasons of professional baseball careers.</p>
+      <div class="bars">
+        <div class="bar"><span class="t">Track record only</span><span class="track"><i style="width:73.9%"></i></span><b>73.9%</b></div>
+        <div class="bar"><span class="t">Track record plus real birth details</span><span class="track"><i class="dim" style="width:73%"></i></span><b>73.0%</b></div>
+        <div class="bar"><span class="t">Track record plus someone else's birth details</span><span class="track"><i class="dim" style="width:73.2%"></i></span><b>73.2%</b></div>
+      </div>
+      <p class="src">Outcome: still a regular player three seasons later. Majority guess 53.9%. The differences are within noise. So HALIA is built on what you tell it. Astrology and numerology readings remain a separate, traditional part of Destiny OS and do not feed HALIA.</p>
+    </div>
+
+    <div class="find">
+      <h3>What published research adds</h3>
+      <p class="muted">A study pooling 43 long-running studies of couples found that how each person feels about the relationship itself is what predicts its quality. Personality traits and a partner's own answers added little, and nothing predicted whose relationship would improve or decline. That is why HALIA shows couples where their answers differ and stops short of a verdict.</p>
+      <p class="muted">HALIA's daily rhythm follows the "just-in-time adaptive intervention" approach from health research: small support, fitted to your current situation, at the moment you can use it.</p>
+      <p class="src">Sources: <a href="https://doi.org/10.1073/pnas.1917036117">Joel et al., PNAS, 2020</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/27663578/">Nahum-Shani et al., Annals of Behavioral Medicine, 2018</a></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="lbl">The alignment score</div>
+    <h2>How two people are compared.</h2>
+    <p>Each question has a weight and a rule. Answers that match score full marks, answers on a scale score by how close they are (low and medium risk is a half match), and "flexible" or "open" matches anything. The area scores are combined by weight.</p>
+    <table>
+      <tr><th>Question</th><th>You</th><th>Them</th><th>Match</th></tr>
+      <tr><td>Having children</td><td>Want</td><td>Open either way</td><td>Full</td></tr>
+      <tr><td>Saver or spender</td><td>Saver</td><td>Spender</td><td>None</td></tr>
+      <tr><td>Free time</td><td>At home</td><td>Out with people</td><td>None</td></tr>
+      <tr><td>Handling disagreement</td><td>Talk at once</td><td>Cool off first</td><td>None</td></tr>
+    </table>
+    <div class="big">77</div>
+    <div class="lbl" style="margin:6px 0 16px">Out of 100, when the other nine answers match</div>
+    <ul class="plain">
+      <li><b>No score until there is enough to go on.</b> Both people must have answered most of the questions for that comparison. Until then HALIA shows how many are left.</li>
+      <li><b>The differences matter more than the number.</b> Every report lists the questions where you differ most, so you know what to talk about.</li>
+      <li><b>One engine, many comparisons.</b> Couples, co-founders and job fit use the same engine with different questions and weights. New comparisons can be added the same way.</li>
+    </ul>
+    <p class="note">The score shows how closely your answers match on what you each said matters. It is not a prediction of how a relationship, partnership or job will turn out.</p>
+  </section>
+
+  <section>
+    <div class="lbl">Limits</div>
+    <h2>What HALIA will not do.</h2>
+    <ul class="plain">
+      <li>Predict events, name lucky or unlucky days, or promise outcomes.</li>
+      <li>Tell you whether to marry, stay with or leave someone.</li>
+      <li>Diagnose a health problem or suggest medicines.</li>
+      <li>Recommend specific investments, loans or trades.</li>
+      <li>Send sensitive questions, such as family plans or faith, on WhatsApp. Those appear only if you open a couple comparison.</li>
+    </ul>
+    <p class="muted small" style="margin-top:14px">If you are in distress, HALIA will point you to Tele-MANAS (14416, free, 24 hours) or emergency services (112).</p>
+  </section>
+
+  <section>
+    <div class="lbl">Not proven yet</div>
+    <h2>What we still have to show.</h2>
+    <ul class="plain">
+      <li><b>That HALIA's guidance improves people's lives.</b> This needs a controlled study with consenting users, which has not been run.</li>
+      <li><b>That an alignment score predicts anything.</b> Today it describes how your answers match. We will test it first on job fit, where outcomes can be measured.</li>
+      <li><b>That our findings hold in India today.</b> The tests above used US earnings data from the 1980s and professional sport.</li>
+    </ul>
+    <p class="muted small" style="margin-top:14px">We will update this page as results come in, including the ones that don't go our way.</p>
+  </section>
+
+  <section style="border-bottom:0">
+    <div class="lbl">Your data</div>
+    <h2>Yours to see, change and delete.</h2>
+    <p class="muted">HALIA keeps the answers you choose to give and your chats for 30 days. When you compare with someone, they see the score and where your answers differ, and nothing else. Withdrawing consent deletes all of it at once.</p>
+    <a class="btn" href="/halia/">Try HALIA</a>
+    <p class="small muted" style="margin-top:14px">3 chats free. HALIA Chat is ₹499 a month for 25 chats a day.</p>
+  </section>
+
+  <footer>
+    <p>HALIA stands for Hybrid Adaptive Life Intelligence. It is a framework built from established methods and is not a medical, financial or legal service.</p>
+    <p>Figures on this page come from our own analysis of public datasets, dated 26 November 2026.</p>
+  </footer>
+</div>
+</body>
+</html>
