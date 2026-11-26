@@ -18,7 +18,9 @@ from datetime import date
 
 import httpx
 
-import db, numerology
+import db, conf
+conf.load_env()          # keys saved in the admin panel
+import numerology
 from billing import is_subscriber
 
 log = logging.getLogger("destinyos.daily")

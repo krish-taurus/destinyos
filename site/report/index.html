@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Noto+Serif+Devanagari:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/temple.css?v=1">
+<link rel="stylesheet" href="/temple.css?v=2">
 <style>
 .hero{padding:5svh 0 44px}
 .hero h1{font-size:clamp(46px,10vw,104px);letter-spacing:-.025em;line-height:.95}
@@ -81,6 +81,15 @@ article.sec h2{font-size:clamp(32px,5.6vw,52px);max-width:16em}
 .acts li{counter-increment:a;position:relative;padding:12px 0 12px 54px;border-bottom:1px solid var(--carve);font-size:18px}
 .acts li::before{content:counter(a);position:absolute;left:0;top:6px;font:700 38px/1 var(--serif);color:var(--lamp)}
 .fine{padding:30px 0 70px;border-top:1.5px solid var(--carve);margin-top:40px}
+.snap{padding:44px 0;border-top:1.5px solid var(--carve)}
+.snap h2{font-size:clamp(36px,7vw,64px)}
+.lv{display:grid;gap:12px;margin-top:26px;max-width:640px}
+.lv div{display:grid;grid-template-columns:8em 1fr 5.4em;gap:12px;align-items:center;font-size:16.5px}
+.lv i{height:12px;border-radius:9px;background:var(--carve);overflow:hidden}.lv i::after{content:"";display:block;height:100%;width:var(--w);background:#B98A3C}
+.lv .low i::after{background:var(--kumkum)}.lv .low span:first-child{color:var(--ivory);font-weight:600}.lv b{font-weight:500;color:var(--dim);font-size:14.5px}
+.step{margin-top:28px;padding:22px 24px;border:1.5px solid var(--lamp);border-radius:4px;max-width:640px;background:radial-gradient(ellipse at 0 0,rgba(231,180,90,.16),transparent 70%)}
+.step p{font:600 clamp(24px,4.4vw,32px)/1.25 var(--serif);margin-top:8px}
+.code-i{margin-top:6px;min-height:48px;font-size:17px;text-transform:uppercase}
 .more{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 60px}
 @media print{body{background:#fff;color:#111}nav.top,.offer,.more,.noprint,.locked,.prep{display:none!important}.lp b,.yhead b,.price,.gold{color:#7A5310;text-shadow:none}.body,.cols p,.stand p,.offer li{color:#222}.stand,.two div,.locks div{background:#F6F1E6}.year{break-before:page}}
 </style>
@@ -97,6 +106,8 @@ article.sec h2{font-size:clamp(32px,5.6vw,52px);max-width:16em}
       <div class="nums"><div class="lp"><b id="n-lp">0</b><span>Life Path</span></div>
         <div class="four" id="four"></div></div>
     </header>
+
+    <section class="snap hide" id="snap"></section>
 
     <section class="years hide" id="years"></section>
 
@@ -122,14 +133,15 @@ article.sec h2{font-size:clamp(32px,5.6vw,52px);max-width:16em}
       <div>
         <div class="price">₹499<small>once</small></div>
         <p style="margin-top:18px"><button class="btn wide" id="buy3">Get the three-year report</button></p>
+        <p><button class="link code-t" data-for="code3">I have a code</button><input class="in hide code-i" id="code3" maxlength="24" placeholder="Code" aria-label="Discount code" autocapitalize="characters"></p>
         <p class="err" id="e-buy3" role="alert"></p>
         <p class="cap">The yearly readings follow tradition and are for reflection. They do not promise outcomes.</p>
       </div>
     </section>
 
     <section class="prep hide" id="prep">
-      <h2>Seven questions before we write.</h2>
-      <p class="lead" style="margin-top:14px">HALIA starts from your life today, so your plan is built on your own answers. It takes about a minute.</p>
+      <h2 id="prep-h">Seven questions before we write.</h2>
+      <p class="lead" style="margin-top:14px" id="prep-lead">HALIA starts from your life today, so your plan is built on your own answers. It takes about a minute.</p>
       <form id="f-prep"><div id="qs"></div>
         <label class="check" style="max-width:640px"><input type="checkbox" id="h-consent"><span id="h-consent-text"></span></label>
         <p class="err" id="e-prep" role="alert"></p>
@@ -149,14 +161,15 @@ article.sec h2{font-size:clamp(32px,5.6vw,52px);max-width:16em}
       <div>
         <div class="price">₹4,999<small>30 minutes</small></div>
         <p style="margin-top:18px"><button class="btn line wide" id="buyS">Book a personal session</button></p>
+        <p><button class="link code-t" data-for="codeS">I have a code</button><input class="in hide code-i" id="codeS" maxlength="24" placeholder="Code" aria-label="Discount code" autocapitalize="characters"></p>
         <p class="err" id="e-buyS" role="alert"></p>
         <p class="cap">After payment we schedule your time on WhatsApp.</p>
       </div>
     </section>
 
-    <div class="more"><a class="btn line" href="/app/">Ask Destiny and daily guidance</a><a class="btn line" href="/halia/">Open HALIA chat</a></div>
+    <div class="more"><a class="btn line" href="/app/">Ask Destiny and daily guidance</a><a class="btn line" href="/halia/">Open HALIA chat</a><a class="btn line" href="/match/">HALIA Match</a></div>
   </div>
 </main>
-<script src="/report.js?v=1"></script>
+<script src="/report.js?v=2"></script>
 </body>
 </html>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin — Destiny OS</title>
+<script src="/config.js?v=3"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/temple.css?v=2">
+<style>
+body{font-size:16px}
+.wrap{max-width:1120px}
+h1{font-size:clamp(36px,6vw,56px)}h2{font-size:30px;margin:34px 0 12px}h3{font-size:23px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:20px 0 6px;border-bottom:1.5px solid var(--carve)}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:12px 14px;font:600 16px var(--sans);color:var(--dim);cursor:pointer}
+.tabs button[aria-selected=true]{color:var(--lamp);border-color:var(--lamp)}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:18px}
+.stats div{padding:16px;border:1.5px solid var(--carve-2);border-radius:4px}
+.stats b{display:block;font:700 44px/1 var(--serif);color:var(--lamp-2)}.stats span{font-size:14px;color:var(--dim)}
+.ready{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.pill{padding:7px 12px;border-radius:99px;font:600 14px var(--sans);border:1.5px solid var(--carve-2);color:var(--dim)}
+.pill.on{border-color:#5E8F5A;color:#A9D6A4}.pill.off{border-color:#8A4A3A;color:#F0A794}
+.card{padding:18px 20px;border:1.5px solid var(--carve-2);border-radius:4px;background:var(--stone-2);margin-top:14px}
+.key{display:grid;gap:6px 16px;padding:12px 0;border-bottom:1px solid var(--carve);align-items:center}
+@media(min-width:760px){.key{grid-template-columns:1.1fr 1fr 1.4fr auto}}
+.key b{font-weight:600}.key small{color:var(--dim);font-size:13.5px}
+.in{min-height:46px;font-size:16px;padding:8px 12px}
+.btn{min-height:46px;padding:9px 18px;font-size:15.5px}.btn.sm{min-height:38px;padding:6px 12px;font-size:14px}
+.btn.red{border-color:#C8442B;background:transparent;color:#F0A794}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:15px}
+th{text-align:left;font:600 13.5px var(--sans);color:var(--dim);padding:8px}td{padding:10px 8px;border-top:1px solid var(--carve)}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--stone-2)}
+.tw{overflow-x:auto}
+.grid{display:grid;gap:12px}@media(min-width:760px){.grid{grid-template-columns:repeat(3,1fr)}}
+.grid label span,.lbl{display:block;font:500 14px var(--sans);color:#D9CDB6;margin-bottom:6px}
+.rowb{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.msg{min-height:22px;margin-top:10px;font-size:15px;color:var(--lamp-2)}.msg.bad{color:#FF9B85}
+#login{max-width:440px;margin:12svh auto 0}
+</style>
+</head>
+<body>
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><button class="link hide" id="out">Sign out</button></nav>
+<main class="wrap" style="padding-bottom:80px">
+  <section id="login" class="hide">
+    <h1>Admin.</h1>
+    <form id="f-login"><label class="f"><span>Admin password</span><input class="in" id="pw" type="password" autocomplete="current-password" required></label>
+      <p class="err" id="e-login" role="alert"></p><button class="btn wide">Sign in</button></form>
+    <p class="cap" style="margin-top:16px">The password is on the server. In the droplet console run:<br><code>sudo grep ADMIN_PASSWORD /etc/destinyos.env</code></p>
+  </section>
+
+  <section id="app" class="hide">
+    <h1>Admin panel</h1>
+    <div class="tabs" role="tablist">
+      <button role="tab" data-t="over" aria-selected="true">Overview</button><button role="tab" data-t="keys">API keys</button>
+      <button role="tab" data-t="users">Accounts</button><button role="tab" data-t="offers">Offers</button><button role="tab" data-t="match">Match reports</button>
+    </div>
+
+    <div id="t-over"><div class="ready" id="ready"></div><div class="stats" id="stats"></div></div>
+
+    <div id="t-keys" class="hide">
+      <p class="cap" style="margin-top:14px;max-width:46em">Paste a key and save. It takes effect at once, with no restart. Secret keys are never shown again, only their last four characters. Leave a box empty to keep the current value.</p>
+      <div id="keys"></div>
+      <div class="rowb"><button class="btn" id="save-keys">Save keys</button><button class="btn line" id="test-ai">Test the AI key</button></div>
+      <p class="msg" id="m-keys" role="status"></p>
+    </div>
+
+    <div id="t-users" class="hide">
+      <div class="rowb"><input class="in" id="q" placeholder="Search name, phone or city" style="max-width:340px"><button class="btn line" id="new-user">Create an account</button><span class="cap" id="total"></span></div>
+      <form class="card hide" id="f-user">
+        <h3>Create an account</h3><p class="cap">Only for people who asked you to and gave you these details. They sign in with their own mobile number.</p>
+        <div class="grid" style="margin-top:12px">
+          <label><span>Mobile number</span><input class="in" id="u-phone" inputmode="tel" required></label>
+          <label><span>Full name at birth</span><input class="in" id="u-name" required></label>
+          <label><span>City of birth</span><input class="in" id="u-city" required></label>
+          <label><span>Date of birth</span><input class="in" id="u-dob" type="date" required></label>
+          <label><span>Time of birth (optional)</span><input class="in" id="u-time" type="time"></label>
+          <label><span>Language</span><select class="in" id="u-lang"><option value="en">English</option><option value="hi">Hindi</option></select></label>
+        </div>
+        <div class="rowb"><button class="btn">Create account</button><button type="button" class="link" id="cancel-user">Cancel</button></div><p class="msg" id="m-user"></p>
+      </form>
+      <div class="card hide" id="detail"></div>
+      <div class="tw"><table><thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Plan</th><th>Report</th><th>Joined</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+
+    <div id="t-offers" class="hide">
+      <form class="card" id="f-coupon">
+        <h3>New discount code</h3><p class="cap">Works on one-time items: the three-year report, the personal session and the other reports. 100% makes the item free.</p>
+        <div class="grid" style="margin-top:12px">
+          <label><span>Code</span><input class="in" id="c-code" placeholder="DIWALI50" required></label>
+          <label><span>Percent off</span><input class="in" id="c-pct" type="number" min="1" max="100" value="50" required></label>
+          <label><span>Applies to</span><select class="in" id="c-item"><option value="">Any one-time item</option></select></label>
+          <label><span>How many uses</span><input class="in" id="c-uses" type="number" min="1" value="100" required></label>
+          <label><span>Valid for (days, optional)</span><input class="in" id="c-days" type="number" min="1" max="366"></label>
+          <label><span>Note for yourself</span><input class="in" id="c-note" maxlength="120"></label>
+        </div>
+        <div class="rowb"><button class="btn">Create code</button></div><p class="msg" id="m-coupon"></p>
+      </form>
+      <div class="tw"><table><thead><tr><th>Code</th><th>Off</th><th>Applies to</th><th>Used</th><th>Expires</th><th>Note</th><th></th></tr></thead><tbody id="coupons"></tbody></table></div>
+      <p class="cap" style="margin-top:14px">To give one person a free report or free days on a plan, open their account under Accounts.</p>
+    </div>
+
+    <div id="t-match" class="hide"><p class="cap" style="margin-top:14px">People reported on HALIA Match. Hiding a profile removes it from everyone's deck.</p>
+      <div class="tw"><table><thead><tr><th>Reported</th><th>Times</th><th>By</th><th>Reason</th><th>When</th><th></th></tr></thead><tbody id="reports"></tbody></table></div></div>
+  </section>
+</main>
+<script>
+(() => {
+  const API = window.DESTINY_API || '', $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const when = t => t ? new Date(t * 1000).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+  let items = {}, plans = {};
+  async function api(path, method = 'GET', body) {
+    let res; try { res = await fetch(API + '/api/admin' + path, { method, credentials: 'include', headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined }); }
+    catch { throw new Error('No connection.'); }
+    const d = await res.json().catch(() => null);
+    if (res.status === 401 && path !== '/login') { show(false); throw new Error('Please sign in again.'); }
+    if (!res.ok) throw new Error(d && typeof d.detail === 'string' ? d.detail : 'That did not work. Try again.');
+    return d;
+  }
+  const say = (id, text, bad) => { $(id).textContent = text; $(id).classList.toggle('bad', !!bad); };
+  function show(inside) { $('login').classList.toggle('hide', inside); $('app').classList.toggle('hide', !inside); $('out').classList.toggle('hide', !inside); if (!inside) $('pw').focus(); }
+
+  $('f-login').onsubmit = async ev => { ev.preventDefault(); $('e-login').textContent = '';
+    try { await api('/login', 'POST', { password: $('pw').value }); $('pw').value = ''; show(true); tab('over'); } catch (e) { $('e-login').textContent = e.message; } };
+  $('out').onclick = async () => { try { await api('/logout', 'POST'); } catch {} show(false); };
+
+  const LOAD = { over, keys, users, offers, match: reports };
+  function tab(t) { document.querySelectorAll('.tabs button').forEach(b => { const on = b.dataset.t === t; b.setAttribute('aria-selected', on); $('t-' + b.dataset.t).classList.toggle('hide', !on); }); LOAD[t]().catch(() => {}); }
+  document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => tab(b.dataset.t));
+
+  async function over() {
+    const o = await api('/overview');
+    $('ready').innerHTML = [['ai', 'AI reports and chat'], ['sms', 'SMS sign-in codes'], ['payments', 'Payments'], ['whatsapp', 'WhatsApp']]
+      .map(([k, l]) => `<span class="pill ${o.ready[k] ? 'on' : 'off'}">${l}: ${o.ready[k] ? 'ready' : 'needs keys'}</span>`).join('');
+    $('stats').innerHTML = [['users', 'Accounts'], ['users_week', 'New this week'], ['reports', 'Free reports written'], ['three_year', 'Three-year reports'], ['sessions', 'Sessions booked'],
+      ['subscribers', 'Active subscribers'], ['halia_on', 'HALIA turned on'], ['match_profiles', 'Match profiles'], ['matches', 'Matches made']]
+      .map(([k, l]) => `<div><b>${esc(o[k])}</b><span>${l}</span></div>`).join('') + `<div><b>₹${esc(o.revenue_inr.toLocaleString('en-IN'))}</b><span>One-time sales</span></div>`;
+  }
+
+  async function keys(data) {
+    const s = (data || await api('/settings')).settings; let g = '', html = '';
+    for (const k of s) { if (k.group !== g) { g = k.group; html += `<h2>${esc(g)}</h2>`; }
+      html += `<div class="key"><div><b>${esc(k.label)}</b><br><small>${esc(k.key)}</small></div>
+        <div><span class="pill ${k.set ? 'on' : 'off'}">${k.set ? 'Set' : 'Not set'}</span> <small>${esc(k.shown)}${k.source ? ' · from ' + esc(k.source) : ''}</small></div>
+        <input class="in" data-key="${esc(k.key)}" type="${k.secret ? 'password' : 'text'}" autocomplete="off" placeholder="Paste a new value" aria-label="${esc(k.label)}">
+        <div>${k.source === 'panel' ? `<button class="btn sm red" data-clear="${esc(k.key)}">Remove</button>` : ''}</div></div>`; }
+    $('keys').innerHTML = html;
+    $('keys').querySelectorAll('[data-clear]').forEach(b => b.onclick = async () => { try { keys(await api('/settings', 'PUT', { values: { [b.dataset.clear]: '' } })); say('m-keys', 'Removed.'); } catch (e) { say('m-keys', e.message, 1); } });
+  }
+  $('save-keys').onclick = async () => { const values = {}; $('keys').querySelectorAll('input[data-key]').forEach(i => { if (i.value.trim()) values[i.dataset.key] = i.value.trim(); });
+    if (!Object.keys(values).length) return say('m-keys', 'Paste at least one key first.', 1);
+    try { keys(await api('/settings', 'PUT', { values })); say('m-keys', `Saved ${Object.keys(values).length}. In use now.`); } catch (e) { say('m-keys', e.message, 1); } };
+  $('test-ai').onclick = async () => { say('m-keys', 'Asking the model…'); try { const r = await api('/settings/test-ai', 'POST'); say('m-keys', r.ok ? 'The AI key works.' : r.detail, !r.ok); } catch (e) { say('m-keys', e.message, 1); } };
+
+  let timer;
+  async function users() { const r = await api('/users?q=' + encodeURIComponent($('q').value)); $('total').textContent = `${r.total} account${r.total === 1 ? '' : 's'}`;
+    $('rows').innerHTML = r.users.map(u => `<tr data-id="${u.id}"><td>${esc(u.name)}</td><td>${esc(u.phone)}</td><td>${esc(u.city)}</td><td>${esc(u.tier)}</td><td>${u.three_year ? 'Three-year' : u.has_report ? 'Free' : 'None'}</td><td>${when(u.created_at)}</td></tr>`).join('') || '<tr><td colspan="6">No accounts found.</td></tr>';
+    $('rows').querySelectorAll('tr[data-id]').forEach(tr => tr.onclick = () => detail(tr.dataset.id)); }
+  $('q').oninput = () => { clearTimeout(timer); timer = setTimeout(() => users().catch(() => {}), 250); };
+  $('new-user').onclick = () => $('f-user').classList.toggle('hide'); $('cancel-user').onclick = () => $('f-user').classList.add('hide');
+  $('f-user').onsubmit = async ev => { ev.preventDefault();
+    try { await api('/users', 'POST', { phone: $('u-phone').value, name: $('u-name').value, city: $('u-city').value, dob: $('u-dob').value, birth_time: $('u-time').value || null, language: $('u-lang').value });
+      say('m-user', 'Account created.'); ev.target.reset(); users(); } catch (e) { say('m-user', e.message, 1); } };
+
+  async function detail(id) {
+    if (!Object.keys(items).length) { const c = await api('/coupons'); items = c.items; plans = c.plans; }
+    const u = await api('/users/' + id), D = $('detail');
+    D.innerHTML = `<div class="rowb" style="margin:0;justify-content:space-between"><h3>${esc(u.name)}</h3><button class="link" id="d-close">Close</button></div>
+      <p>${esc(u.phone)} · born ${esc(u.dob)}${u.birth_time ? ' ' + esc(u.birth_time) : ''}, ${esc(u.city)} · joined ${when(u.created_at)}${u.source ? ' via ' + esc(u.source) : ''}</p>
+      <p class="cap">Plan: ${esc(u.plan.tier)}${u.plan.paid_until ? ' until ' + when(u.plan.paid_until) : ''} · HALIA answers: ${u.halia_answers} · Match profile: ${u.match_profile ? 'yes' : 'no'}</p>
+      <h3 style="margin-top:18px">Give an offer</h3>
+      <div class="rowb"><select class="in" id="g-item" style="max-width:320px">${Object.entries(items).map(([k, n]) => `<option value="${k}">${esc(n)}</option>`).join('')}</select><button class="btn sm" id="g-give">Give this free</button></div>
+      <div class="rowb"><select class="in" id="g-plan" style="max-width:200px">${Object.entries(plans).map(([k, n]) => `<option value="${k}">${esc(n)}</option>`).join('')}</select>
+        <input class="in" id="g-days" type="number" min="1" max="366" value="30" style="max-width:110px" aria-label="Days"><span>days</span><button class="btn sm" id="g-plan-give">Give free days</button></div>
+      ${u.grants.length ? '<p class="lbl" style="margin-top:14px">Free days running</p>' + u.grants.map(g => `<div class="rowb" style="margin-top:4px"><span>${esc(plans[g.plan] || g.plan)} until ${when(g.current_end)}</span><button class="btn sm red" data-end="${g.id}">End now</button></div>`).join('') : ''}
+      ${u.purchases.length ? '<p class="lbl" style="margin-top:14px">Purchases</p>' + u.purchases.map(p => `<p>${esc(items[p.item] || p.item)} · ₹${p.amount_paise / 100}${p.provider_order_id.startsWith('grant_') ? ' (given by you)' : ''}${p.coupon ? ' · code ' + esc(p.coupon) : ''} · ${esc(p.status)} · ${when(p.created_at)}</p>`).join('') : ''}
+      <h3 style="margin-top:22px">Delete this account</h3><p class="cap">Removes the account and everything stored for it. This cannot be undone. Type the last four digits of the phone number to confirm.</p>
+      <div class="rowb"><input class="in" id="d-confirm" inputmode="numeric" maxlength="4" style="max-width:120px" aria-label="Last four digits"><button class="btn sm red" id="d-del">Delete account</button></div>
+      <p class="msg" id="m-detail"></p>`;
+    D.classList.remove('hide'); D.scrollIntoView({ block: 'nearest' });
+    const act = fn => async () => { try { await fn(); await detail(id); users().catch(() => {}); say('m-detail', 'Done.'); } catch (e) { say('m-detail', e.message, 1); } };
+    $('d-close').onclick = () => D.classList.add('hide');
+    $('g-give').onclick = act(() => api(`/users/${id}/grant`, 'POST', { item: $('g-item').value }));
+    $('g-plan-give').onclick = act(() => api(`/users/${id}/grant`, 'POST', { plan: $('g-plan').value, days: +$('g-days').value || 30 }));
+    D.querySelectorAll('[data-end]').forEach(b => b.onclick = act(() => api(`/users/${id}/grant/${b.dataset.end}`, 'DELETE')));
+    $('d-del').onclick = async () => { if ($('d-confirm').value !== u.phone.slice(-4)) return say('m-detail', 'Those digits do not match.', 1);
+      try { await api('/users/' + id, 'DELETE'); D.classList.add('hide'); users(); } catch (e) { say('m-detail', e.message, 1); } };
+  }
+
+  async function offers() { const r = await api('/coupons'); items = r.items; plans = r.plans;
+    if ($('c-item').options.length === 1) for (const [k, n] of Object.entries(items)) $('c-item').add(new Option(n, k));
+    $('coupons').innerHTML = r.coupons.map(c => `<tr style="cursor:default"><td><b>${esc(c.code)}</b></td><td>${c.percent}%</td><td>${esc(c.item ? items[c.item] : 'Any')}</td><td>${c.used} of ${c.max_uses}</td><td>${c.expires_at ? when(c.expires_at) : 'No end'}</td><td>${esc(c.note)}</td>
+      <td>${c.active ? `<button class="btn sm red" data-off="${esc(c.code)}">Switch off</button>` : 'Off'}</td></tr>`).join('') || '<tr style="cursor:default"><td colspan="7">No codes yet.</td></tr>';
+    $('coupons').querySelectorAll('[data-off]').forEach(b => b.onclick = async () => { await api('/coupons/' + b.dataset.off, 'DELETE'); offers(); }); }
+  $('f-coupon').onsubmit = async ev => { ev.preventDefault();
+    try { const r = await api('/coupons', 'POST', { code: $('c-code').value, percent: +$('c-pct').value, item: $('c-item').value || null, max_uses: +$('c-uses').value, days: +$('c-days').value || null, note: $('c-note').value });
+      say('m-coupon', `Code ${r.code} is live.`); ev.target.reset(); offers(); } catch (e) { say('m-coupon', e.message, 1); } };
+
+  async function reports() { const r = await api('/match-reports');
+    $('reports').innerHTML = r.reports.map(x => `<tr style="cursor:default"><td>${esc(x.target_name)}<br><small>${esc(x.target_phone)}</small></td><td>${x.times}</td><td>${esc(x.reporter_name)}</td><td>${esc(x.reason || 'No reason given')}</td><td>${when(x.at)}</td>
+      <td>${x.active ? `<button class="btn sm red" data-hide="${x.target_id}">Hide profile</button>` : 'Hidden'}</td></tr>`).join('') || '<tr style="cursor:default"><td colspan="6">No reports.</td></tr>';
+    $('reports').querySelectorAll('[data-hide]').forEach(b => b.onclick = async () => { await api(`/match-profiles/${b.dataset.hide}/hide`, 'POST'); reports(); }); }
+
+  api('/overview').then(() => { show(true); tab('over'); }).catch(() => show(false));
+})();
+</script>
+</body>
+</html>

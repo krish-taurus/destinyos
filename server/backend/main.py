@@ -13,9 +13,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from timezonefinder import TimezoneFinder
 
+import db, conf
+conf.load_env()            # keys saved in the admin panel, before the modules below read their settings
 from astro import build_chart, dasha_window
-import db, numerology, reports
-import auth, billing, voice, halia
+import numerology, reports
+import auth, billing, voice, halia, match, admin
 from fastapi.responses import FileResponse
 from auth import current_user
 from billing import is_subscriber, is_voice, require_subscriber, plan_status, retire_plus_if_needed
@@ -39,6 +41,8 @@ app.include_router(auth.router)
 app.include_router(billing.router)
 app.include_router(voice.router)
 app.include_router(halia.router)
+app.include_router(match.router)
+app.include_router(admin.router)
 app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["GET", "POST", "PATCH", "DELETE"], allow_credentials=True,
                    allow_headers=["*"])
 
@@ -315,15 +319,14 @@ def me_patch(body: MePatch, u=Depends(current_user)):
     return {"ok": True}
 
 
-@app.delete("/api/me")
-def me_delete(req: Request, u=Depends(current_user)):
+def erase_user(u: dict):
     """DPDP right to erasure: cancels any subscription at once and deletes the account and all its data."""
     s = billing.subscription(u["id"])
-    if s and s["status"] not in ("cancelled", "completed") and billing.configured():
+    if s and s["status"] not in ("cancelled", "completed") and billing.configured() and not s["provider_sub_id"].startswith("grant_"):
         try:
             billing._rzp("POST", f"/subscriptions/{s['provider_sub_id']}/cancel", json={"cancel_at_cycle_end": 0})
         except HTTPException:
-            raise HTTPException(502, "We couldn't cancel your subscription just now, so nothing was deleted. Try again in a minute.")
+            raise HTTPException(502, "We couldn't cancel the subscription just now, so nothing was deleted. Try again in a minute.")
     had_report = bool(db.one("SELECT 1 FROM reports WHERE user_id=? AND kind='core'", u["id"]))
     # keep only a non-reversible marker so the free report and free questions can't be re-claimed
     reports.remember_on_delete(u["phone"], had_report, u["free_questions_used"])
@@ -334,6 +337,11 @@ def me_delete(req: Request, u=Depends(current_user)):
         c.execute("DELETE FROM users WHERE id=?", (u["id"],))
         c.execute("DELETE FROM events WHERE user_id=?", (u["id"],))
         c.execute("DELETE FROM whatsapp_log WHERE user_id=?", (u["id"],))
+
+
+@app.delete("/api/me")
+def me_delete(req: Request, u=Depends(current_user)):
+    erase_user(u)
     return {"ok": True}
 
 

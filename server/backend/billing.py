@@ -56,6 +56,26 @@ def has_item(user_id: int, item: str) -> bool:
     return bool(db.one("SELECT 1 FROM purchases WHERE user_id=? AND item=? AND status IN ('paid','fulfilled')", user_id, item))
 
 
+def coupon_uses(code: str) -> int:
+    return db.one("SELECT COUNT(*) n FROM purchases WHERE coupon=? AND status IN ('paid','fulfilled')", code)["n"]
+
+
+def price_with(item: str, code: str | None) -> tuple[int, str | None]:
+    """The amount in paise after a discount code, and the code as stored. Raises 422 with a plain reason if it can't be used."""
+    amount = ADDONS[item]["amount"]
+    if not code:
+        return amount, None
+    code = "".join(ch for ch in code.upper() if ch.isalnum())[:24]
+    k = db.one("SELECT * FROM coupons WHERE code=? AND active=1", code)
+    if not k or (k["expires_at"] and k["expires_at"] < db.now()):
+        raise HTTPException(422, "That code isn't valid any more.")
+    if k["item"] and k["item"] != item:
+        raise HTTPException(422, f"That code is for the {ADDONS[k['item']]['name']}.")
+    if coupon_uses(code) >= k["max_uses"]:
+        raise HTTPException(422, "That code has been fully used.")
+    return amount * (100 - k["percent"]) // 100, code
+
+
 def configured() -> bool:
     return bool(KEY_ID and KEY_SECRET and PLAN_ID)
 
@@ -271,6 +291,7 @@ def cancel(user=Depends(current_user)):
 class OrderIn(BaseModel):
     item: str
     details: dict | None = None    # compatibility: partner name/dob/time/city
+    coupon: str | None = Field(default=None, max_length=30)
 
 
 @router.post("/order")
@@ -282,15 +303,23 @@ def order(body: OrderIn, user=Depends(current_user)):
         d = body.details or {}
         if not (d.get("name") and d.get("dob")):
             raise HTTPException(422, "Add your partner's name and date of birth.")
-    o = _rzp("POST", "/orders", json={"amount": a["amount"], "currency": "INR",
+    amount, code = price_with(body.item, body.coupon)
+    details = json.dumps(body.details or {})[:2000]
+    if amount == 0:                                   # a 100% code: nothing to pay, so no payment window
+        ref = f"free_{user['id']}_{body.item}_{db.now()}"
+        with db.tx() as c:
+            cur = c.execute("INSERT INTO purchases(user_id, item, amount_paise, provider_order_id, status, details, created_at, coupon) "
+                            "VALUES (?,?,0,?,'paid',?,?,?)", (user["id"], body.item, ref, details, db.now(), code))
+        db.log_event(user["id"], "addon_paid", {"item": body.item, "coupon": code})
+        return {"free": True, "purchase_id": cur.lastrowid, "amount": 0, "description": a["name"]}
+    o = _rzp("POST", "/orders", json={"amount": amount, "currency": "INR",
                                        "receipt": f"u{user['id']}-{body.item}-{db.now()}",
                                        "notes": {"user_id": str(user["id"]), "item": body.item}})
     with db.tx() as c:
-        c.execute("INSERT INTO purchases(user_id, item, amount_paise, provider_order_id, status, details, created_at) "
-                  "VALUES (?,?,?,?,?,?,?)", (user["id"], body.item, a["amount"], o["id"], "created",
-                                              json.dumps(body.details or {})[:2000], db.now()))
-    return {"key_id": KEY_ID, "order_id": o["id"], "amount": a["amount"], "description": a["name"],
-            "name": user["name"], "phone": user["phone"]}
+        c.execute("INSERT INTO purchases(user_id, item, amount_paise, provider_order_id, status, details, created_at, coupon) "
+                  "VALUES (?,?,?,?,?,?,?,?)", (user["id"], body.item, amount, o["id"], "created", details, db.now(), code))
+    return {"key_id": KEY_ID, "order_id": o["id"], "amount": amount, "full_amount": a["amount"], "coupon": code,
+            "description": a["name"], "name": user["name"], "phone": user["phone"]}
 
 
 class OrderVerifyIn(BaseModel):

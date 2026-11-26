@@ -19,7 +19,9 @@ from datetime import date
 
 import httpx
 
-import db, halia
+import db, conf
+conf.load_env()          # keys saved in the admin panel
+import halia
 import halia_engine as eng
 from daily_whatsapp import clean
 

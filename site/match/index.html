@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D0A07">
+<title>HALIA Match — Destiny OS</title>
+<meta name="description" content="Meet people whose answers about life, home, money and family agree with yours. Matching by the HALIA engine, not by birth charts.">
+<script src="/config.js?v=3"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/temple.css?v=2">
+<style>
+body{overscroll-behavior-y:contain}
+main{max-width:560px;margin:0 auto;padding:0 18px 40px}
+.tabs{display:flex;border-bottom:1.5px solid var(--carve);margin-bottom:14px}
+.tabs button{flex:1;background:none;border:0;border-bottom:3px solid transparent;padding:13px 6px;font:600 16px var(--sans);color:var(--dim);cursor:pointer}
+.tabs button[aria-selected=true]{color:var(--lamp);border-color:var(--lamp)}
+.intro h1{font-size:clamp(46px,12vw,84px);letter-spacing:-.025em;line-height:.95;margin-top:3svh}
+.how{list-style:none;margin:22px 0 6px;display:grid;gap:10px}
+.how li{display:flex;gap:14px;align-items:center;padding:12px 14px;background:var(--stone-2);border-radius:4px;font-size:16px}
+.how b{flex:none;width:44px;height:44px;display:grid;place-items:center;border:1.5px solid var(--lamp);border-radius:50%;color:var(--lamp);font:600 20px var(--sans)}
+
+/* the deck */
+.deck{position:relative;height:min(64svh,560px);margin-top:6px;touch-action:none;user-select:none;-webkit-user-select:none}
+.pc{position:absolute;inset:0;display:flex;flex-direction:column;padding:22px 22px 18px;border:1.5px solid var(--carve-2);border-radius:10px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% -10%,rgba(231,180,90,.22),transparent 58%),linear-gradient(#1B150E,#110C07);box-shadow:0 18px 50px rgba(0,0,0,.6);will-change:transform;cursor:grab}
+.pc.back{transform:scale(.95) translateY(14px);filter:brightness(.6)}
+.pc.go{transition:transform .32s ease-in,opacity .32s}.pc.home{transition:transform .28s cubic-bezier(.2,1.4,.4,1)}
+.pc .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sc b{font:700 clamp(84px,24vw,128px)/.8 var(--serif);color:var(--lamp);text-shadow:0 0 50px rgba(231,180,90,.4)}
+.sc span{display:block;margin-top:10px;font-size:14px;color:var(--dim);max-width:11em;line-height:1.35}
+.medal{flex:none;width:92px;height:92px;border-radius:50%;display:grid;place-items:center;font:700 50px var(--serif);color:#1A1208;
+  background:radial-gradient(circle at 35% 30%,#F6D99A,#B98A3C 70%);box-shadow:0 0 0 5px #110C07,0 0 0 6.5px var(--lamp)}
+.pc h2{font-size:clamp(34px,9vw,46px);margin-top:16px}.pc .meta{color:#D9CDB6;font-size:16.5px;margin-top:2px}
+.pc .bio{margin-top:10px;font:500 21px/1.3 var(--serif);color:var(--ivory)}
+.bars{margin-top:auto;display:grid;gap:7px;padding-top:12px}
+.bar{display:grid;grid-template-columns:9.2em 1fr 2.4em;gap:10px;align-items:center;font-size:13.5px;color:#CFC3AC}
+.bar i{height:7px;border-radius:9px;background:var(--carve);overflow:hidden}.bar i::after{content:"";display:block;height:100%;width:var(--w);background:var(--lamp)}
+.bar b{text-align:right;font-weight:600;color:var(--lamp-2)}
+.keen{display:inline-block;margin-top:10px;padding:5px 10px;border-radius:99px;background:rgba(231,180,90,.16);color:var(--lamp-2);font:600 13.5px var(--sans)}
+.stamp{position:absolute;top:26px;padding:6px 14px;border:3px solid;border-radius:6px;font:700 30px var(--serif);opacity:0;pointer-events:none;background:rgba(13,10,7,.72)}
+.stamp.y{left:20px;color:#8FD08A;rotate:-12deg}.stamp.n{right:20px;color:#F0A794;rotate:12deg}.stamp.s{left:50%;top:auto;bottom:120px;translate:-50% 0;color:var(--lamp)}
+.acts{display:flex;justify-content:center;gap:16px;margin-top:18px}
+.acts button{display:grid;place-items:center;gap:2px;width:92px;height:74px;border-radius:10px;border:1.5px solid var(--carve-2);background:var(--stone-2);font:600 13.5px var(--sans);cursor:pointer;color:var(--ivory)}
+.acts button svg{width:26px;height:26px}.acts .y{border-color:#5E8F5A;color:#A9D6A4}.acts .n{border-color:#8A4A3A;color:#F0A794}.acts .s{border-color:var(--lamp);color:var(--lamp)}
+.acts button:active{transform:scale(.95)}
+.hint{text-align:center;margin-top:12px}
+.empty{height:100%;display:grid;place-items:center;text-align:center;padding:20px;border:1.5px dashed var(--carve-2);border-radius:10px}
+.empty h2{font-size:34px}
+
+/* question card */
+.qcard h2{font-size:clamp(30px,7.4vw,44px);margin-top:10px;line-height:1.1}
+.opts{display:grid;gap:10px;margin-top:22px}
+.opts button{min-height:58px;padding:12px 16px;text-align:left;border:1.5px solid var(--carve-2);border-radius:4px;background:var(--stone-2);font:500 18px var(--sans);cursor:pointer;color:var(--ivory)}
+.opts button:hover{border-color:var(--lamp)}
+.prog{height:6px;background:var(--carve);border-radius:9px;overflow:hidden;margin-top:14px}.prog i{display:block;height:100%;background:var(--lamp);width:var(--w);transition:width .3s}
+
+/* it's a match */
+.won{position:fixed;inset:0;z-index:50;display:grid;place-items:center;text-align:center;padding:24px;background:radial-gradient(ellipse at 50% 45%,rgba(231,180,90,.3),transparent 62%),rgba(13,10,7,.97)}
+.won h2{font-size:clamp(60px,17vw,120px);letter-spacing:-.03em;color:var(--lamp);line-height:.9;animation:pop .6s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes pop{from{transform:scale(.5);opacity:0}}
+.won i{position:absolute;left:50%;top:45%;width:7px;height:7px;border-radius:50%;background:var(--lamp-2);animation:fly 1.3s ease-out both}
+@keyframes fly{to{transform:translate(var(--x),var(--y));opacity:0}}
+
+/* matches and chat */
+.mrow{display:flex;gap:14px;align-items:center;width:100%;padding:14px 4px;border:0;border-bottom:1px solid var(--carve);background:none;text-align:left;cursor:pointer;color:inherit}
+.mrow .medal{width:56px;height:56px;font-size:30px;box-shadow:none}.mrow b{font:600 22px var(--serif)}.mrow span{display:block;font-size:14.5px;color:var(--dim)}
+.mrow em{margin-left:auto;font:700 26px var(--serif);font-style:normal;color:var(--lamp)}
+.talk{margin:12px 0;padding:14px 16px;background:var(--stone-2);border-left:3px solid var(--lamp);font-size:15px}
+.talk p+p{margin-top:8px}.talk b{color:var(--lamp-2)}
+.msgs{display:flex;flex-direction:column;gap:8px;min-height:30svh;padding:12px 0}
+.msgs p{max-width:82%;padding:10px 14px;border-radius:14px;background:var(--carve);font-size:16.5px;line-height:1.4;overflow-wrap:anywhere}
+.msgs p.me{align-self:flex-end;background:var(--lamp);color:#1A1208}
+.send{position:sticky;bottom:0;display:flex;gap:8px;padding:10px 0;background:var(--stone)}
+.send .in{min-height:50px;font-size:17px}.send .btn{min-height:50px;padding:8px 18px}
+</style>
+</head>
+<body>
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><a href="/report/">My report</a></nav>
+<main>
+  <p class="cap" id="boot" style="margin-top:20svh;text-align:center">Opening HALIA Match…</p>
+
+  <!-- welcome and profile -->
+  <section id="v-setup" class="hide intro">
+    <p><button class="link hide" id="prof-back">← Back to Discover</button></p>
+    <h1 id="setup-h">Meet people who want the same life.</h1>
+    <p class="lead" style="margin-top:14px" id="setup-lead">HALIA Match compares what you each said about family, home, money and daily life, and shows you the people whose answers agree with yours.</p>
+    <ul class="how" id="how"><li><b>→</b><span>Swipe right to say yes.</span></li><li><b>←</b><span>Swipe left to pass.</span></li><li><b>↑</b><span>Swipe up for a strong yes. They see you first.</span></li></ul>
+    <p class="note hide" id="minor">HALIA Match is for adults aged 18 and over.</p>
+    <form id="f-prof" novalidate>
+      <label class="f"><span>First name to show</span><input class="in" id="p-name" maxlength="30" required></label>
+      <div class="f"><span class="lbl" style="display:block;font:500 15.5px var(--sans);color:#D9CDB6;margin:22px 0 8px">I am</span><div class="seg" id="p-gender"></div></div>
+      <div class="f"><span style="display:block;font:500 15.5px var(--sans);color:#D9CDB6;margin:22px 0 8px">I want to meet</span><div class="seg" id="p-seeking"></div></div>
+      <div class="row2"><label class="f"><span>Youngest age</span><input class="in" id="p-min" type="number" min="18" max="80" required></label>
+        <label class="f"><span>Oldest age</span><input class="in" id="p-max" type="number" min="18" max="80" required></label></div>
+      <label class="f"><span>City you live in</span><input class="in" id="p-city" maxlength="60" required></label>
+      <div class="f"><span style="display:block;font:500 15.5px var(--sans);color:#D9CDB6;margin:22px 0 8px">I am here for</span><div class="seg" id="p-intent"></div></div>
+      <label class="f"><span>A line about you <small>up to 200 characters, no phone numbers or links</small></span><input class="in" id="p-bio" maxlength="200" placeholder="Weekend trekker. Filter coffee over everything."></label>
+      <label class="check hide" id="c-halia-l"><input type="checkbox" id="c-halia"><span id="c-halia-t"></span></label>
+      <label class="check hide" id="c-show-l"><input type="checkbox" id="c-show"><span id="c-show-t"></span></label>
+      <label class="check hide" id="c-active-l"><input type="checkbox" id="c-active"><span>Show my profile to others. Untick to take a break without losing your matches.</span></label>
+      <p class="err" id="e-prof" role="alert"></p>
+      <button class="btn wide" id="b-prof">Continue</button>
+      <p class="hide" id="leave-row" style="margin-top:18px"><button type="button" class="link" id="leave" style="color:#F0A794">Leave HALIA Match and delete my profile</button> <button type="button" class="link hide" id="leave-yes" style="color:#F0A794">Yes, delete it and my matches</button></p>
+    </form>
+  </section>
+
+  <!-- questions -->
+  <section id="v-q" class="hide qcard">
+    <p class="cap" id="q-count" style="margin-top:3svh"></p><div class="prog"><i id="q-prog"></i></div>
+    <h2 id="q-text"></h2><div class="opts" id="q-opts"></div>
+    <p class="err" id="e-q" role="alert"></p>
+    <p style="margin-top:14px"><button class="link" id="q-skip">Skip this one</button> &nbsp; <button class="link" id="q-done">See people now</button></p>
+    <p class="cap" style="margin-top:8px">These answers are how HALIA matches you. People see individual answers only after you both say yes.</p>
+  </section>
+
+  <!-- app -->
+  <section id="v-app" class="hide">
+    <div class="tabs" role="tablist"><button role="tab" data-t="deck" aria-selected="true">Discover</button><button role="tab" data-t="list">Matches <span id="m-n"></span></button><button role="tab" data-t="me">Profile</button></div>
+    <div id="t-deck">
+      <p class="note hide" id="more-q">You have answered <span id="aq"></span> matching questions. <button class="link" id="more-q-go" style="padding:0">Answer the rest</button> for scores with more people.</p>
+      <div class="deck" id="deck"></div>
+      <div class="acts" id="acts"><button class="n" data-a="pass" aria-label="Pass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Pass</button>
+        <button class="s" data-a="super" aria-label="Strong yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5M5 12l7-7 7 7"/></svg>Strong yes</button>
+        <button class="y" data-a="like" aria-label="Yes"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.7-9.6-9.3C.9 8.300 2.800 4.500 6.500 4.500c2 0 3.600 1 5.500 3.200 1.900-2.200 3.500-3.200 5.500-3.200 3.700 0 5.600 3.800 4.100 7.200C19.500 16.300 12 21 12 21z"/></svg>Yes</button></div>
+      <p class="cap hint" id="left"></p><p class="err" id="e-deck" role="alert" style="text-align:center"></p>
+      <p class="cap" style="text-align:center;margin-top:6px">The number shows how closely your answers agree. It is not a prediction of how things will turn out.</p>
+    </div>
+    <div id="t-list" class="hide"><div id="list"></div></div>
+    <div id="t-chat" class="hide">
+      <p><button class="link" id="back">← All matches</button></p>
+      <h2 id="ch-name" style="font-size:40px"></h2><p class="cap" id="ch-meta"></p>
+      <div class="talk hide" id="ch-talk"></div>
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <form class="send" id="f-msg"><input class="in" id="msg" maxlength="500" placeholder="Write a message" autocomplete="off" aria-label="Message"><button class="btn">Send</button></form>
+      <p class="err" id="e-msg" role="alert"></p>
+      <p style="margin-top:8px"><button class="link" id="unmatch">Unmatch</button> &nbsp; <button class="link" id="rep" style="color:#F0A794">Report and block</button></p>
+      <form class="hide" id="f-rep"><label class="f"><span>What happened? <small>Our team reads every report.</small></span><input class="in" id="rep-why" maxlength="300"></label><p style="margin-top:12px"><button class="btn line">Report and block</button></p></form>
+    </div>
+  </section>
+  <div class="won hide" id="won"><div><h2>It's a match.</h2><p class="lead" id="won-t" style="margin:18px auto 26px"></p><p style="display:grid;gap:12px;max-width:320px;margin:0 auto"><button class="btn" id="won-hi">Say hello</button><button class="btn line" id="won-on">Keep looking</button></p></div></div>
+</main>
+<script src="/match.js?v=1"></script>
+</body>
+</html>

@@ -39,6 +39,7 @@ echo "== 4/7 config"
 SVC_USER=$(systemctl show -p User --value destinyos-api); SVC_USER=${SVC_USER:-root}
 mkdir -p "$DATA"; chown "$SVC_USER" "$DATA"; chmod 700 "$DATA"
 grep -q '^SESSION_SECRET=' "$ENVF" || echo "SESSION_SECRET=$(openssl rand -hex 32)" >> "$ENVF"
+grep -q '^ADMIN_PASSWORD=' "$ENVF" || { echo "ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -d '/+=')" >> "$ENVF"; echo ">> Admin panel password created. Read it with: sudo grep ADMIN_PASSWORD $ENVF"; }
 grep -q '^DESTINY_DB=' "$ENVF"     || echo "DESTINY_DB=$DATA/destinyos.db" >> "$ENVF"
 grep -q '^COOKIE_SECURE=' "$ENVF"  || echo "COOKIE_SECURE=1" >> "$ENVF"
 chmod 600 "$ENVF"
@@ -66,5 +67,5 @@ if [ "$ok" != 1 ]; then
   bash "$REPO/deploy/rollback.sh" "$TS"; exit 1
 fi
 echo "   API healthy"
-for u in / /sign-in/ /sign-up/ /report/ /app/ /halia/ /halia/how-it-works/ /business/ /free-report/; do printf "   %-14s %s\n" "$u" "$(curl -s -o /dev/null -w '%{http_code}' "https://destinyos.in$u")"; done
+for u in / /sign-in/ /sign-up/ /report/ /match/ /admin/ /app/ /halia/ /halia/how-it-works/ /business/ /free-report/; do printf "   %-14s %s\n" "$u" "$(curl -s -o /dev/null -w '%{http_code}' "https://destinyos.in$u")"; done
 echo "DEPLOYED $(git -C "$REPO" log -1 --format=%h). If anything looks wrong: bash $REPO/deploy/rollback.sh $TS"

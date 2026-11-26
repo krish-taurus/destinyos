@@ -91,42 +91,65 @@
   const SCALE = [['1', 'Very low'], ['2', 'Low'], ['3', 'OK'], ['4', 'Good'], ['5', 'Very good']];
   const EXTRA = [['Q_FOCUS_PILLAR_V1', 'What would you most like to improve right now?', [['career', 'Career'], ['relationships', 'Relationships'], ['money', 'Money'], ['happiness', 'Happiness'], ['health', 'Health']]],
     ['Q_TIME_AVAILABLE_V1', 'How much time could you realistically spare each day?', [['5', '5 minutes'], ['15', '15 minutes'], ['30', '30 minutes'], ['60', 'An hour or more']]]];
+  // pid given: the paid report is written afterwards. No pid: only the snapshot is refreshed.
   async function prep(pid) {
-    if (!me.age_18) return writeYears(pid);
-    let st; try { st = await api('/api/halia/state'); } catch { return writeYears(pid); }
+    const after = () => pid ? writeYears(pid) : ($('prep').classList.add('hide'), snapshot(true));
+    if (!me.age_18) return pid && writeYears(pid);
+    let st; try { st = await api('/api/halia/state'); } catch { return pid && writeYears(pid); }
     const have = Object.fromEntries((st.answers || []).map(a => [a.field, String(a.value)]));
     const all = [...QS.map(([id, q]) => [id, q, SCALE]), ...EXTRA];
     $('qs').innerHTML = all.map(([id, q, opts]) => { const f = id.slice(2, -3);
       return `<fieldset class="q" style="border:0"><legend style="font:500 18px var(--sans);margin-bottom:10px">${q}</legend><div class="seg">${opts.map(([c, l]) => `<label><input type="radio" name="${id}" value="${c}"${have[f] === c ? ' checked' : ''}><span>${l}</span></label>`).join('')}</div></fieldset>`; }).join('');
+    $('prep-h').textContent = pid ? 'Seven questions before we write.' : 'Seven questions about your life today.';
+    $('prep-lead').textContent = pid ? 'HALIA starts from your life today, so your plan is built on your own answers. It takes about a minute.' : 'HALIA works only from what you tell it. Answer what you can; it takes about a minute.';
+    $('b-prep').textContent = pid ? 'Write my three-year report' : 'Show where I stand'; $('skip').classList.toggle('hide', !pid);
     $('h-consent-text').textContent = st.consent_text; $('h-consent').checked = !!st.consented; $('h-consent').closest('label').classList.toggle('hide', !!st.consented);
-    $('offer3').classList.add('hide'); $('prep').classList.remove('hide'); done(); $('prep').scrollIntoView();
+    if (pid) $('offer3').classList.add('hide'); $('prep').classList.remove('hide'); done(); $('prep').scrollIntoView();
     $('skip').onclick = () => writeYears(pid);
     $('f-prep').onsubmit = async ev => { ev.preventDefault(); const E = $('e-prep'); E.textContent = '';
       const picked = all.map(([id]) => [id, (document.querySelector(`input[name=${id}]:checked`) || {}).value]).filter(([, v]) => v);
-      if (!picked.length) return E.textContent = 'Answer at least one question, or write it without your answers.';
+      if (!picked.length) return E.textContent = pid ? 'Answer at least one question, or write it without your answers.' : 'Answer at least one question.';
       if (!st.consented && !$('h-consent').checked) return E.textContent = 'Tick the box so HALIA can use your answers.';
       $('b-prep').disabled = true;
       try { if (!st.consented) await api('/api/halia/consent', 'POST', { consent: true, daily_optin: false });
         for (const [id, v] of picked) await api('/api/halia/answers', 'POST', { question_id: id, value: v });
-        writeYears(pid); }
+        after(); }
       catch (e) { E.textContent = e.message; }
       $('b-prep').disabled = false; };
   }
 
+  // ── HALIA snapshot: worked out by the engine from the person's own answers ──
+  async function snapshot(scroll) {
+    if (!me.age_18) return;
+    const S = $('snap'); let s = null;
+    try { s = await api('/api/halia/snapshot'); } catch (e) { if (e.status !== 403) return; }
+    if (!s || !s.answered) {
+      S.innerHTML = `<h2>Where do you stand today?</h2><p class="lead" style="margin-top:14px">Your chart describes the sky you were born under. HALIA looks at your life as it is now: work, relationships, money, happiness and health. Seven questions, one minute, and it gives you one step to take today.</p>
+        <p style="margin-top:22px"><button class="btn" id="snap-go">Answer seven questions</button></p>`;
+    } else {
+      S.innerHTML = `<h2>Where you stand today.</h2><p class="lead" style="margin-top:14px">${s.chosen ? `You chose to work on ${esc(s.focus_name.toLowerCase())} first.` : `${esc(s.focus_name)} is your lowest area right now, so HALIA starts there.`}</p>
+        <div class="lv">${s.levels.map(l => `<div class="${l.pillar === s.lowest ? 'low' : ''}"><span>${esc(l.name)}</span><i style="--w:${(l.value || 0) * 20}%"></i><b>${esc(l.label || 'Not answered')}</b></div>`).join('')}</div>
+        <div class="step"><span class="cap">One step for today, about ${esc(s.minutes)} minutes</span><p>${esc(s.step)}</p></div>
+        <p class="cap" style="margin-top:14px;max-width:44em">${esc(s.note)} <button class="link" id="snap-go" style="padding:0;font-size:14.5px">Update my answers</button></p>`;
+    }
+    S.classList.remove('hide'); $('snap-go').onclick = () => prep(null); if (scroll) S.scrollIntoView();
+  }
+
   // ── payments ──
   const rzp = () => window.Razorpay ? Promise.resolve() : new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://checkout.razorpay.com/v1/checkout.js'; s.onload = res; s.onerror = () => rej(new Error('The payment window could not load. Check your connection.')); document.head.appendChild(s); });
-  async function pay(item) {
-    const o = await api('/api/billing/order', 'POST', { item }); await rzp();
+  async function pay(item, coupon) {
+    const o = await api('/api/billing/order', 'POST', { item, coupon: coupon || null }); if (o.free) return o.purchase_id; await rzp();
     return new Promise((res, rej) => new Razorpay({ key: o.key_id, order_id: o.order_id, amount: o.amount, currency: 'INR', name: 'Destiny OS', description: o.description,
       prefill: { name: o.name, contact: o.phone }, theme: { color: '#E7B45A' }, modal: { ondismiss: () => rej(new Error('')) },
       handler: p => api('/api/billing/order/verify', 'POST', p).then(v => res(v.purchase_id), rej) }).open());
   }
-  function sell(btn, errId, item, label, then) {
+  document.querySelectorAll('.code-t').forEach(b => b.onclick = () => { $(b.dataset.for).classList.remove('hide'); $(b.dataset.for).focus(); b.classList.add('hide'); });
+  function sell(btn, errId, item, label, then, codeId) {
     if (!buys.ready) { const a = document.createElement('a'); a.className = btn.className; a.textContent = 'Ask for it on WhatsApp'; a.target = '_blank'; a.rel = 'noopener';
       a.href = WA + '?text=' + encodeURIComponent(`Hi, I'd like the ${label}. My name is ${me.name}.`); btn.replaceWith(a);
       $(errId).style.color = 'var(--dim)'; $(errId).textContent = 'Online payment opens shortly.'; return; }
     btn.onclick = async () => { $(errId).textContent = ''; btn.disabled = true;
-      try { then(await pay(item)); } catch (e) { $(errId).textContent = e.message; }
+      try { then(await pay(item, $(codeId).value.trim())); } catch (e) { $(errId).textContent = e.message; }
       btn.disabled = false; };
   }
   async function session(pid) { try { const r = await api(`/api/addon/${pid}/generate`, 'POST');
@@ -139,10 +162,11 @@
       me = await api('/api/me');
       [buys] = await Promise.all([api('/api/billing/purchases'), loadCore()]);
       const b3 = bought('three_year'), bs = bought('consultation');
-      if (bs) session(bs.id); else sell($('buyS'), 'e-buyS', 'consultation', '30-minute personal session with Dr. Krish', session);
+      snapshot();
+      if (bs) session(bs.id); else sell($('buyS'), 'e-buyS', 'consultation', '30-minute personal session with Dr. Krish', session, 'codeS');
       if (b3 && b3.status === 'fulfilled') { const all = await api('/api/addon/reports'); const t = all.reports.find(r => r.kind === 'three_year'); if (t) renderYears(t); }
       else if (b3) return prep(b3.id);
-      else { $('offer3').classList.remove('hide'); sell($('buy3'), 'e-buy3', 'three_year', 'three-year report', prep); }
+      else { $('offer3').classList.remove('hide'); sell($('buy3'), 'e-buy3', 'three_year', 'three-year report', prep, 'code3'); }
       done();
     } catch (e) { if (e.status !== 401) fail(e.message, start); }
   }

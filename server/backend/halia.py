@@ -112,6 +112,12 @@ def state(u=Depends(current_user)):
             "chat": chat_left(u), "chat_plan": PLANS["chat"], "chat_link": chat_link()}
 
 
+@router.get("/api/halia/snapshot")
+def snapshot(u=Depends(require_halia)):
+    """Where you stand today: worked out by the engine from your own answers, with one step sized to your time."""
+    return eng.snapshot(values(u["id"]))
+
+
 class ConsentIn(BaseModel):
     consent: bool
     daily_optin: bool = False
@@ -136,9 +142,12 @@ def withdraw(u=Depends(current_user)):
     """Withdrawing consent erases everything HALIA holds: answers, question history, chats, invites and links."""
     with db.tx() as c:
         for t, col in (("halia_answers", "user_id"), ("halia_question_log", "user_id"), ("halia_chat", "user_id"),
-                       ("halia_invites", "user_id"), ("halia_settings", "user_id")):
+                       ("halia_invites", "user_id"), ("halia_settings", "user_id"), ("match_profiles", "user_id"),
+                       ("match_swipes", "user_id"), ("match_blocks", "user_id")):
             c.execute(f"DELETE FROM {t} WHERE {col}=?", (u["id"],))
         c.execute("DELETE FROM halia_links WHERE user_a=? OR user_b=?", (u["id"], u["id"]))
+        c.execute("DELETE FROM match_swipes WHERE target_id=?", (u["id"],))
+        c.execute("DELETE FROM matches WHERE user_a=? OR user_b=?", (u["id"], u["id"]))
     db.log_event(u["id"], "halia_withdraw")
     return {"ok": True}
 

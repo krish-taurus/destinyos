@@ -298,3 +298,48 @@ def coverage(domain: str, facts: dict) -> dict:
     fields = domain_fields(domain)
     have = [f for f in fields if f in facts]
     return {"domain": domain, "name": DOMAINS[domain]["name"], "answered": len(have), "of": len(fields)}
+
+
+# ── Snapshot: where a person stands today, from their own level answers. Rules only, no model. ────────────
+PILLARS = [("career", "Career", "L_CAREER"), ("relationships", "Relationships", "L_RELATIONSHIPS"), ("money", "Money", "L_MONEY"),
+           ("happiness", "Happiness", "L_HAPPINESS"), ("health", "Health", "L_WELLBEING")]
+STEPS = {   # one small step per pillar, sized to the time the person said they have
+    "career": ["Write down the one work task you keep postponing and do its first 5 minutes today.",
+               "Spend 15 minutes on the one task that would move your work forward most this week.",
+               "Give 30 minutes to the skill your next role needs: one lesson, then one practice problem.",
+               "Block one hour for your most important piece of work before you open any messages."],
+    "relationships": ["Send one honest, kind message to someone you have been meaning to contact.",
+                      "Call one person who matters to you and listen for 15 minutes without fixing anything.",
+                      "Spend 30 minutes with someone close, phones away.",
+                      "Plan one unhurried hour this week with the person you most want to be closer to."],
+    "money": ["Write down everything you spent yesterday. Only look; change nothing yet.",
+              "Take 15 minutes to list your fixed monthly costs and what is left after them.",
+              "Spend 30 minutes setting one automatic transfer to savings, however small.",
+              "Give one hour to a simple monthly budget: income, fixed costs, savings, the rest."],
+    "happiness": ["Write three things that went right today, however small.",
+                  "Spend 15 minutes on something you enjoy purely for itself.",
+                  "Take a 30-minute walk without your phone.",
+                  "Keep one hour this week for the thing you used to love and stopped doing."],
+    "health": ["Drink a glass of water and take a 5-minute walk now.",
+               "Walk for 15 minutes after your next meal.",
+               "Move for 30 minutes today, and set a fixed bedtime for tonight.",
+               "Give an hour to your body today: 40 minutes of movement and 20 to prepare tomorrow's meals."],
+}
+_TIME = {"5": 0, "15": 1, "30": 2, "60": 3}
+
+
+def snapshot(values: dict) -> dict:
+    """values: {field: value}. The lowest level decides the focus unless the person chose one themselves."""
+    levels = [{"pillar": p, "name": n, "value": int(values[f]) if values.get(f) else None,
+               "label": _label(f, values[f]) if values.get(f) else None} for p, n, f in PILLARS]
+    known = [l for l in levels if l["value"] is not None]
+    out = {"levels": levels, "answered": len(known), "of": len(PILLARS), "lowest": None, "focus": None, "step": None,
+           "note": "Built only from the answers you gave about your life today. No birth details are used."}
+    if not known:
+        return out
+    lowest = min(known, key=lambda l: l["value"])
+    focus = values.get("FOCUS_PILLAR") if values.get("FOCUS_PILLAR") in STEPS else lowest["pillar"]
+    out.update(lowest=lowest["pillar"], focus=focus, focus_name=dict((p, n) for p, n, _ in PILLARS)[focus],
+               chosen=bool(values.get("FOCUS_PILLAR")), minutes=int(values.get("TIME_AVAILABLE") or 15),
+               step=STEPS[focus][_TIME.get(str(values.get("TIME_AVAILABLE")), 1)])
+    return out

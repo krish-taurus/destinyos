@@ -148,6 +148,65 @@ CREATE TABLE IF NOT EXISTS halia_chat (
   at      INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS halia_chat_user ON halia_chat(user_id, id);
+CREATE TABLE IF NOT EXISTS app_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS admin_sessions (token_hash TEXT PRIMARY KEY, expires_at INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS coupons (
+  code       TEXT PRIMARY KEY,                 -- upper case
+  percent    INTEGER NOT NULL,                 -- 1..100
+  item       TEXT,                             -- one-time item it applies to, NULL = any
+  max_uses   INTEGER NOT NULL DEFAULT 1,
+  expires_at INTEGER,
+  active     INTEGER NOT NULL DEFAULT 1,
+  note       TEXT,
+  created_at INTEGER NOT NULL
+);
+-- HALIA Match: opt-in profiles, swipes, mutual matches and their messages
+CREATE TABLE IF NOT EXISTS match_profiles (
+  user_id      INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  display_name TEXT NOT NULL,
+  gender       TEXT NOT NULL,                  -- woman|man|other
+  seeking      TEXT NOT NULL,                  -- women|men|everyone
+  age_min      INTEGER NOT NULL,
+  age_max      INTEGER NOT NULL,
+  city         TEXT NOT NULL,
+  intent       TEXT NOT NULL,                  -- marriage|long_term|friendship
+  bio          TEXT NOT NULL DEFAULT '',
+  active       INTEGER NOT NULL DEFAULT 1,
+  consent_text TEXT NOT NULL,
+  created_at   INTEGER NOT NULL,
+  updated_at   INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS match_swipes (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  target_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  action    TEXT NOT NULL,                     -- like|pass|super
+  day       TEXT NOT NULL,
+  at        INTEGER NOT NULL,
+  UNIQUE(user_id, target_id)
+);
+CREATE TABLE IF NOT EXISTS matches (
+  id     INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_a INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,   -- the smaller id
+  user_b INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  at     INTEGER NOT NULL,
+  UNIQUE(user_a, user_b)
+);
+CREATE TABLE IF NOT EXISTS match_messages (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  match_id  INTEGER NOT NULL REFERENCES matches(id) ON DELETE CASCADE,
+  sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body      TEXT NOT NULL,
+  at        INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS match_blocks (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  target_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reason    TEXT,
+  at        INTEGER NOT NULL,
+  UNIQUE(user_id, target_id)
+);
 CREATE TABLE IF NOT EXISTS wa_inbound (msg_id TEXT PRIMARY KEY, at INTEGER NOT NULL);
 """
 
@@ -185,7 +244,8 @@ def conn() -> sqlite3.Connection:
 MIGRATIONS = [   # (table, column, definition) added to databases created before the column existed
     ("users", "language", "TEXT NOT NULL DEFAULT 'en'"),
     ("subscriptions", "plan", "TEXT NOT NULL DEFAULT 'plus'"),
-    ("subscriptions", "cancel_requested", "INTEGER NOT NULL DEFAULT 0"),   # we asked Razorpay to stop renewing it
+    ("subscriptions", "cancel_requested", "INTEGER NOT NULL DEFAULT 0"),
+    ("purchases", "coupon", "TEXT"),   # we asked Razorpay to stop renewing it
 ]
 
 
