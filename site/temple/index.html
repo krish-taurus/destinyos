@@ -25,7 +25,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.015em}
 .lead{font-size:clamp(18px,2.4vw,22px);line-height:1.55;color:#D9CDB6;max-width:31em}
 .cap{font-size:14px;line-height:1.5;color:var(--dim);max-width:40em}
 .gold{color:var(--lamp)}
-#embers{position:fixed;inset:0;z-index:1;pointer-events:none}
+#embers{position:fixed;inset:0;z-index:5;pointer-events:none}
 main,nav.top,footer{position:relative;z-index:2}
 nav.top{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:linear-gradient(rgba(13,10,7,.9),transparent)}
 nav.top a{text-decoration:none;font:600 15px var(--sans)}
@@ -74,6 +74,34 @@ nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
 .flame{position:absolute;left:50%;top:27svh;translate:-50% 0;width:20px;height:34px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 72%,#fff,var(--lamp-2) 34%,var(--lamp) 60%,transparent 74%);filter:blur(.4px);box-shadow:0 0 70px 26px rgba(231,180,90,.36);animation:flick 3.2s infinite ease-in-out;opacity:calc(1 - var(--p)*4)}
 @keyframes flick{0%,100%{transform:scale(1) rotate(-1.5deg)}30%{transform:scale(1.07,.95) rotate(2deg)}62%{transform:scale(.95,1.06) rotate(-2.5deg)}}
 
+.fx-on .hero{opacity:calc(1 - var(--p)*24)}
+.fx-on .sanctum .deva{visibility:hidden}
+.sanctum>div{transform:scale(calc(1 + var(--p)*.08))}
+
+/* Nalanda: a brick city of learning at dusk, with people walking through it */
+.nalanda .pin{background:linear-gradient(#0D0A07 0%,#1C1109 22%,#4A2610 42%,#9A531A 56%,#D98A2B 64%,#D98A2B 100%);justify-content:flex-start;padding-top:86px}
+.city{position:absolute;inset:0;width:100%;height:100%;transform:scale(calc(1.02 + var(--p)*.2));transform-origin:50% 78%}
+.city .sun{fill:#FBE3A6;filter:blur(10px)}
+.city .far{transform:translateX(calc(var(--p)*-26px))}
+.city .mid{transform:translateX(calc(var(--p)*-60px))}
+.city .front{transform:translateX(calc(var(--p)*-120px))}
+.city .cell{fill:#E7B45A;animation:lampglow 4s ease-in-out infinite alternate}
+.city .cell:nth-child(3n){animation-delay:-1.7s}.city .cell:nth-child(4n){animation-delay:-2.9s;opacity:.25}
+@keyframes lampglow{from{opacity:.38}to{opacity:.8}}
+.walker{animation:walk var(--d) linear var(--delay) infinite}
+.walker.rev{animation-direction:reverse}
+@keyframes walk{from{transform:translateX(-70px)}to{transform:translateX(1270px)}}
+.walker .leg{transform-box:fill-box;transform-origin:50% 0;animation:step .62s ease-in-out infinite alternate}
+.walker .leg.b{animation-delay:-.62s}
+@keyframes step{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
+.nalanda .over{position:relative;z-index:2;text-shadow:0 2px 24px #0D0A07,0 0 50px #0D0A07}
+.nalanda .pin::before{content:"";position:absolute;inset:0 0 45% 0;z-index:1;background:linear-gradient(rgba(13,10,7,.92) 30%,transparent);pointer-events:none}
+.nalanda .title{font-size:clamp(64px,15vw,190px);opacity:calc(var(--p)*6);transform:translateY(calc((1 - min(var(--p)*5,1))*30px))}
+.nalanda .lead,.nalanda .cap,.nalanda .era{opacity:calc((var(--p) - .22)*5);margin-top:14px}
+.static .nalanda .title,.static .nalanda .lead,.static .nalanda .cap,.static .nalanda .era{opacity:1;transform:none}
+.slam{animation:slam .7s cubic-bezier(.2,.9,.2,1)}
+@keyframes slam{from{transform:scale(2.6);filter:blur(14px);opacity:0}}
+
 /* 2 to 4. the story */
 .era{font:600 15px var(--sans);color:var(--lamp);margin-bottom:12px}
 .story .title{font-size:clamp(40px,7.6vw,92px)}
@@ -103,8 +131,9 @@ nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
 .reveal{padding:40px 0 110px}
 .sum{font:600 clamp(20px,4.6vw,34px)/1.3 var(--serif);color:var(--dim);min-height:1.4em;letter-spacing:.06em}
 .big{font:700 clamp(150px,42vw,360px)/.8 var(--serif);color:var(--lamp);text-shadow:0 0 90px rgba(231,180,90,.4);letter-spacing:-.04em}
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:44px}
+.tiles{opacity:0;transition:opacity .5s;display:grid;grid-template-columns:repeat(2,1fr);gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:44px}
 @media(min-width:760px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tiles.on{opacity:1}
 .tiles div{background:var(--stone);padding:24px 18px;opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}
 .tiles div.on{opacity:1;transform:none}
 .tiles b{display:block;font:700 62px/1 var(--serif);color:var(--ivory)}
@@ -149,6 +178,40 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
     <p class="lead">For three thousand years people in this land have read the sky. Walk through how it began, then see your own chart revealed.</p>
     <p class="hint">Scroll to open the doors</p>
   </div></div>
+</div></section>
+<div class="frieze"></div>
+
+<!-- Nalanda -->
+<section class="scene nalanda" data-scene="nalanda" style="--len:3.4;--p:0"><div class="pin">
+  <svg class="city" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs><pattern id="brick" width="26" height="12" patternUnits="userSpaceOnUse"><path d="M0 .5H26M0 6.5H26M13 0V6M0 6V12" stroke="#000" stroke-opacity=".4" fill="none"/></pattern></defs>
+    <circle class="sun" cx="640" cy="330" r="150"/>
+    <g class="far">
+      <path fill="#1A0F07" d="M150 400V338H178V312Q200 286 222 312V338H250V400ZM950 400V338H978V312Q1000 286 1022 312V338H1050V400Z"/>
+      <path id="stupa" fill="#140B05" d="M400 400V352H440V308H482V264H522V222H560V188Q640 112 720 188V222H758V264H798V308H840V352H880V400Z"/>
+      <path fill="#2A1809" d="M612 400L628 190H652L668 400Z"/>
+      <path fill="url(#brick)" d="M400 400V352H440V308H482V264H522V222H560V188Q640 112 720 188V222H758V264H798V308H840V352H880V400Z"/>
+    </g>
+    <g class="mid">
+      <rect x="-120" y="384" width="1440" height="96" fill="#1B1009"/><rect x="-120" y="384" width="1440" height="96" fill="url(#brick)"/>
+      <rect x="-120" y="378" width="1440" height="8" fill="#2E1C0E"/>
+      <g id="cells"></g>
+    </g>
+    <g id="walk-far"></g>
+    <rect x="-120" y="478" width="1440" height="130" fill="#2B1A0D"/><rect x="-120" y="478" width="1440" height="130" fill="url(#brick)" opacity=".7"/><rect x="-120" y="478" width="1440" height="10" fill="#0C0805" opacity=".6"/>
+    <g id="walk-mid"></g>
+    <g class="front">
+      <path fill="#070504" d="M-40 600V150H0V118H96V150H136V600ZM-12 150H108V172H-12ZM1104 600V150H1144V118H1240V150H1280V600ZM1132 150H1252V172H1132Z"/>
+      <path fill="#070504" d="M136 600V548H260V572H380V600ZM1104 600V548H980V572H860V600Z"/>
+    </g>
+    <g id="walk-near"></g>
+  </svg>
+  <div class="wrap over">
+    <h2 class="title">Nalanda.</h2>
+    <p class="era">From the fifth century CE</p>
+    <p class="lead">A city of brick where monks and scholars lived and studied in their thousands. Alongside philosophy they learned grammar, medicine, logic, mathematics and astronomy, and its library drew pilgrims from as far as China.</p>
+    <p class="cap">Traditional accounts speak of 10,000 students and 2,000 teachers. Nalanda was a Buddhist monastery and place of learning; the sky was one of many things studied here.</p>
+  </div>
 </div></section>
 <div class="frieze"></div>
 
@@ -277,6 +340,7 @@ const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio
 const RASHI = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrischika','Dhanu','Makara','Kumbha','Meena'];
 const SG = [...'♈♉♊♋♌♍♎♏♐♑♒♓'].map(g => g + '︎'), PG = { Sun: '☉', Moon: '☽', Mars: '♂', Mercury: '☿', Jupiter: '♃', Venus: '♀', Saturn: '♄', Rahu: '☊', Ketu: '☋' };
 
+document.querySelectorAll('.hero h1').forEach(h => h.innerHTML = h.textContent.trim().split(/\s+/).map(w => `<span>${w}</span>`).join(' '));
 /* the star-shaped plan of a Hoysala shrine: nested sixteen-pointed stars */
 function star(svg, rings, colour) {
   for (const [R, r, w] of rings) { let d = ''; for (let i = 0; i < 32; i++) { const [x, y] = pol(i % 2 ? r : R, i * 11.25 - 90); d += (i ? 'L' : 'M') + x.toFixed(2) + ' ' + y.toFixed(2); }
@@ -299,7 +363,10 @@ for (let i = 0; i < 12; i++) { const [x1, y1] = pol(96, i * 30 - 90), [x2, y2] =
 const zc = zod.appendChild(el('text', { class: 'nak', y: 6 }));
 
 const draw = {
-  gate(e, p) { e.style.setProperty('--p', p); e.style.setProperty('--open', ease(clamp((p - .12) / .7))); },
+  gate(e, p, r) { const open = ease(clamp((p - .12) / .7)); e.style.setProperty('--p', p); e.style.setProperty('--open', open);
+    FX.morph(p, clamp(p * 24) * clamp((r.bottom - innerHeight * .25) / (innerHeight * .75)));
+    if (open > .5 && !draw.gate.done) { draw.gate.done = true; for (let k = 0; k < 7; k++) FX.burst(innerWidth / 2, innerHeight * (k + .5) / 7, 70, 11); } if (open < .2) draw.gate.done = false; },
+  nalanda(e, p) { e.style.setProperty('--p', p); },
   sky(e, p) { const n = Math.min(27, Math.floor(clamp(p * 1.12) * 27) + 1), [x, y] = pol(132, (n - 1) * 360 / 27 - 90);
     dots.forEach((d, i) => d.setAttribute('fill', i < n ? '#E7B45A' : '#2A2117')); moon.setAttribute('cx', x); moon.setAttribute('cy', y); nakName.textContent = NAK[n - 1]; nakNo.textContent = `${n} of 27`; },
   twelve(e, p) { const t = clamp(p * 1.15); zod.firstChild.style.setProperty('--draw', clamp(t * 3));
@@ -307,22 +374,58 @@ const draw = {
     const k = Math.floor(clamp(t * 14 - 2.2, 0, 11.99)); zc.textContent = t * 14 > 2.2 ? RASHI[k] : ''; },
   rishi(e, p) { e.style.setProperty('--draw', clamp(p * 1.3)); },
 };
-const scenes = [...document.querySelectorAll('.scene')];
-function tick() { const vh = innerHeight; for (const e of scenes) { const r = e.getBoundingClientRect(); draw[e.dataset.scene](e, still ? 1 : clamp(-r.top / (r.height - vh))); } }
-let queued = false; addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; tick(); }); } }, { passive: true }); addEventListener('resize', tick); tick();
-
-/* embers rising from the lamp */
 (function () {
-  const c = $('embers'), x = c.getContext('2d'); let W, H, P = [];
-  const size = () => { W = c.width = innerWidth; H = c.height = innerHeight; }; size(); addEventListener('resize', size);
-  const born = () => ({ x: Math.random() * W, y: H + 10, r: .6 + Math.random() * 1.6, v: .18 + Math.random() * .5, s: Math.random() * 6.3, a: .25 + Math.random() * .55 });
-  for (let i = 0; i < 46; i++) { const p = born(); p.y = Math.random() * H; P.push(p); }
-  if (still) return;
-  (function loop() { x.clearRect(0, 0, W, H);
-    for (const p of P) { p.y -= p.v; p.s += .012; p.x += Math.sin(p.s) * .25; if (p.y < -10) Object.assign(p, born());
-      x.globalAlpha = p.a * (.6 + .4 * Math.sin(p.s * 3)); x.fillStyle = '#E7B45A'; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.3); x.fill(); }
-    requestAnimationFrame(loop); })();
+  const cells = $('cells'); for (let xx = -90; xx < 1300; xx += 58) cells.appendChild(el('path', { class: 'cell', d: `M${xx} 478V436Q${xx + 13} 414 ${xx + 26} 436V478Z` }));
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const robes = ['#C8843A', '#B5651D', '#C8442B', '#8A4A17', '#0A0705'];
+  const rows = [['walk-far', 478, .46, 10, 70, .95], ['walk-mid', 530, .8, 9, 52, 1], ['walk-near', 594, 1.35, 5, 38, 1]];
+  for (const [id, base, sc, n, dur, op] of rows) for (let i = 0; i < n; i++) {
+    const d = dur * (.75 + rnd() * .6), fill = id === 'walk-near' ? '#070504' : robes[Math.floor(rnd() * robes.length)];
+    const outer = $(id).appendChild(el('g', { transform: `translate(0 ${base}) scale(${sc * (.9 + rnd() * .2)})`, opacity: op }));
+    const g = outer.appendChild(el('g', { class: 'walker' + (rnd() < .45 ? ' rev' : ''), style: `--d:${d.toFixed(1)}s;--delay:-${(rnd() * d).toFixed(1)}s` }));
+    g.appendChild(el('rect', { class: 'leg', x: -4, y: -13, width: 3, height: 13, fill })); g.appendChild(el('rect', { class: 'leg b', x: 1, y: -13, width: 3, height: 13, fill }));
+    g.appendChild(el('path', { d: 'M-6 -37Q0 -42 6 -37L8 -11H-8Z', fill })); g.appendChild(el('circle', { cy: -44, r: 4.2, fill }));
+    if (rnd() < .4) g.appendChild(el('rect', { x: 5, y: -30, width: 7, height: 3, fill: '#F3E9D6', opacity: .8 }));      /* a palm-leaf manuscript under the arm */
+  }
 })();
+const scenes = [...document.querySelectorAll('.scene')];
+function tick() { const vh = innerHeight; for (const e of scenes) { const r = e.getBoundingClientRect(); draw[e.dataset.scene](e, still ? 1 : clamp(-r.top / (r.height - vh)), r); } }
+let queued = false; addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; tick(); }); } }, { passive: true }); addEventListener('resize', tick);
+
+/* one canvas: embers, sparks, and the headline that breaks into gold dust and re-forms as ज्योतिष */
+const FX = (function () {
+  const c = $('embers'), x = c.getContext('2d'), N = innerWidth < 700 ? 2600 : 5200; let W, H, A = [], B = [], parts = [], sparks = [], embers = [], gp = 0, ga = 0, ready = false;
+  const smooth = t => t * t * (3 - 2 * t);
+  function size() { const d = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; c.style.width = W + 'px'; c.style.height = H + 'px'; x.setTransform(d, 0, 0, d, 0, 0); }
+  function sample(paint) { const o = document.createElement('canvas'); o.width = W; o.height = H; const g = o.getContext('2d'); g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; paint(g);
+    const d = g.getImageData(0, 0, W, H).data, pts = [], st = W < 700 ? 2 : 3; for (let yy = 0; yy < H; yy += st) for (let xx = 0; xx < W; xx += st) if (d[(yy * W + xx) * 4 + 3] > 120) pts.push([xx, yy]); return pts; }
+  function targets() {
+    if (still) return; const pin = document.querySelector('[data-scene=gate] .pin'), top = pin.getBoundingClientRect().top, h1 = pin.querySelector('h1'), dv = pin.querySelector('.deva'), f = e => { const s = getComputedStyle(e); return `${s.fontWeight} ${s.fontSize} ${s.fontFamily}`; };
+    A = sample(g => { g.font = f(h1); h1.querySelectorAll('span').forEach(w => { const r = w.getBoundingClientRect(); g.fillText(w.textContent, r.left + r.width / 2, r.top - top + r.height / 2); }); });
+    B = sample(g => { g.font = f(dv); const r = dv.getBoundingClientRect(); g.fillText(dv.textContent, r.left + r.width / 2, r.top - top + r.height / 2); });
+    if (A.length < 50 || B.length < 50) return;
+    parts = []; const R = Math.max(W, H); for (let i = 0; i < N; i++) { const an = Math.random() * 6.283, m = (.12 + Math.pow(Math.random(), 1.6) * .8) * R;
+      parts.push({ a: Math.floor(i * A.length / N), b: Math.floor(Math.random() * B.length), sx: Math.cos(an) * m, sy: Math.sin(an) * m, ph: Math.random() * 6.283, s: 1.2 + Math.random() * 1.5 }); }
+    ready = true; document.documentElement.classList.add('fx-on');
+  }
+  const born = () => ({ x: Math.random() * W, y: H + 10, r: .6 + Math.random() * 1.6, v: .18 + Math.random() * .5, s: Math.random() * 6.3, a: .25 + Math.random() * .55 });
+  function frame(t) {
+    x.clearRect(0, 0, W, H); x.globalCompositeOperation = 'lighter'; x.fillStyle = '#E7B45A';
+    for (const p of embers) { p.y -= p.v; p.s += .012; p.x += Math.sin(p.s) * .25; if (p.y < -10) Object.assign(p, born()); x.globalAlpha = p.a * (.6 + .4 * Math.sin(p.s * 3)); x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.3); x.fill(); }
+    if (ready && ga > .01) { const tt = clamp((gp - .05) / .7), m = tt < .3 ? 0 : smooth((tt - .3) / .7), bell = Math.pow(Math.sin(Math.PI * tt), .7), ca = Math.cos(tt * 1.5), sa = Math.sin(tt * 1.5);
+      for (const p of parts) { const a = A[p.a], b = B[p.b]; x.globalAlpha = ga * (.5 + .5 * Math.sin(t * .004 + p.ph));
+        x.fillRect(a[0] + (b[0] - a[0]) * m + (p.sx * ca - p.sy * sa) * bell + Math.sin(t * .002 + p.ph) * .8, a[1] + (b[1] - a[1]) * m + (p.sx * sa + p.sy * ca) * bell + Math.cos(t * .0017 + p.ph) * .8, p.s, p.s); } }
+    for (let i = sparks.length - 1; i >= 0; i--) { const p = sparks[i]; p.x += p.vx; p.y += p.vy; p.vx *= .955; p.vy = p.vy * .955 - .035; p.l -= p.k; if (p.l <= 0) { sparks.splice(i, 1); continue; } x.globalAlpha = p.l; x.fillRect(p.x, p.y, p.s, p.s); }
+    requestAnimationFrame(frame);
+  }
+  size(); for (let i = 0; i < 46; i++) { const p = born(); p.y = Math.random() * H; embers.push(p); }
+  addEventListener('resize', () => { size(); ready = false; clearTimeout(targets.t); targets.t = setTimeout(() => { if (scrollY < innerHeight * 3) targets(); }, 300); });
+  if (!still) { requestAnimationFrame(frame); setTimeout(targets, 2300); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(targets, 2400)); }
+  return { morph(p, a) { gp = p; ga = a; },
+    burst(bx, by, n, power) { if (still) return; for (let i = 0; i < n; i++) { const an = Math.random() * 6.283, v = power * (.15 + Math.pow(Math.random(), 2)); sparks.push({ x: bx, y: by, vx: Math.cos(an) * v, vy: Math.sin(an) * v, l: 1, k: .006 + Math.random() * .014, s: 1 + Math.random() * 2.2 }); } } };
+})();
+
+tick();
 
 /* the rishi asks, one question at a time */
 let stepNo = 1;
@@ -352,15 +455,17 @@ async function reveal(name, dob, d) {
   $('book').href = 'https://wa.me/917975554666?text=' + encodeURIComponent(`Hi, I'd like to book a one-to-one consultation with Dr. Krish. My name is ${name}.`);
   const year = new Date().getFullYear();
   const T = [['Birth number', n.birthNumber], ['Expression', n.expression], ['Soul urge', n.soulUrge], ['Personal year ' + year, n.personalYear]];
-  $('tiles').innerHTML = T.map(([l, v]) => `<div><b>0</b><span>${l}</span><em>${mean(v)}</em></div>`).join('');
+  $('tiles').classList.remove('on'); $('tiles').innerHTML = T.map(([l, v]) => `<div><b>0</b><span>${l}</span><em>${mean(v)}</em></div>`).join('');
   buildWheel(d.chart);
   $('reveal').scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' }); await wait(900);
   const red = v => { while (v > 9 && ![11, 22, 33].includes(v)) v = String(v).split('').reduce((a, b) => a + +b, 0); return v; };
   const [y, m, dd] = dob.split('-').map(Number), parts = [['day', dd], ['month', m], ['year', y]]; let shown = '';
   for (const [label, v] of parts) { shown += (shown ? '  +  ' : '') + `${label} ${red(v)}`; $('r-sum').textContent = shown; await wait(420); }
   $('r-sum').textContent = shown + '  =  ' + (red(dd) + red(m) + red(y)); await wait(600);
-  await count($('r-big'), n.lifePath, 1100); $('r-mean').textContent = mean(n.lifePath) + '.'; await wait(500);
-  const tiles = [...$('tiles').children]; for (let i = 0; i < tiles.length; i++) { tiles[i].classList.add('on'); count(tiles[i].firstChild, T[i][1], 700); await wait(260); }
+  $('r-big').textContent = n.lifePath; $('r-big').classList.remove('slam'); void $('r-big').offsetWidth; $('r-big').classList.add('slam');
+  { const r = $('r-big').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 900, 17); }
+  await wait(700); $('r-mean').textContent = mean(n.lifePath) + '.'; await wait(500);
+  const tiles = [...$('tiles').children]; $('tiles').classList.add('on'); for (let i = 0; i < tiles.length; i++) { tiles[i].classList.add('on'); count(tiles[i].firstChild, T[i][1], 700); await wait(260); }
   new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { o.disconnect(); spin(d.chart); } }, { threshold: .45 }).observe($('wheel'));
 }
 
@@ -382,7 +487,8 @@ function buildWheel(ch) {
   $('facts').innerHTML = F.map(([l, v]) => `<div><span>${l}</span><b>${v}</b></div>`).join(''); $('r-note').textContent = ch.lagna ? '' : 'Add your birth time and city to see your rising sign. Without them the Moon\'s position is approximate.';
 }
 function place(t) { for (const p of planets) { const e = ease(t), [x, y] = pol(p.r + (1 - e) * 60, at(p.lon + (1 - e) * 360 * p.turns)); p.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`); p.g.setAttribute('opacity', clamp(t * 4)); } }
-function spin() { const t0 = performance.now(); (function f(t) { const p = still ? 1 : clamp((t - t0) / 3600); place(p); if (p < 1) requestAnimationFrame(f); })(t0); }
+function spin() { const t0 = performance.now(); (function f(t) { const p = still ? 1 : clamp((t - t0) / 3600); place(p); if (p < 1) return requestAnimationFrame(f);
+  const r = $('wheel').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 420, 13); })(t0); }
 </script>
 </body>
 </html>
