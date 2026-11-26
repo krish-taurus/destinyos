@@ -57,25 +57,47 @@ nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
 .sanctum p{opacity:calc((var(--p) - .62)*3.4)}
 .star{position:absolute;left:50%;top:50%;width:min(150vw,1100px);aspect-ratio:1;translate:-50% -50%;opacity:.5;animation:turn 240s linear infinite}
 @keyframes turn{to{rotate:360deg}}
-.door{position:absolute;top:0;bottom:0;width:50.5%;background:
-  linear-gradient(90deg,rgba(0,0,0,.5),transparent 18%,transparent 82%,rgba(0,0,0,.5)),
-  repeating-linear-gradient(0deg,transparent 0 118px,rgba(231,180,90,.16) 118px 120px),
-  repeating-linear-gradient(90deg,transparent 0 98px,rgba(231,180,90,.1) 98px 100px),var(--stone-2);
-  box-shadow:inset 0 0 120px #000;will-change:transform}
-.door.l{left:0;border-right:2px solid rgba(231,180,90,.5);transform:translateX(calc(var(--open)*-100%))}
-.door.r{right:0;border-left:2px solid rgba(231,180,90,.5);transform:translateX(calc(var(--open)*100%))}
-.door svg{position:absolute;top:27%;width:min(34vw,230px);translate:0 -50%;opacity:.75}
-.door.l svg{right:7%}.door.r svg{left:7%}
-.hero{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 9svh;opacity:calc(1 - var(--p)*5);pointer-events:none}
+/* the doorway: carved leaves on hinges, a stone frame, and lamps everywhere */
+.temple{--dw:min(84vw,45svh);--dh:72svh;--jamb:clamp(15px,4.4vw,34px);--base:7svh;position:absolute;inset:0;transform-origin:50% 56%;transform:scale(calc(1 + var(--zoom,0)*5));opacity:calc(1 - var(--gone,0))}
+.doorway{position:absolute;left:50%;bottom:var(--base);translate:-50% 0;width:var(--dw);height:var(--dh);perspective:1500px;box-shadow:0 0 0 220vmax #110C07}
+.leaf{position:absolute;top:0;bottom:0;width:50%;backface-visibility:hidden;will-change:transform}
+.leaf.l{left:0;transform-origin:0 50%;transform:rotateY(calc(var(--open)*-106deg))}
+.leaf.r{right:0;transform-origin:100% 50%;transform:rotateY(calc(var(--open)*106deg))}
+.leaf svg{width:100%;height:100%;display:block}
+.leaf.r svg{transform:scaleX(-1)}
+.leaf::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% -6%,rgba(246,217,154,.34),transparent 46%),linear-gradient(transparent 55%,rgba(0,0,0,.55));pointer-events:none}
+.lintel{position:absolute;left:50%;translate:-50% 0;bottom:calc(var(--base) + var(--dh));width:calc(var(--dw) + var(--jamb)*2 + 26px);height:10svh;background:linear-gradient(#3A2A18,#1E150C);border-bottom:3px solid #6E4B18;box-shadow:0 14px 30px -8px #000}
+.lintel::before{content:"";position:absolute;inset:8px 0 auto 0;height:18px;background:radial-gradient(circle at 50% 100%,transparent 6px,#7A5A2A 7px,#7A5A2A 8.5px,transparent 9.5px) 0 0/20px 18px repeat-x;opacity:.8}
+.lintel .crest{position:absolute;left:50%;top:-5svh;translate:-50% 0;width:11svh;height:11svh}
+.lrow{position:absolute;left:var(--jamb);right:var(--jamb);bottom:3px;display:flex;justify-content:space-around;align-items:flex-end}
+.bells{position:absolute;left:8%;right:8%;top:100%;display:flex;justify-content:space-around;pointer-events:none}
+.bell{width:15px;height:30px;transform-origin:50% 0}
+.jamb{position:absolute;bottom:var(--base);height:var(--dh);width:var(--jamb);background:linear-gradient(90deg,#1E150C,#3A2A18 45%,#1E150C);display:flex;flex-direction:column;justify-content:space-around;align-items:center;border-inline:2px solid #6E4B18}
+.jamb.l{left:calc(50% - var(--dw)/2 - var(--jamb))}.jamb.r{left:calc(50% + var(--dw)/2)}
+.step{position:absolute;left:50%;translate:-50% 0;bottom:calc(var(--base) - 2.4svh);width:calc(var(--dw) + var(--jamb)*2 + 70px);height:2.4svh;background:linear-gradient(#3A2A18,#1A120A);border-top:2px solid #6E4B18}
+.side{position:absolute;top:10svh;bottom:var(--base);display:none;grid-template-columns:repeat(auto-fill,84px);grid-auto-rows:1fr;gap:10px 22px;justify-content:center;align-content:space-around;padding:0 30px;background:repeating-linear-gradient(0deg,transparent 0 78px,rgba(0,0,0,.45) 78px 80px)}
+.side.l{left:0;right:calc(50% + var(--dw)/2 + var(--jamb) + 22px)}.side.r{right:0;left:calc(50% + var(--dw)/2 + var(--jamb) + 22px)}
+@media(min-width:820px){.side{display:grid}}
+.niche{display:grid;place-items:end center;height:58px;padding-bottom:7px;border-radius:44% 44% 0 0/62% 62% 0 0;background:radial-gradient(ellipse at 50% 88%,rgba(231,180,90,.4),rgba(0,0,0,.72) 72%)}
+.diya{position:relative;width:17px;height:8px;border-radius:0 0 12px 12px/0 0 8px 8px;background:linear-gradient(#D7A84F,#6E4B18);flex:none}
+.fl{position:absolute;left:50%;bottom:6px;width:10px;height:17px;margin-left:-5px;transform-origin:50% 100%;border-radius:50% 50% 50% 50%/68% 68% 32% 32%;background:radial-gradient(ellipse at 50% 78%,#fff 0,#FBE3A6 30%,#E7B45A 58%,rgba(231,180,90,0) 76%);box-shadow:0 -5px 22px 7px rgba(231,180,90,.42);will-change:transform}
+.stand{position:absolute;bottom:var(--base);width:26px;height:21svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.stand.l{left:calc(50% - var(--dw)/2 - var(--jamb) - 34px)}.stand.r{left:calc(50% + var(--dw)/2 + var(--jamb) + 8px)}
+@media(max-width:819px){.stand.l{left:calc(50% - var(--dw)/2 - 6px)}.stand.r{left:calc(50% + var(--dw)/2 - 20px)}}
+.stand .diya{width:26px;height:11px}.stand .fl{width:14px;height:24px;margin-left:-7px;bottom:8px}
+.stand::after{content:"";flex:1;width:5px;background:linear-gradient(90deg,#6E4B18,#E7B45A,#6E4B18);border-radius:2px;box-shadow:0 0 0 0 transparent}
+.stand::before{content:"";position:absolute;bottom:0;width:30px;height:9px;border-radius:50% 50% 0 0;background:linear-gradient(#D7A84F,#6E4B18)}
+/* the presence behind the door */
+.rays{position:absolute;left:50%;top:56%;width:210vmax;height:210vmax;translate:-50% -50%;border-radius:50%;background:repeating-conic-gradient(rgba(246,217,154,.2) 0 4deg,transparent 4deg 14deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 62%);mask:radial-gradient(circle,#000 0,transparent 62%);opacity:calc(var(--open)*.9);animation:turn 90s linear infinite}
+.aura{position:absolute;left:50%;top:56%;width:70vmin;height:70vmin;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,244,214,.75),rgba(231,180,90,.3) 34%,transparent 66%);opacity:var(--open);animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{50%{scale:1.14}}
+.hero{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 9svh;background:linear-gradient(transparent 42%,rgba(13,10,7,.93) 80%);opacity:calc(1 - var(--p)*5);pointer-events:none}
 .hero .title{animation:rise 1.5s .5s cubic-bezier(.2,.8,.2,1) both}
 .hero .lead{margin-top:18px;animation:rise 1.5s .8s cubic-bezier(.2,.8,.2,1) both}
 .hero .hint{margin-top:26px;font-size:15px;color:var(--lamp);animation:rise 1.5s 1.2s both}
 .hero .hint::after{content:"";display:block;width:1.5px;height:44px;background:linear-gradient(var(--lamp),transparent);margin-top:10px;animation:drip 2s infinite}
 @keyframes rise{from{opacity:0;transform:translateY(34px)}}
 @keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(1);opacity:0}}
-.flame{position:absolute;left:50%;top:27svh;translate:-50% 0;width:20px;height:34px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 72%,#fff,var(--lamp-2) 34%,var(--lamp) 60%,transparent 74%);filter:blur(.4px);box-shadow:0 0 70px 26px rgba(231,180,90,.36);animation:flick 3.2s infinite ease-in-out;opacity:calc(1 - var(--p)*4)}
-@keyframes flick{0%,100%{transform:scale(1) rotate(-1.5deg)}30%{transform:scale(1.07,.95) rotate(2deg)}62%{transform:scale(.95,1.06) rotate(-2.5deg)}}
-
 .fx-on .hero{opacity:calc(1 - var(--p)*24)}
 .fx-on .sanctum .deva{visibility:hidden}
 .sanctum>div{transform:scale(calc(1 + var(--p)*.08))}
@@ -214,14 +236,20 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 
 <main>
 <!-- 1. the gate -->
-<section class="scene" data-scene="gate" style="--len:2.8;--p:0;--open:0"><div class="pin">
+<section class="scene" data-scene="gate" style="--len:3.6;--p:0;--open:0"><div class="pin">
   <div class="sanctum">
     <svg class="star" id="star" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
     <div><div class="deva" lang="sa">ज्योतिष</div><p class="lead" style="margin:0 auto;text-align:center">Jyotisha. The study of light.</p></div>
   </div>
-  <div class="door l"><svg class="medal" viewBox="-100 -100 200 200" aria-hidden="true"></svg></div>
-  <div class="door r"><svg class="medal" viewBox="-100 -100 200 200" aria-hidden="true"></svg></div>
-  <div class="flame" aria-hidden="true"></div>
+  <div class="rays" aria-hidden="true"></div><div class="aura" aria-hidden="true"></div>
+  <div class="temple" id="temple" aria-hidden="true">
+    <div class="doorway"><div class="leaf l"></div><div class="leaf r"></div></div>
+    <div class="side l"></div><div class="side r"></div>
+    <div class="jamb l"></div><div class="jamb r"></div>
+    <div class="lintel"><svg class="crest medal" viewBox="-100 -100 200 200"></svg><div class="lrow"></div><div class="bells"></div></div>
+    <div class="step"></div>
+    <div class="stand l"><span class="diya"><i class="fl"></i></span></div><div class="stand r"><span class="diya"><i class="fl"></i></span></div>
+  </div>
   <div class="hero"><div class="wrap">
     <h1 class="title">Enter the temple of time.</h1>
     <p class="lead">For three thousand years people in this land have read the sky. Walk through how it began, then see your own chart revealed.</p>
@@ -497,6 +525,42 @@ function star(svg, rings, colour) {
 star($('star'), [[98, 84, .25], [80, 66, .3], [60, 47, .35], [40, 29, .4], [22, 14, .45]], '#E7B45A');
 document.querySelectorAll('.medal').forEach(s => star(s, [[96, 78, 1.2], [70, 54, 1], [44, 30, .9]], '#E7B45A'));
 
+/* the temple door: carved panels, brass studs, lamps and bells */
+(function () {
+  const lotus = (cx, cy, r) => { let d = ''; for (let i = 0; i < 8; i++) { const a = i * 45, [x1, y1] = pol(r, a - 90), [c1x, c1y] = pol(r * .62, a - 90 - 24), [c2x, c2y] = pol(r * .62, a - 90 + 24);
+    d += `M${cx} ${cy}Q${(cx + c1x).toFixed(1)} ${(cy + c1y).toFixed(1)} ${(cx + x1).toFixed(1)} ${(cy + y1).toFixed(1)}Q${(cx + c2x).toFixed(1)} ${(cy + c2y).toFixed(1)} ${cx} ${cy}`; } return d; };
+  let g = `<defs><linearGradient id="wood" x1="0" x2="1"><stop offset="0" stop-color="#2E1C0E"/><stop offset=".5" stop-color="#3B2412"/><stop offset="1" stop-color="#24150A"/></linearGradient>
+    <radialGradient id="brass"><stop offset="0" stop-color="#FBE3A6"/><stop offset=".55" stop-color="#C9973F"/><stop offset="1" stop-color="#5E3F12"/></radialGradient></defs>
+    <rect width="200" height="640" fill="url(#wood)"/><rect x="4" y="4" width="192" height="632" fill="none" stroke="#C9973F" stroke-width="3"/><rect x="9" y="9" width="182" height="622" fill="none" stroke="#6E4B18" stroke-width="1.5"/>`;
+  for (let r = 0; r < 5; r++) { const y = 18 + r * 122;
+    if (r) { g += `<rect x="9" y="${y - 9}" width="182" height="8" fill="#6E4B18"/>`; for (let k = 0; k < 9; k++) g += `<circle cx="${20 + k * 20}" cy="${y - 5}" r="3" fill="url(#brass)"/>`; }
+    for (let c = 0; c < 2; c++) { const x = 16 + c * 88, cx = x + 40, cy = y + 52;
+      g += `<rect x="${x}" y="${y}" width="80" height="104" fill="#1C1008" stroke="#8A6426" stroke-width="1.5"/><path d="M${x} ${y + 104}V${y}H${x + 80}" fill="none" stroke="#E7B45A" stroke-opacity=".5" stroke-width="1.2"/>
+        <rect x="${x + 7}" y="${y + 7}" width="66" height="90" fill="none" stroke="#6E4B18" stroke-width="1"/>
+        <path d="${lotus(cx, cy, 30)}" fill="#3B2412" stroke="#C9973F" stroke-width="1.1"/><path d="${lotus(cx, cy, 17)}" fill="#5A3A18" stroke="#E7B45A" stroke-width=".9" transform="rotate(22.5 ${cx} ${cy})"/><circle cx="${cx}" cy="${cy}" r="6" fill="url(#brass)"/>`;
+      for (const [dx, dy] of [[13, 13], [67, 13], [13, 91], [67, 91]]) g += `<circle cx="${x + dx}" cy="${y + dy}" r="3.2" fill="url(#brass)"/>`; } }
+  g += `<circle cx="184" cy="326" r="13" fill="none" stroke="url(#brass)" stroke-width="4"/><circle cx="184" cy="312" r="5" fill="url(#brass)"/>`;
+  document.querySelectorAll('.leaf').forEach(l => l.innerHTML = `<svg viewBox="0 0 200 640" preserveAspectRatio="none">${g}</svg>`);
+  const diya = '<span class="diya"><i class="fl"></i></span>', small = innerWidth < 700;
+  document.querySelector('.lrow').innerHTML = diya.repeat(small ? 7 : 9);
+  document.querySelectorAll('.jamb').forEach(j => j.innerHTML = diya.repeat(5));
+  document.querySelectorAll('.side').forEach(sd => { const cols = Math.max(1, Math.floor((sd.clientWidth - 60) / 106)); sd.innerHTML = `<div class="niche">${diya}</div>`.repeat(cols * 5); });
+  document.querySelector('.bells').innerHTML = '<svg class="bell" viewBox="0 0 15 30"><path d="M7.5 0V9" stroke="#8A6426" stroke-width="1.2"/><path d="M2.5 22Q2.5 9 7.5 9Q12.5 9 12.5 22L14 24H1Z" fill="#C9973F"/><circle cx="7.5" cy="26" r="2" fill="#E7B45A"/></svg>'.repeat(small ? 4 : 6);
+})();
+/* wind: scrolling stirs the air, every flame and bell leans with its own lag, then settles */
+const flames = [...document.querySelectorAll('.temple .fl')].map(e => ({ e, w: 0, r: .05 + Math.random() * .13, ph: Math.random() * 6.3, f: 2.2 + Math.random() * 2.4, k: .7 + Math.random() * .7 }));
+const bells = [...document.querySelectorAll('.bell')].map(e => ({ e, w: 0, r: .03 + Math.random() * .04, ph: Math.random() * 6.3 }));
+let wind = 0, lastY = scrollY, gateOn = true;
+function blow(t) {
+  const dy = scrollY - lastY; lastY = scrollY; wind += (clamp(dy / 26, -1.6, 1.6) - wind) * .12;
+  if (gateOn) { const s = t / 1000, gust = wind + Math.sin(s * .6) * .08 + Math.sin(s * 1.7) * .05;
+    for (const f of flames) { f.w += (gust * f.k - f.w) * f.r; const a = f.w * 38 + Math.sin(s * f.f + f.ph) * 5, m = Math.abs(f.w);
+      f.e.style.transform = `rotate(${a.toFixed(1)}deg) scale(${(1 - m * .22 + Math.sin(s * 9 + f.ph) * .05).toFixed(3)},${(1 + m * .5 + Math.sin(s * f.f * 1.7 + f.ph) * .09).toFixed(3)})`; f.e.style.opacity = (1 - Math.max(0, m - .75) * .9).toFixed(2); }
+    for (const b of bells) { b.w += (gust - b.w) * b.r; b.e.style.transform = `rotate(${(b.w * 26 + Math.sin(s * 1.3 + b.ph) * 2).toFixed(1)}deg)`; } }
+  requestAnimationFrame(blow);
+}
+if (!still) requestAnimationFrame(blow);
+
 /* 27 nakshatras */
 const ring = $('ring'), dots = [];
 ring.appendChild(el('circle', { r: 132, fill: 'none', stroke: '#2A2117', 'stroke-width': 1.5 }));
@@ -510,7 +574,8 @@ for (let i = 0; i < 12; i++) { const [x1, y1] = pol(96, i * 30 - 90), [x2, y2] =
 const zc = zod.appendChild(el('text', { class: 'nak', y: 6 }));
 
 const draw = {
-  gate(e, p, r) { const open = ease(clamp((p - .12) / .7)); e.style.setProperty('--p', p); e.style.setProperty('--open', open);
+  gate(e, p, r) { const open = ease(clamp((p - .1) / .42)); e.style.setProperty('--p', p); e.style.setProperty('--open', open); gateOn = r.bottom > 0 && p < .97;
+    const z = clamp((p - .34) / .5); e.style.setProperty('--zoom', z * z); e.style.setProperty('--gone', clamp((p - .74) / .14));
     FX.morph(p, clamp(p * 24) * clamp((r.bottom - innerHeight * .25) / (innerHeight * .75)));
     if (open > .5 && !draw.gate.done) { draw.gate.done = true; for (let k = 0; k < 7; k++) FX.burst(innerWidth / 2, innerHeight * (k + .5) / 7, 70, 11); } if (open < .2) draw.gate.done = false; },
   nalanda(e, p) { e.style.setProperty('--p', p); },
