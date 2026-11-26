@@ -313,3 +313,15 @@ def test_public_preview_returns_numbers_and_chart_and_stores_nothing():
     assert r.json()["chart"]["lagna"] is None and r.json()["chart"]["notes"]
     assert c.post("/api/preview", json={"name": "Priya", "dob": "1994-02-31"}).status_code == 422
     assert before == (db.one("SELECT COUNT(*) n FROM users")["n"], db.one("SELECT COUNT(*) n FROM events")["n"])
+
+
+def test_chart_uses_lahiri_in_api_worker_threads_too():
+    """Swiss Ephemeris keeps the sidereal mode per thread; requests run in worker threads."""
+    import threading, astro
+    from datetime import datetime, timezone
+    d, out = datetime(1994, 8, 17, 1, 0, tzinfo=timezone.utc), {}
+    t = threading.Thread(target=lambda: out.update(sun=astro.positions(d)["Sun"], asc=astro.lagna(d, 12.97, 77.59))); t.start(); t.join()
+    assert out["sun"]["longitude"] == astro.positions(d)["Sun"]["longitude"] == 120.131 and out["sun"]["sign"] == "Leo"
+    assert out["asc"]["longitude"] == astro.lagna(d, 12.97, 77.59)["longitude"]
+    j = TestClient(main.app).post("/api/preview", json={"name": "Priya Sharma", "dob": "1994-08-17", "birth_time": "06:30", "city": "Bengaluru"}).json()
+    assert j["chart"]["natal"]["Sun"]["sign"] == "Leo"

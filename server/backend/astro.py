@@ -35,6 +35,7 @@ def _sign(lon: float) -> dict:
 
 
 def positions(dt_utc: datetime) -> dict:
+    swe.set_sid_mode(swe.SIDM_LAHIRI)      # per thread: the setting made at import does not reach API worker threads
     jd = _jd(dt_utc)
     out = {}
     for name, pid in PLANETS:
@@ -46,6 +47,7 @@ def positions(dt_utc: datetime) -> dict:
 
 
 def lagna(dt_utc: datetime, lat: float, lon: float) -> dict:
+    swe.set_sid_mode(swe.SIDM_LAHIRI)
     _, ascmc = swe.houses_ex(_jd(dt_utc), lat, lon, b"W", swe.FLG_SIDEREAL)
     return _sign(ascmc[0])
 
