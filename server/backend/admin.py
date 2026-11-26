@@ -1,6 +1,7 @@
 """Admin panel API: service keys, accounts, offers and match reports.
 
-Access is one password, ADMIN_PASSWORD in /etc/destinyos.env (deploy.sh creates it; it cannot be set from the panel).
+Access is ADMIN_EMAIL and ADMIN_PASSWORD in /etc/destinyos.env (deploy.sh creates a password; set your own with
+deploy/set-admin.sh; neither can be changed from the panel).
 Signing in gives a 12-hour cookie limited to /api/admin. Every change is written to the events table.
 """
 from __future__ import annotations
@@ -30,6 +31,7 @@ def admin_only(req: Request):
 
 
 class LoginIn(BaseModel):
+    email: str = Field(default="", max_length=200)
     password: str = Field(max_length=200)
 
 
@@ -43,10 +45,12 @@ def login(body: LoginIn, req: Request, resp: Response):
         q.popleft()
     if len(q) >= 5:
         raise HTTPException(429, "Too many attempts. Try again in 15 minutes.")
-    if not hmac.compare_digest(body.password.encode(), _password().encode()):
+    want = os.getenv("ADMIN_EMAIL", "").strip().lower()          # when set, the email must match as well
+    ok_email = not want or hmac.compare_digest(body.email.strip().lower().encode(), want.encode())
+    if not (hmac.compare_digest(body.password.encode(), _password().encode()) and ok_email):
         q.append(now)
         db.log_event(None, "admin_login_failed", {"ip": ip})
-        raise HTTPException(401, "That password isn't right.")
+        raise HTTPException(401, "That email or password isn't right.")
     tok = secrets.token_urlsafe(32)
     with db.tx() as c:
         c.execute("DELETE FROM admin_sessions WHERE expires_at<?", (db.now(),))

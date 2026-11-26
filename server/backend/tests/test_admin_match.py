@@ -67,6 +67,11 @@ def test_admin_needs_the_password_and_locks_after_five_wrong_tries(monkeypatch):
     assert c.post("/api/admin/login", json={"password": PW}).status_code == 429
     admin._tries.clear(); monkeypatch.setenv("ADMIN_PASSWORD", "short")
     assert c.post("/api/admin/login", json={"password": "short"}).status_code == 503
+    admin._tries.clear(); monkeypatch.setenv("ADMIN_PASSWORD", PW); monkeypatch.setenv("ADMIN_EMAIL", "Owner@Example.com")
+    assert c.post("/api/admin/login", json={"password": PW}).status_code == 401                      # email now required
+    assert c.post("/api/admin/login", json={"email": "someone@else.com", "password": PW}).status_code == 401
+    assert c.post("/api/admin/login", json={"email": " owner@example.com", "password": PW}).status_code == 200
+    c.post("/api/admin/logout"); monkeypatch.delenv("ADMIN_EMAIL")
     signed_in_user = person("8222000001", "Ravi Kumar")
     assert signed_in_user.get("/api/admin/overview").status_code == 401          # an ordinary account is not an admin
 

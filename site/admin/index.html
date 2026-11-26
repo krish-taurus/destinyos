@@ -45,9 +45,9 @@ tbody tr{cursor:pointer}tbody tr:hover{background:var(--stone-2)}
 <main class="wrap" style="padding-bottom:80px">
   <section id="login" class="hide">
     <h1>Admin.</h1>
-    <form id="f-login"><label class="f"><span>Admin password</span><input class="in" id="pw" type="password" autocomplete="current-password" required></label>
+    <form id="f-login"><label class="f"><span>Admin email</span><input class="in" id="em" type="email" autocomplete="username"></label><label class="f"><span>Password</span><input class="in" id="pw" type="password" autocomplete="current-password" required></label>
       <p class="err" id="e-login" role="alert"></p><button class="btn wide">Sign in</button></form>
-    <p class="cap" style="margin-top:16px">The password is on the server. In the droplet console run:<br><code>sudo grep ADMIN_PASSWORD /etc/destinyos.env</code></p>
+    <p class="cap" style="margin-top:16px">Set or change these on the server. In the droplet console run:<br><code>sudo bash /opt/destinyos-src/deploy/set-admin.sh</code></p>
   </section>
 
   <section id="app" class="hide">
@@ -120,10 +120,10 @@ tbody tr{cursor:pointer}tbody tr:hover{background:var(--stone-2)}
     return d;
   }
   const say = (id, text, bad) => { $(id).textContent = text; $(id).classList.toggle('bad', !!bad); };
-  function show(inside) { $('login').classList.toggle('hide', inside); $('app').classList.toggle('hide', !inside); $('out').classList.toggle('hide', !inside); if (!inside) $('pw').focus(); }
+  function show(inside) { $('login').classList.toggle('hide', inside); $('app').classList.toggle('hide', !inside); $('out').classList.toggle('hide', !inside); if (!inside) $('em').focus(); }
 
   $('f-login').onsubmit = async ev => { ev.preventDefault(); $('e-login').textContent = '';
-    try { await api('/login', 'POST', { password: $('pw').value }); $('pw').value = ''; show(true); tab('over'); } catch (e) { $('e-login').textContent = e.message; } };
+    try { await api('/login', 'POST', { email: $('em').value, password: $('pw').value }); $('pw').value = ''; show(true); tab('over'); } catch (e) { $('e-login').textContent = e.message; } };
   $('out').onclick = async () => { try { await api('/logout', 'POST'); } catch {} show(false); };
 
   const LOAD = { over, keys, users, offers, match: reports };
