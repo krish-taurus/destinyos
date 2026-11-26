@@ -75,10 +75,10 @@
       <div class="stand"><h3>Where you stand today</h3><p>${esc(t.where_you_stand)}</p>${t.halia_answers ? '' : '<p class="cap" style="margin-top:10px">Written without HALIA answers. Answer the questions in HALIA chat for guidance that starts from your own life.</p>'}</div>
       ${yrs}
       <article class="year"><h3 style="font-size:clamp(32px,6vw,56px)">What to build across three years</h3><div class="body">${text(t.three_year_plan)}</div><div class="body"><p>${esc(t.closing)}</p></div>
-        <p class="noprint" style="margin-top:26px"><button class="btn line" id="print">Print or save as PDF</button></p></article>
+        <p class="noprint" style="margin-top:26px"><button class="btn pdf">Download the full report as PDF</button> <span class="err pdf-e" role="alert" style="display:block"></span></p></article>
       <div class="fine"><p class="cap" style="max-width:44em">The Personal Year numbers and Dasha periods are calculated from your birth details using the Pythagorean method and the Lahiri sidereal system. What they mean is a matter of tradition and is offered for reflection, not as a prediction. The steps follow the HALIA method and come from the answers you gave. Nothing here replaces medical, legal or financial advice.</p></div>`;
     $('years').classList.remove('hide'); $('offer3').classList.add('hide'); $('prep').classList.add('hide');
-    $('print').onclick = () => print();
+    wirePdf();
   }
   async function writeYears(pid) {
     wait('Your three years are being written.', ['Working out your Personal Year for each year…', 'Laying out your Dasha periods month by month…', 'Reading each year for work, relationships and energy…', 'Building your plan from your answers. This takes about a minute.']);
@@ -135,6 +135,17 @@
     S.classList.remove('hide'); $('snap-go').onclick = () => prep(null); if (scroll) S.scrollIntoView();
   }
 
+  // ── PDF download ──
+  async function pdf(btn) { const was = btn.textContent, E = btn.parentNode.querySelector('.pdf-e'); btn.disabled = true; btn.textContent = 'Preparing your PDF…'; if (E) E.textContent = '';
+    try { const res = await fetch(API + '/api/report/pdf', { credentials: 'include' });
+      if (!res.ok) { const d = await res.json().catch(() => null); throw new Error(d && typeof d.detail === 'string' ? d.detail : 'The PDF could not be made just now. Try again.'); }
+      const url = URL.createObjectURL(await res.blob()), a = document.createElement('a');
+      a.href = url; a.download = (/filename="([^"]+)"/.exec(res.headers.get('content-disposition') || '') || [])[1] || 'Destiny-OS-report.pdf';
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000); }
+    catch (e) { if (E) E.textContent = e.message === 'Failed to fetch' ? 'No connection. Check your internet and try again.' : e.message; }
+    btn.disabled = false; btn.textContent = was; }
+  const wirePdf = () => document.querySelectorAll('button.pdf').forEach(b => b.onclick = () => pdf(b));
+
   // ── payments ──
   const rzp = () => window.Razorpay ? Promise.resolve() : new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://checkout.razorpay.com/v1/checkout.js'; s.onload = res; s.onerror = () => rej(new Error('The payment window could not load. Check your connection.')); document.head.appendChild(s); });
   async function pay(item, coupon) {
@@ -170,6 +181,7 @@
       done();
     } catch (e) { if (e.status !== 401) fail(e.message, start); }
   }
+  wirePdf();
   $('out').onclick = async () => { try { await api('/api/auth/logout', 'POST'); } catch {} location.replace('/'); };
   start();
 })();

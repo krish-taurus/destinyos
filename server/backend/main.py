@@ -18,7 +18,7 @@ conf.load_env()            # keys saved in the admin panel, before the modules b
 from astro import build_chart, dasha_window
 import numerology, reports
 import auth, billing, voice, halia, match, admin
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from auth import current_user
 from billing import is_subscriber, is_voice, require_subscriber, plan_status, retire_plus_if_needed
 
@@ -48,7 +48,7 @@ app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["GET", 
 
 # ── Rate limiting (in-memory; move to Redis when you scale past one instance) ──
 LIMITS = {"chart": (30, 3600), "brief": (20, 3600), "ask": (40, 3600),
-          "food": (15, 3600), "compass": (6, 3600), "otp": (10, 3600), "report": (6, 3600), "audio": (6, 3600), "halia": (60, 3600)}
+          "food": (15, 3600), "compass": (6, 3600), "otp": (10, 3600), "report": (6, 3600), "audio": (6, 3600), "halia": (60, 3600), "pdf": (30, 3600)}
 LANG_RULE = {"en": "Reply in simple everyday English.",
              "hi": "Reply in simple everyday Hindi (Devanagari script), the way ordinary people speak; avoid difficult Sanskrit words."}
 _hits: dict[tuple[str, str], deque] = defaultdict(deque)
@@ -418,6 +418,23 @@ def report_get(lang: str | None = None, u=Depends(current_user)):
     if not r:
         raise HTTPException(404, "No report yet.")
     return reports.shape_core(r, full_access(u["id"]))
+
+
+@app.get("/api/report/pdf")
+def report_pdf(req: Request, lang: str | None = None, u=Depends(current_user)):
+    """The person's report as a PDF: what they can already see on the page, nothing more."""
+    import pdf_report
+    r = reports.get_core(u["id"], _lang(u, lang))
+    if not r:
+        raise HTTPException(404, "No report yet.")
+    limit(req, "pdf")
+    three = db.one("SELECT data FROM reports WHERE user_id=? AND kind='three_year' ORDER BY created_at DESC, id DESC LIMIT 1", u["id"])
+    snap = halia.eng.snapshot(halia.values(u["id"])) if halia.settings(u["id"]) else None
+    data = pdf_report.build(u, reports.shape_core(r, full_access(u["id"])), snap, json.loads(three["data"]) if three else None)
+    name = re.sub(r"[^A-Za-z0-9]+", "-", u["name"]).strip("-")[:40] or "report"
+    db.log_event(u["id"], "report_pdf")
+    return Response(data, media_type="application/pdf",
+                    headers={"Content-Disposition": f'attachment; filename="Destiny-OS-{name}.pdf"', "Cache-Control": "private, no-store"})
 
 
 # ── Free voice briefing in Dr. Krish's voice (ElevenLabs) ──

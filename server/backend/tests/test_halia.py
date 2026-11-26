@@ -375,3 +375,24 @@ def test_dasha_window_is_continuous_and_clipped():
     assert all(x["end"] == y["start"] for x, y in zip(w, w[1:])) and 3 <= len(w) <= 12
     now = astro.vimshottari(astro.positions(b)["Moon"]["longitude"], b, a)
     assert (w[0]["maha"], w[0]["antar"]) == (now["mahadasha"]["lord"], now["antardasha"]["lord"])
+
+
+def test_report_pdf_holds_only_what_the_person_can_see(monkeypatch):
+    c = client("8111000040", name="Asha Rao")
+    assert c.get("/api/report/pdf").status_code == 404                           # nothing written yet
+    c.post("/api/report"); answer(c, "L_MONEY", "2"); answer(c, "TIME_AVAILABLE", "30")
+    r = c.get("/api/report/pdf")
+    assert r.status_code == 200 and r.headers["content-type"] == "application/pdf" and r.content[:5] == b"%PDF-"
+    assert 'filename="Destiny-OS-Asha-Rao.pdf"' in r.headers["content-disposition"]
+    _, pid = pay(c, "three_year"); c.post(f"/api/addon/{pid}/generate")
+    full = c.get("/api/report/pdf")
+    assert full.status_code == 200 and len(full.content) > len(r.content)        # three years and seven more chapters added
+    assert TestClient(main.app).get("/api/report/pdf").status_code == 401         # signed-in people only, their own report
+
+
+def test_report_pdf_renders_hindi():
+    c = TestClient(main.app); signup(c, "8111000042", "Priya Sharma", language="hi")
+    c.post("/api/halia/consent", json={"consent": True})
+    assert c.post("/api/report", params={"lang": "hi"}).status_code == 200
+    r = c.get("/api/report/pdf", params={"lang": "hi"})
+    assert r.status_code == 200 and b"NotoSansDevanagari" in r.content           # the Devanagari font was needed and embedded
