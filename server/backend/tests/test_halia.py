@@ -325,3 +325,53 @@ def test_chart_uses_lahiri_in_api_worker_threads_too():
     assert out["asc"]["longitude"] == astro.lagna(d, 12.97, 77.59)["longitude"]
     j = TestClient(main.app).post("/api/preview", json={"name": "Priya Sharma", "dob": "1994-08-17", "birth_time": "06:30", "city": "Bengaluru"}).json()
     assert j["chart"]["natal"]["Sun"]["sign"] == "Leo"
+
+
+def pay(c, item):
+    o = c.post("/api/billing/order", json={"item": item}).json()
+    r = c.post("/api/billing/order/verify", json={"razorpay_order_id": o["order_id"], "razorpay_payment_id": "pay_t",
+                                                  "razorpay_signature": sign(f"{o['order_id']}|pay_t", "ks")})
+    assert r.status_code == 200, r.text
+    return o, r.json()["purchase_id"]
+
+
+def test_three_year_report_costs_499_opens_the_full_report_and_uses_halia_answers(monkeypatch):
+    c = client("8111000030")
+    answer(c, "L_CAREER", "2"); answer(c, "FOCUS_PILLAR", "career")
+    free = c.post("/api/report").json()
+    assert any(s["locked"] for s in free["sections"]) and c.get("/api/me").json()["full_report"] is False
+    seen = {}
+    real = main.ask_claude
+    monkeypatch.setattr(main, "ask_claude", lambda system, msgs, **k: seen.update(p=msgs[-1]["content"]) or real(system, msgs, **k))
+    o, pid = pay(c, "three_year")
+    assert o["amount"] == 49900
+    rep = c.post(f"/api/addon/{pid}/generate").json()
+    first = rep["calendar"][0]["year"]
+    assert rep["kind"] == "three_year" and [y["year"] for y in rep["years"]] == [first, first + 1, first + 2]
+    assert all(1 <= k["personal_year"] <= 33 and k["dasha"] for k in rep["calendar"]) and rep["halia_answers"] == 2
+    assert "How satisfied are you with your work or studies right now? Low" in seen["p"] and "never promise" in seen["p"].lower()
+    assert not any(s["locked"] for s in c.get("/api/report").json()["sections"]) and c.get("/api/me").json()["full_report"] is True
+    again = c.post(f"/api/addon/{pid}/generate").json()                    # paid once, written once
+    assert again["created_at"] == rep["created_at"]
+
+
+def test_three_year_report_needs_payment_and_works_without_halia_answers():
+    c = client("8111000031", consent=False)
+    o = c.post("/api/billing/order", json={"item": "three_year"}).json()
+    pid = db.one("SELECT id FROM purchases WHERE provider_order_id=?", o["order_id"])["id"]
+    assert c.post(f"/api/addon/{pid}/generate").status_code == 402
+    c.post("/api/billing/order/verify", json={"razorpay_order_id": o["order_id"], "razorpay_payment_id": "pay_u",
+                                             "razorpay_signature": sign(f"{o['order_id']}|pay_u", "ks")})
+    assert c.post(f"/api/addon/{pid}/generate").json()["halia_answers"] == 0
+
+
+def test_dasha_window_is_continuous_and_clipped():
+    import astro
+    from datetime import datetime, timezone
+    b = datetime(1994, 8, 17, 1, 0, tzinfo=timezone.utc)
+    a, z = datetime(2027, 1, 1, tzinfo=timezone.utc), datetime(2030, 1, 1, tzinfo=timezone.utc)
+    w = astro.dasha_window(astro.positions(b)["Moon"]["longitude"], b, a, z)
+    assert w[0]["start"] == "2027-01-01" and w[-1]["end"] == "2030-01-01"
+    assert all(x["end"] == y["start"] for x, y in zip(w, w[1:])) and 3 <= len(w) <= 12
+    now = astro.vimshottari(astro.positions(b)["Moon"]["longitude"], b, a)
+    assert (w[0]["maha"], w[0]["antar"]) == (now["mahadasha"]["lord"], now["antardasha"]["lord"])

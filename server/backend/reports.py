@@ -183,6 +183,38 @@ Frame astrology as tradition. Practical, specific, no guarantees, no investment 
 Reply with only JSON: {{"headline": string, "year_theme": string (120 words), "months": [{{"month": "January {year}", "personal_month": integer, "theme": string, "focus": string, "caution": string}}] (12 items), "best_windows": string (dates or months good for launches, signing and travel)}}"""
 
 
+def three_year_prompt(user: dict, nums: dict, chart_text: str, calendar: list[dict], halia_lines: list[str], lang: str = "en") -> str:
+    years = [c["year"] for c in calendar]
+    cal = "\n".join(
+        f"{c['year']}: Personal Year {c['personal_year']}. Dasha periods: " +
+        ("; ".join(f"{d['maha']}-{d['antar']} {d['start']} to {d['end']}" for d in c["dasha"]) or "not available")
+        for c in calendar)
+    answers = "\n".join(halia_lines) if halia_lines else "none given yet"
+    return f"""Write the Destiny OS three-year report for {user['name']} (born {user['dob']}), covering {years[0]}, {years[1]} and {years[2]}.
+
+Pythagorean: Life Path {nums['lifePath']}, Expression {nums['expression']}, Soul Urge {nums['soulUrge']}.
+{chart_text}
+Year by year (computed, use exactly these and invent no other dates or positions):
+{cal}
+
+What this person told HALIA about their life today (their own answers):
+{answers}
+
+{STYLE.get(lang, STYLE['en'])}
+
+Two voices, kept apart:
+- The yearly readings come from numerology and Jyotish. Present them as tradition, for reflection: "this year is traditionally about...". Never promise an outcome, a date, a job, a marriage or money.
+- "where_you_stand" and every "actions" list follow the HALIA method: start only from the answers above, name the lowest area honestly and kindly, and give small steps that fit the time they said they have. If no answers were given, say so in one sentence and keep the steps general.
+Reply with only JSON: {{"headline": string (under 12 words),
+ "where_you_stand": string (100-140 words),
+ "years": [{{"year": integer, "theme": string (under 8 words), "overview": string (90-120 words, name the Personal Year and the Dasha periods in plain words),
+   "work_money": string (70-100 words), "relationships": string (60-90 words), "energy_habits": string (60-90 words, sleep, focus and stress only),
+   "good_months": string (one line: months that tradition treats as supportive, and for what), "go_slow": string (one line),
+   "actions": [string, string, string] (three small concrete steps for that year)}}] (exactly 3 items, one per year in order),
+ "three_year_plan": string (5 lines separated by newlines, each starting with "• ": what to build across the three years, one line per life area: career, money, relationships, happiness, health),
+ "closing": string (40-60 words, encouraging, no promises)}}"""
+
+
 def save_report(user_id: int, kind: str, data: dict) -> int:
     with db.tx() as c:
         cur = c.execute("INSERT INTO reports(user_id, kind, data, created_at) VALUES (?,?,?,?)",
@@ -217,5 +249,5 @@ def update_report(report_id: int, data: dict):
 
 
 def require_kind(kind: str):
-    if kind not in ("compatibility", "annual"):
+    if kind not in ("compatibility", "annual", "three_year"):
         raise HTTPException(404, "Unknown report.")

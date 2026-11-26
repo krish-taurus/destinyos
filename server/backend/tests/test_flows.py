@@ -24,6 +24,11 @@ def fake_claude(system, messages, model=None, max_tokens=1500):
         return json.dumps({"headline": f"[{lang}] headline", "sections": {k: f"[{lang}] {v}" for k, v in SECTIONS.items()}})
     if "spoken voice briefing" in text:
         return "Namaste Priya, this is your Destiny OS voice briefing."
+    if "three-year report" in text:
+        yrs = [{"year": 0, "theme": "Build", "overview": "o", "work_money": "w", "relationships": "r", "energy_habits": "e",
+                "good_months": "g", "go_slow": "s", "actions": ["a", "b", "c"]} for _ in range(3)]
+        return json.dumps({"headline": "Three steady years", "where_you_stand": "here", "years": yrs,
+                           "three_year_plan": "• one", "closing": "c"})
     if "core report" in text:
         return json.dumps({"headline": "You build things that last", "sections": SECTIONS})
     if "compatibility" in text:
@@ -49,7 +54,8 @@ def fake_rzp(method, path, **kw):
         sid = path.split("/")[2]
         return {"id": sid, "status": "active", "current_end": db.now() + 30 * 86400}
     if path == "/orders":
-        return {"id": f"order_{db.now()}_{kw['json']['notes']['item']}"}
+        RZP["orders"] = RZP.get("orders", 0) + 1
+        return {"id": f"order_{db.now()}_{RZP['orders']}_{kw['json']['notes']['item']}"}
     raise AssertionError(path)
 
 
@@ -228,6 +234,7 @@ def test_addons_compatibility_and_consultation():
     assert rep["kind"] == "compatibility" and rep["partner"] == "Arjun Rao"
 
     o = c.post("/api/billing/order", json={"item": "consultation"}).json()
+    assert o["amount"] == 499900 and "30 min" in o["description"]
     pid = db.one("SELECT id FROM purchases WHERE provider_order_id=?", o["order_id"])["id"]
     assert c.post(f"/api/addon/{pid}/generate").status_code == 402          # not paid yet
     c.post("/api/billing/order/verify", json={"razorpay_order_id": o["order_id"], "razorpay_payment_id": "pay_8",

@@ -1,8 +1,9 @@
 """Destiny OS API — accounts, free report, Destiny Plus subscription, and the guidance engines."""
 from __future__ import annotations
 import base64, hashlib, json, logging, os, re, time
+from urllib.parse import quote
 from collections import defaultdict, deque
-from datetime import date
+from datetime import date, datetime, timezone
 from functools import lru_cache
 
 import httpx
@@ -12,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from timezonefinder import TimezoneFinder
 
-from astro import build_chart
+from astro import build_chart, dasha_window
 import db, numerology, reports
 import auth, billing, voice, halia
 from fastapi.responses import FileResponse
@@ -291,7 +292,8 @@ def me(u=Depends(current_user)):
             "whatsapp_optin": bool(u["whatsapp_optin"]), "manifest_goal": u["manifest_goal"],
             "numerology": numerology.both(u["name"], u["dob"]),
             "has_report": has_core, "free_report_available": not has_core and not reports.free_already_used(u["phone"]),
-            "questions": questions_left(u), "plan": plan_status(u["id"]),
+            "questions": questions_left(u), "plan": plan_status(u["id"]), "full_report": full_access(u["id"]),
+            "age_18": halia._age(u["dob"]) >= 18,
             "consultation_whatsapp": "https://wa.me/917975554666"}
 
 
@@ -335,6 +337,31 @@ def me_delete(req: Request, u=Depends(current_user)):
     return {"ok": True}
 
 
+def full_access(user_id: int) -> bool:
+    """The locked half of the core report opens with Destiny Plus or the one-time three-year report."""
+    return is_subscriber(user_id) or billing.has_item(user_id, "three_year")
+
+
+def three_year_calendar(u: dict, chart: dict | None, first_year: int) -> list[dict]:
+    """Per year: the Personal Year number and the Dasha periods that fall inside it. Computed, never written by the model."""
+    out = []
+    for y in range(first_year, first_year + 3):
+        periods = []
+        if chart and chart.get("birth_utc"):
+            periods = dasha_window(chart["natal"]["Moon"]["longitude"], datetime.fromisoformat(chart["birth_utc"]),
+                                   datetime(y, 1, 1, tzinfo=timezone.utc), datetime(y + 1, 1, 1, tzinfo=timezone.utc))
+        out.append({"year": y, "personal_year": numerology.calc(u["name"], u["dob"], "pyth", date(y, 6, 1))["personalYear"],
+                    "dasha": periods})
+    return out
+
+
+def halia_lines(user_id: int) -> list[str]:
+    if not halia.settings(user_id):
+        return []
+    return [f"- {a['question']} {a['label']}" for a in halia._facts_view(halia.facts(user_id))
+            if not halia.eng.BY_FIELD[a["field"]]["sensitive"]]
+
+
 # ── Core report: one free per phone number; locked sections need Destiny Plus ──
 def _lang(u: dict, lang: str | None) -> str:
     return lang if lang in reports.LANGS else (u.get("language") or "en")
@@ -343,7 +370,7 @@ def _lang(u: dict, lang: str | None) -> str:
 @app.post("/api/report")
 def report_create(req: Request, lang: str | None = None, u=Depends(current_user)):
     lang = _lang(u, lang)
-    sub = is_subscriber(u["id"])
+    sub = full_access(u["id"])
     existing = reports.get_core(u["id"], lang)
     if existing and existing.get("lang", "en") == lang:
         return reports.shape_core(existing, sub)
@@ -358,7 +385,7 @@ def report_create(req: Request, lang: str | None = None, u=Depends(current_user)
         reports.save_report(u["id"], "core", data)
         return reports.shape_core(data, sub)
     if not sub and reports.free_already_used(u["phone"]):
-        raise HTTPException(402, "A free report has already been created for this number. Subscribe to Destiny Plus to get your full report.")
+        raise HTTPException(402, "A free report has already been created for this number. Get the three-year report or Destiny Plus to open your full report.")
     limit(req, "report")
     nums = numerology.both(u["name"], u["dob"])
     chart = user_chart(u)
@@ -382,7 +409,7 @@ def report_get(lang: str | None = None, u=Depends(current_user)):
     r = reports.get_core(u["id"], _lang(u, lang))
     if not r:
         raise HTTPException(404, "No report yet.")
-    return reports.shape_core(r, is_subscriber(u["id"]))
+    return reports.shape_core(r, full_access(u["id"]))
 
 
 # ── Free voice briefing in Dr. Krish's voice (ElevenLabs) ──
@@ -423,8 +450,9 @@ def addon_generate(purchase_id: int, req: Request, u=Depends(current_user)):
     if not p or p["status"] == "created":
         raise HTTPException(402, "This purchase isn't paid yet.")
     if p["item"] == "consultation":
-        return {"kind": "consultation", "whatsapp": "https://wa.me/917975554666?text=" +
-                f"Hi, I've booked a consultation (order {p['provider_order_id']}). When can we schedule it?"}
+        return {"kind": "consultation", "whatsapp": "https://wa.me/917975554666?text=" + quote(
+                f"Hi, I've paid for a 30-minute personal session with Dr. Krish (order {p['provider_order_id']}). "
+                f"My name is {u['name']}. When can we schedule it?")}
     reports.require_kind(p["item"])
     done = db.one("SELECT data FROM reports WHERE user_id=? AND kind=? AND created_at>=? ORDER BY created_at DESC LIMIT 1",
                   u["id"], p["item"], p["created_at"])
@@ -441,6 +469,22 @@ def addon_generate(purchase_id: int, req: Request, u=Depends(current_user)):
         out = parse_json(ask_claude(f"You are the compatibility writer of Destiny OS.\n{GUARDRAILS}",
                                     [{"role": "user", "content": prompt}], max_tokens=2500))
         out["partner"] = partner["name"]
+    elif p["item"] == "three_year":
+        first = date.today().year + (1 if date.today().month >= 11 else 0)
+        ch = user_chart(u)
+        cal = three_year_calendar(u, ch, first)
+        answers = halia_lines(u["id"])
+        out = parse_json(ask_claude(f"You are the three-year report writer of Destiny OS.\n{GUARDRAILS}",
+                                    [{"role": "user", "content": reports.three_year_prompt(
+                                        u, me_n, chart_summary(ch), cal, answers, u.get("language") or "en")}],
+                                    max_tokens=7000))
+        if not isinstance(out, dict) or not isinstance(out.get("years"), list) or len(out["years"]) != 3:
+            raise HTTPException(502, "The report came back incomplete. Nothing was lost: please try again.")
+        for y, c in zip(out["years"], cal):
+            y["year"] = c["year"]
+        out["calendar"] = cal
+        out["halia_answers"] = len(answers)
+        out["created_at"] = db.now()
     else:
         year = date.today().year + (1 if date.today().month >= 11 else 0)
         out = parse_json(ask_claude(f"You are the forecast writer of Destiny OS.\n{GUARDRAILS}",

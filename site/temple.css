@@ -1,0 +1,68 @@
+/* Shared temple style for the account pages: sign in, sign up and the report. */
+:root{--stone:#0D0A07;--stone-2:#17120C;--carve:#2A2117;--carve-2:#3A2E20;--lamp:#E7B45A;--lamp-2:#F6D99A;--kumkum:#C8442B;--ivory:#F3E9D6;--dim:#A39680;
+  --serif:"Cormorant Garamond",Georgia,serif;--deva:"Noto Serif Devanagari","Cormorant Garamond",serif;--sans:"DM Sans",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:dark}
+body{background:var(--stone);color:var(--ivory);font:400 18px/1.6 var(--sans);-webkit-font-smoothing:antialiased;min-height:100svh}
+a{color:inherit}button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--lamp);outline-offset:3px}
+.hide{display:none!important}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px;width:100%}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.015em;line-height:1.05}
+.title{font:600 clamp(44px,9vw,96px)/.95 var(--serif);letter-spacing:-.025em}
+.lead{font-size:clamp(18px,2.4vw,21px);line-height:1.55;color:#D9CDB6;max-width:31em}
+.cap{font-size:14.5px;line-height:1.5;color:var(--dim)}
+.gold{color:var(--lamp)}
+nav.top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px}
+nav.top a{text-decoration:none;font:600 15px var(--sans)}
+nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:13px 26px;border-radius:4px;border:1.5px solid var(--lamp);background:var(--lamp);color:#1A1208;font:600 17px var(--sans);cursor:pointer;text-decoration:none;transition:box-shadow .3s,transform .15s}
+.btn:hover{box-shadow:0 0 34px rgba(231,180,90,.5)}.btn:active{transform:scale(.98)}
+.btn.line{background:transparent;color:var(--lamp)}.btn:disabled{opacity:.5;cursor:default;box-shadow:none}
+.btn.wide{width:100%}
+.link{background:none;border:0;color:var(--lamp);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:500 15.5px var(--sans);padding:10px 0}
+.frieze{height:34px;background:
+  radial-gradient(circle at 50% 100%,transparent 9px,var(--carve) 10px,var(--carve) 11.5px,transparent 12.5px) 0 0/28px 17px repeat-x,
+  radial-gradient(circle at 50% 0,transparent 9px,var(--carve) 10px,var(--carve) 11.5px,transparent 12.5px) 14px 17px/28px 17px repeat-x;
+  border-block:1.5px solid var(--carve)}
+
+/* form fields: carved into the stone, lit when focused */
+label.f{display:block;margin-top:22px}
+label.f>span{display:block;font:500 15.5px var(--sans);color:#D9CDB6;margin-bottom:8px}
+label.f small{color:var(--dim);font-size:14px;font-weight:400}
+.in{width:100%;min-height:58px;padding:12px 16px;background:#0A0705;border:1.5px solid var(--carve-2);border-radius:4px;font:500 20px var(--sans);color:var(--ivory);transition:border-color .2s,box-shadow .2s}
+.in:focus{outline:0;border-color:var(--lamp);box-shadow:0 0 0 3px rgba(231,180,90,.18)}
+.in::placeholder{color:#6F6452}
+.in.code{font:600 30px var(--sans);letter-spacing:.42em;text-align:center}
+.phone{display:flex}
+.phone b{display:grid;place-items:center;padding:0 14px;background:var(--carve);border:1.5px solid var(--carve-2);border-right:0;border-radius:4px 0 0 4px;font:600 19px var(--sans);color:var(--lamp-2)}
+.phone .in{border-radius:0 4px 4px 0}
+.row2{display:grid;gap:0 16px}
+@media(min-width:560px){.row2{grid-template-columns:1fr 1fr}}
+.check{display:flex;gap:12px;align-items:flex-start;margin-top:20px;font-size:15px;line-height:1.5;color:#CFC3AC;cursor:pointer}
+.check input{flex:none;width:24px;height:24px;margin-top:1px;accent-color:var(--lamp)}
+.seg{display:flex;gap:10px;flex-wrap:wrap}
+.seg label{flex:1;min-width:92px}
+.seg input{position:absolute;opacity:0}
+.seg span{display:grid;place-items:center;min-height:50px;padding:8px 12px;border:1.5px solid var(--carve-2);border-radius:4px;font:500 16px var(--sans);cursor:pointer;text-align:center}
+.seg input:checked+span{border-color:var(--lamp);background:rgba(231,180,90,.14);color:var(--lamp-2)}
+.seg input:focus-visible+span{outline:2px solid var(--lamp);outline-offset:3px}
+.err{min-height:24px;margin-top:14px;color:#FF9B85;font-size:15.5px}
+.note{margin-top:18px;padding:14px 16px;border-left:3px solid var(--lamp);background:rgba(231,180,90,.08);font-size:15.5px;line-height:1.5;color:#E4D8C0}
+
+/* a diya: brass bowl and a flame that breathes */
+.diya{position:relative;width:34px;height:20px;border-radius:0 0 34px 34px;background:linear-gradient(#8A6426,#4E3814);box-shadow:inset 0 2px 0 #C79A45}
+.diya i{position:absolute;left:50%;bottom:16px;width:12px;height:22px;margin-left:-6px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 78%,#FFF6D8 0 22%,#FFC95A 48%,#E7772B 78%,transparent 82%);transform-origin:50% 100%;opacity:.12;filter:blur(.3px);transition:opacity .6s}
+.diya.lit i{opacity:1;box-shadow:0 0 26px 9px rgba(231,180,90,.34);animation:flick 2.6s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scale(1,1) rotate(-2deg)}35%{transform:scale(.92,1.1) rotate(3deg)}70%{transform:scale(1.05,.94) rotate(-1deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* the doorway panel used by sign in and sign up */
+.door{max-width:560px;margin:0 auto;padding:6svh 22px 80px}
+.lamps{display:flex;gap:26px;align-items:flex-end;height:54px;margin-bottom:26px}
+.lamps .diya+.diya{margin-left:0}
+.door h1{font-size:clamp(46px,11vw,84px);letter-spacing:-.025em;line-height:.95}
+.door .lead{margin-top:14px}
+.stage{margin-top:10px}
+.swap{margin-top:34px;padding-top:22px;border-top:1.5px solid var(--carve);font-size:16px;color:#CFC3AC}
+.swap a{color:var(--lamp);font-weight:600}

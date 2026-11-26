@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D0A07">
+<meta name="robots" content="noindex">
+<title>Sign in — Destiny OS</title>
+<script src="/config.js?v=3"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/temple.css?v=1">
+</head>
+<body data-mode="in">
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><a href="/sign-up/">Sign up</a></nav>
+<main class="door">
+  <div class="lamps" id="lamps" role="img" aria-label="Step 1 of 3"><div class="diya lit"><i></i></div><div class="diya"><i></i></div><div class="diya"><i></i></div></div>
+
+  <section class="stage" id="s-phone">
+    <h1>Welcome back.</h1>
+    <p class="lead">Enter your mobile number and we will text you a code to open your report.</p>
+    <form id="f-phone" novalidate>
+      <label class="f"><span>Your mobile number</span>
+        <div class="phone"><b>+91</b><input class="in" id="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="98765 43210" maxlength="16" required></div></label>
+      <p class="err" id="e-phone" role="alert"></p>
+      <button class="btn wide" id="b-phone">Send my code</button>
+    </form>
+    <p class="cap" style="margin-top:14px">We text you a 6-digit code. No password to remember.</p>
+    <p class="swap">New here? <a href="/sign-up/">Create your account</a> and get your free report.</p>
+  </section>
+
+  <section class="stage hide" id="s-code">
+    <h1>Enter the code.</h1>
+    <p class="lead">Sent by text to <span class="gold" id="sent-to"></span>.</p>
+    <p class="note hide" id="dev-note">Text messages are not switched on yet, so this code was not delivered. <a id="dev-wa" href="#" target="_blank" rel="noopener">Message us on WhatsApp</a> and we will set up your account.</p>
+    <form id="f-code" novalidate>
+      <label class="f"><span>6-digit code</span>
+        <input class="in code" id="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="••••••" required></label>
+      <p class="err" id="e-code" role="alert"></p>
+      <button class="btn wide" id="b-code">Continue</button>
+    </form>
+    <p style="margin-top:8px"><button class="link" id="resend" disabled>Send a new code in 30s</button> &nbsp; <button class="link" id="change">Change number</button></p>
+  </section>
+
+  <section class="stage hide" id="s-details">
+    <h1>Tell us when you arrived.</h1>
+    <p class="lead" id="details-lead">Your numbers and chart are worked out from these. Enter them as they were at birth.</p>
+    <form id="f-details" novalidate>
+      <label class="f"><span>Full name, as given at birth</span><input class="in" id="name" autocomplete="name" maxlength="120" required></label>
+      <div class="row2">
+        <label class="f"><span>Date of birth</span><input class="in" id="dob" type="date" min="1900-01-01" required></label>
+        <label class="f"><span>Time of birth <small>if you know it</small></span><input class="in" id="time" type="time"></label>
+      </div>
+      <label class="f"><span>City of birth</span><input class="in" id="city" autocomplete="off" maxlength="120" placeholder="Bengaluru" required></label>
+      <div class="f" style="margin-top:22px"><span style="display:block;font:500 15.5px var(--sans);color:#D9CDB6;margin-bottom:8px">Report language</span>
+        <div class="seg"><label><input type="radio" name="lang" value="en" checked><span>English</span></label><label><input type="radio" name="lang" value="hi"><span>हिंदी</span></label></div></div>
+      <label class="check"><input type="checkbox" id="consent"><span id="consent-text">I consent to Destiny OS storing my name, phone number and birth details to generate and save my reports and guidance.</span></label>
+      <label class="check"><input type="checkbox" id="wa"><span>Send me my daily guidance on WhatsApp. Optional, and you can turn it off at any time.</span></label>
+      <p class="err" id="e-details" role="alert"></p>
+      <button class="btn wide" id="b-details">Create my free report</button>
+    </form>
+  </section>
+</main>
+<script src="/auth.js?v=1"></script>
+</body>
+</html>

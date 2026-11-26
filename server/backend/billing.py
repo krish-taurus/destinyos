@@ -43,11 +43,17 @@ def plan_id(plan: str) -> str:
 
 RANK = {"free": 0, "chat": 1, "plus": 2, "voice": 3}       # each plan includes HALIA chat; Plus and Voice add the rest
 ADDONS = {   # amounts in paise
-    "consultation":  {"name": "One-to-one consultation with Dr. Krish (45 min)", "amount": 299900},
+    "three_year":    {"name": "Three-year HALIA report", "amount": 49900},
+    "consultation":  {"name": "Personal session with Dr. Krish (30 min)", "amount": 499900},
     "compatibility": {"name": "Compatibility report", "amount": 99900},
     "annual":        {"name": "Annual forecast", "amount": 199900},
 }
 GRACE_SECONDS = 3 * 86400   # keep access for 3 days while a renewal payment is retried
+
+
+def has_item(user_id: int, item: str) -> bool:
+    """A one-time item this account has paid for."""
+    return bool(db.one("SELECT 1 FROM purchases WHERE user_id=? AND item=? AND status IN ('paid','fulfilled')", user_id, item))
 
 
 def configured() -> bool:
@@ -314,7 +320,7 @@ def order_verify(body: OrderVerifyIn, user=Depends(current_user)):
 def purchases(user=Depends(current_user)):
     rows = db.all_("SELECT id, item, status, created_at FROM purchases WHERE user_id=? AND status!='created' "
                    "ORDER BY created_at DESC", user["id"])
-    return {"purchases": rows, "addons": {k: {"name": v["name"], "price_inr": v["amount"] // 100} for k, v in ADDONS.items()}}
+    return {"purchases": rows, "ready": bool(KEY_ID and KEY_SECRET), "addons": {k: {"name": v["name"], "price_inr": v["amount"] // 100} for k, v in ADDONS.items()}}
 
 
 # ── Webhook (source of truth) ──

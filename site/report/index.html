@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0D0A07">
+<meta name="robots" content="noindex">
+<title>Your report — Destiny OS</title>
+<script src="/config.js?v=3"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=Noto+Serif+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/temple.css?v=1">
+<style>
+.hero{padding:5svh 0 44px}
+.hero h1{font-size:clamp(46px,10vw,104px);letter-spacing:-.025em;line-height:.95}
+.hero .lead{margin-top:16px;font:500 clamp(24px,4vw,34px)/1.2 var(--serif);color:var(--lamp-2);max-width:22em}
+.nums{display:grid;grid-template-columns:1fr;gap:14px;margin-top:38px}
+@media(min-width:760px){.nums{grid-template-columns:1.2fr 2fr;gap:22px}}
+.lp{padding:22px 24px;border:1.5px solid var(--lamp);border-radius:4px;background:radial-gradient(ellipse at 20% 0,rgba(231,180,90,.2),transparent 70%)}
+.lp b{display:block;font:700 clamp(110px,26vw,190px)/.8 var(--serif);color:var(--lamp);text-shadow:0 0 60px rgba(231,180,90,.45)}
+.lp span{display:block;margin-top:16px;font:600 22px var(--serif)}
+.four{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.four div{padding:16px 18px;border:1.5px solid var(--carve-2);border-radius:4px}
+.four b{font:700 54px/.9 var(--serif);color:var(--lamp-2)}.four span{display:block;margin-top:8px;font-size:15px;color:var(--dim)}
+
+.wait{min-height:58svh;display:grid;place-items:center;text-align:center;padding:40px 0}
+.wait .diya{margin:0 auto 34px;transform:scale(2.2)}
+.wait h2{font-size:clamp(36px,7vw,62px)}
+
+article.sec{padding:44px 0;border-top:1.5px solid var(--carve)}
+article.sec h2{font-size:clamp(32px,5.6vw,52px);max-width:16em}
+.body{margin-top:18px;max-width:34em;font-size:19px;line-height:1.7;color:#E4D8C0}
+.body p+p{margin-top:14px}
+.body ul{list-style:none;margin-top:6px}
+.body li{position:relative;padding:9px 0 9px 26px;border-bottom:1px solid var(--carve)}
+.body li::before{content:"";position:absolute;left:2px;top:19px;width:9px;height:9px;rotate:45deg;background:var(--lamp)}
+
+.locked{padding:54px 0 20px;border-top:1.5px solid var(--carve)}
+.locked h2{font-size:clamp(36px,7vw,68px)}
+.locks{margin-top:26px;display:grid;gap:10px}
+.locks div{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--stone-2);border-radius:4px}
+.locks svg{flex:none;margin-top:5px}
+.locks b{display:block;font:600 21px/1.2 var(--serif)}.locks span{display:block;font-size:15px;color:var(--dim);margin-top:2px}
+
+.offer{margin:34px 0;display:grid;gap:26px;padding:28px 24px;border:1.5px solid var(--lamp);border-radius:4px;background:linear-gradient(160deg,rgba(231,180,90,.16),rgba(231,180,90,.02) 60%)}
+.offer.quiet{border-color:var(--carve-2);background:var(--stone-2)}
+@media(min-width:800px){.offer{grid-template-columns:1.5fr 1fr;padding:38px 40px;align-items:center;gap:40px}}
+.offer h3{font-size:clamp(32px,5.4vw,50px)}
+.offer ul{list-style:none;margin-top:18px}
+.offer li{position:relative;padding:7px 0 7px 26px;font-size:17px;color:#E4D8C0}
+.offer li::before{content:"";position:absolute;left:2px;top:17px;width:9px;height:9px;rotate:45deg;background:var(--lamp)}
+.price{font:700 clamp(64px,13vw,96px)/.9 var(--serif);color:var(--lamp)}
+.price small{font:500 17px var(--sans);color:var(--dim);margin-left:6px}
+
+.prep{padding:54px 0;border-top:1.5px solid var(--carve)}
+.prep h2{font-size:clamp(36px,7vw,64px)}
+.q{margin-top:28px;max-width:640px}.q>p{font:500 18px var(--sans);margin-bottom:10px}
+
+.years{padding:54px 0 10px;border-top:1.5px solid var(--lamp)}
+.years>h2{font-size:clamp(42px,9vw,92px);letter-spacing:-.025em}
+.stand{margin-top:26px;padding:22px 24px;border-left:3px solid var(--lamp);background:var(--stone-2)}
+.stand h3{font-size:28px}.stand p{margin-top:10px;max-width:36em;color:#E4D8C0}
+.year{padding:54px 0;border-top:1.5px solid var(--carve);margin-top:44px}
+.yhead{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 26px}
+.yhead b{font:700 clamp(92px,22vw,200px)/.78 var(--serif);color:var(--lamp);letter-spacing:-.03em}
+.yhead div{padding-bottom:6px}.yhead h3{font-size:clamp(28px,5vw,44px)}.yhead span{color:var(--dim);font-size:16px}
+.strip{display:flex;height:46px;margin-top:26px;border-radius:4px;overflow:hidden;border:1.5px solid var(--carve-2)}
+.strip i{display:grid;place-items:center;font:600 13px var(--sans);font-style:normal;color:#1A1208;white-space:nowrap;overflow:hidden;min-width:0;border-right:1.5px solid var(--stone)}
+.strip i:nth-child(odd){background:var(--lamp)}.strip i:nth-child(even){background:#B98A3C}
+.months{display:flex;justify-content:space-between;font-size:12.5px;color:var(--dim);margin-top:6px}
+.legend{margin-top:10px;font-size:14.5px;color:var(--dim);line-height:1.6}
+.cols{display:grid;gap:26px;margin-top:30px}
+@media(min-width:860px){.cols{grid-template-columns:repeat(3,1fr)}}
+.cols h4{font:600 24px var(--serif);color:var(--lamp-2)}.cols p{margin-top:8px;font-size:17px;line-height:1.65;color:#E4D8C0}
+.two{display:grid;gap:14px;margin-top:28px}
+@media(min-width:700px){.two{grid-template-columns:1fr 1fr}}
+.two div{padding:16px 18px;background:var(--stone-2);border-radius:4px;font-size:16.5px}.two b{display:block;font:600 20px var(--serif);color:var(--lamp-2);margin-bottom:4px}
+.acts{margin-top:28px;max-width:640px}.acts h4{font:600 24px var(--serif)}
+.acts ol{list-style:none;counter-reset:a;margin-top:10px}
+.acts li{counter-increment:a;position:relative;padding:12px 0 12px 54px;border-bottom:1px solid var(--carve);font-size:18px}
+.acts li::before{content:counter(a);position:absolute;left:0;top:6px;font:700 38px/1 var(--serif);color:var(--lamp)}
+.fine{padding:30px 0 70px;border-top:1.5px solid var(--carve);margin-top:40px}
+.more{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 60px}
+@media print{body{background:#fff;color:#111}nav.top,.offer,.more,.noprint,.locked,.prep{display:none!important}.lp b,.yhead b,.price,.gold{color:#7A5310;text-shadow:none}.body,.cols p,.stand p,.offer li{color:#222}.stand,.two div,.locks div{background:#F6F1E6}.year{break-before:page}}
+</style>
+</head>
+<body>
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><button class="link" id="out">Sign out</button></nav>
+<main class="wrap">
+  <section class="wait" id="wait"><div><div class="diya lit"><i></i></div><h2 id="wait-h">Opening your report…</h2><p class="lead" id="wait-t" style="margin:14px auto 0"></p><p class="err" id="wait-e" role="alert"></p><p><button class="btn hide" id="retry">Try again</button></p></div></section>
+
+  <div id="page" class="hide">
+    <header class="hero">
+      <h1 id="hello"></h1>
+      <p class="lead" id="headline"></p>
+      <div class="nums"><div class="lp"><b id="n-lp">0</b><span>Life Path</span></div>
+        <div class="four" id="four"></div></div>
+    </header>
+
+    <section class="years hide" id="years"></section>
+
+    <div id="sections"></div>
+
+    <section class="locked hide" id="locked">
+      <h2>The rest of your reading is written.</h2>
+      <p class="lead" style="margin-top:14px">Seven more chapters are ready for you. They open with the three-year report.</p>
+      <div class="locks" id="locks"></div>
+    </section>
+
+    <section class="offer hide" id="offer3">
+      <div>
+        <h3>Your next three years, in detail.</h3>
+        <ul>
+          <li>Each of the next three years read in full: its theme, work and money, relationships, energy and habits.</li>
+          <li>Your Personal Year number and Dasha periods for every year, worked out from your birth details.</li>
+          <li>A HALIA plan built from where your life stands today, with three steps for each year.</li>
+          <li>All seven remaining chapters of this report opened.</li>
+          <li>Yours to keep and print.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="price">₹499<small>once</small></div>
+        <p style="margin-top:18px"><button class="btn wide" id="buy3">Get the three-year report</button></p>
+        <p class="err" id="e-buy3" role="alert"></p>
+        <p class="cap">The yearly readings follow tradition and are for reflection. They do not promise outcomes.</p>
+      </div>
+    </section>
+
+    <section class="prep hide" id="prep">
+      <h2>Seven questions before we write.</h2>
+      <p class="lead" style="margin-top:14px">HALIA starts from your life today, so your plan is built on your own answers. It takes about a minute.</p>
+      <form id="f-prep"><div id="qs"></div>
+        <label class="check" style="max-width:640px"><input type="checkbox" id="h-consent"><span id="h-consent-text"></span></label>
+        <p class="err" id="e-prep" role="alert"></p>
+        <p style="display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center"><button class="btn" id="b-prep">Write my three-year report</button><button type="button" class="link" id="skip">Write it without my answers</button></p>
+      </form>
+    </section>
+
+    <section class="offer quiet" id="offerS">
+      <div>
+        <h3>Thirty minutes with Dr. Krish.</h3>
+        <ul>
+          <li>A personal session on a call, one to one.</li>
+          <li>Your chart and numbers read in the traditional way.</li>
+          <li>Your questions answered, and a practical plan made with the HALIA method.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="price">₹4,999<small>30 minutes</small></div>
+        <p style="margin-top:18px"><button class="btn line wide" id="buyS">Book a personal session</button></p>
+        <p class="err" id="e-buyS" role="alert"></p>
+        <p class="cap">After payment we schedule your time on WhatsApp.</p>
+      </div>
+    </section>
+
+    <div class="more"><a class="btn line" href="/app/">Ask Destiny and daily guidance</a><a class="btn line" href="/halia/">Open HALIA chat</a></div>
+  </div>
+</main>
+<script src="/report.js?v=1"></script>
+</body>
+</html>

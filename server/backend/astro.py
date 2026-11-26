@@ -87,6 +87,30 @@ def vimshottari(moon_lon: float, birth_utc: datetime, at: datetime) -> dict:
             "birth_nakshatra": NAKSHATRAS[idx]}
 
 
+def dasha_window(moon_lon: float, birth_utc: datetime, start: datetime, end: datetime) -> list[dict]:
+    """Every Mahadasha/Antardasha period that overlaps [start, end), in order, clipped to the window."""
+    idx = int((moon_lon % 360) // NAK_SPAN)
+    frac = ((moon_lon % 360) % NAK_SPAN) / NAK_SPAN
+    i = idx % 9
+    t = birth_utc - timedelta(days=frac * DASHA_ORDER[i][1] * YEAR_DAYS)
+    out = []
+    while t < end:
+        lord, yrs = DASHA_ORDER[i % 9]
+        md_end = t + timedelta(days=yrs * YEAR_DAYS)
+        if md_end > start:
+            a = t
+            for k in range(9):
+                al, ay = DASHA_ORDER[(i + k) % 9]
+                a_end = a + timedelta(days=yrs * ay / 120 * YEAR_DAYS)
+                if a_end > start and a < end:
+                    out.append({"maha": lord, "antar": al, "start": max(a, start).date().isoformat(),
+                                "end": min(a_end, end).date().isoformat()})
+                a = a_end
+        t = md_end
+        i += 1
+    return out
+
+
 def whole_sign_house(planet_sign: str, lagna_sign: str) -> int:
     return (SIGNS.index(planet_sign) - SIGNS.index(lagna_sign)) % 12 + 1
 
@@ -119,6 +143,7 @@ def build_chart(dob: str, time: str | None, lat: float, lon: float, tz: str) -> 
         "transits": transits,
         "moon_today": transits["Moon"],
         "generated_at": now.isoformat(),
+        "birth_utc": birth_utc.isoformat(),
         "notes": ([] if time_known else
                   ["Birth time not given: lagna and houses are omitted, and Moon position "
                    "(so dasha dates) may be off by up to a few months."]),

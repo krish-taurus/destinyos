@@ -7,7 +7,7 @@
 <title>Destiny OS — numerology and Vedic astrology, read with discipline</title>
 <meta name="description" content="Walk through three thousand years of Jyotisha, see your own chart and numbers revealed, get a free report, and meet HALIA, practical guidance built on your life today.">
 <script src="/config.js"></script>
-<script>window.FREE_REPORT_URL = window.DESTINY_SIGNUP_OPEN !== true ? (window.DESTINY_WHATSAPP || "https://wa.me/917975554666") : "/free-report/?src=website";</script>
+<script>window.FREE_REPORT_URL = window.DESTINY_SIGNUP_OPEN !== true ? (window.DESTINY_WHATSAPP || "https://wa.me/917975554666") : "/sign-up/?src=website";</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600&family=Noto+Serif+Devanagari:wght@500;700&display=swap" rel="stylesheet">
@@ -203,7 +203,7 @@ nav.top .links{display:none;gap:26px}nav.top .links a{font-weight:500;color:#D9C
 /* plans */
 .sec{padding:120px 0}
 .plans{display:grid;gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:40px}
-@media(min-width:760px){.plans{grid-template-columns:repeat(2,1fr)}}@media(min-width:1040px){.plans{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:760px){.plans{grid-template-columns:repeat(2,1fr)}}@media(min-width:1040px){.plans{grid-template-columns:repeat(6,1fr)}.plans>.plan{grid-column:span 2}.plans>.plan:nth-child(n+4){grid-column:span 3}}
 .plan{background:var(--stone);padding:30px 24px;display:flex;flex-direction:column}
 .plan.hot{background:linear-gradient(rgba(231,180,90,.13),var(--stone) 70%)}
 .plan h3{font-size:30px}.plan .for{font-size:15px;color:var(--dim);min-height:3em;margin-top:4px}
@@ -232,7 +232,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 </head>
 <body>
 <canvas id="embers" aria-hidden="true"></canvas>
-<nav class="top"><a class="brand" href="/">DESTINY OS</a><span class="links"><a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#pricing">Pricing</a><a href="/app/">Sign in</a></span><a class="gold" href="#ask">Reveal my chart</a></nav>
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><span class="links"><a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#pricing">Pricing</a><a href="/sign-in/">Sign in</a></span><a class="gold" href="#ask">Reveal my chart</a></nav>
 
 <main>
 <!-- 1. the gate -->
@@ -385,13 +385,13 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
     <div>
       <h3 style="font-size:clamp(28px,4.6vw,40px);line-height:1.1">One to one with Dr. Krish Bharggav</h3>
       <ul style="margin-top:18px">
-        <li>45 minutes, on a call.</li>
+        <li>30 minutes, on a call.</li>
         <li>Your chart and numbers, read in the traditional way.</li>
         <li>A practical plan built with the HALIA framework, from where your work, money and relationships stand today.</li>
       </ul>
     </div>
     <div>
-      <div class="price">₹2,999</div>
+      <div class="price">₹4,999</div>
       <p style="margin:14px 0 18px"><a class="btn" id="book" href="#" style="width:100%">Book on WhatsApp</a></p>
       <p><a class="btn line js-free" href="/free-report/" style="width:100%">Get the free report first</a></p>
       <p class="cap" style="margin-top:14px"><a href="/halia/how-it-works/">What is the HALIA framework?</a></p>
@@ -440,6 +440,9 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
     <div class="plan rv"><h3>Free report</h3><p class="for">Your blueprint, once, after a quick registration.</p><div class="amt">₹0</div>
       <ul><li>Life Path, Expression and Soul Urge numbers</li><li>Both Pythagorean and Chaldean</li><li>Your Vedic chart and current Dasha</li><li>Your number for this year</li><li>A preview of the full report</li></ul>
       <a class="btn js-free" href="/free-report/">Get my free report</a></div>
+    <div class="plan rv"><h3>Three-year report</h3><p class="for">Your next three years in detail, with a HALIA plan from your own answers.</p><div class="amt">₹499<small> once</small></div>
+      <ul><li>Each year read in full: work and money, relationships, energy</li><li>Your Personal Year and Dasha periods for every year</li><li>Three practical steps for each year</li><li>The full report opened, all 13 chapters</li><li>Yours to keep and print</li></ul>
+      <a class="btn js-free" href="/free-report/">Start with the free report</a></div>
     <div class="plan rv"><h3>HALIA Chat</h3><p class="for">Practical guidance from what you tell it, here and on WhatsApp.</p><div class="amt">₹499<small> / month</small></div>
       <ul><li>25 chats a day</li><li>One short question a day, if you want it</li><li>Compare answers with a partner or co-founder</li><li>3 chats free to start</li><li>Cancel anytime</li></ul>
       <a class="btn line" href="/halia/">Open HALIA</a></div>
@@ -450,7 +453,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
       <ul><li>Everything in Destiny Plus</li><li>Talk to Dr. Krish's AI voice guide</li><li>60 minutes of voice calls a month</li><li>Answers from your own numbers and chart</li><li>Cancel anytime</li></ul>
       <a class="btn js-free" href="/free-report/">Start with the free report</a></div>
   </div>
-  <p class="addons"><b>Add to any plan:</b> one-to-one consultation with Dr. Krish from ₹2,999, compatibility report ₹999, annual forecast ₹1,999, <a href="/business/">brand naming for founders</a> from ₹999.</p>
+  <p class="addons"><b>One-time:</b> three-year report ₹499, a 30-minute personal session with Dr. Krish ₹4,999, compatibility report ₹999, annual forecast ₹1,999, <a href="/business/">brand naming for founders</a> from ₹999.</p>
   <p class="cap">*Fair use applies: up to 30 questions a day. Prices in INR; GST is not charged at present.</p>
 </div></section>
 <div class="frieze"></div>
@@ -670,6 +673,7 @@ $('f').onsubmit = async ev => {
     const res = await fetch(API + '/api/preview', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const data = await res.json().catch(() => null);
     if (!res.ok) throw new Error(data && typeof data.detail === 'string' ? data.detail : 'The sky could not be read just now. Try again in a minute.');
+    try { sessionStorage.setItem('dos_pre', JSON.stringify({ name, dob, time: $('in-time').value, city: $('in-city').value.trim() })); } catch {}
     reveal(name, dob, data);
   } catch (e) { $('err').textContent = e.message.includes('fetch') ? 'No connection. Check your internet and try again.' : e.message; }
   btn.disabled = false; btn.textContent = 'Reveal my chart';
@@ -681,7 +685,7 @@ async function reveal(name, dob, d) {
   const n = d.numbers.pythagorean, mean = k => d.meanings[String(k)] || '';
   $('reveal').classList.remove('hide'); $('consult').classList.remove('hide');
   $('r-name').textContent = name; $('r-sum').textContent = ''; $('r-big').textContent = '0'; $('r-mean').textContent = '';
-  $('book').href = 'https://wa.me/917975554666?text=' + encodeURIComponent(`Hi, I'd like to book a one-to-one consultation with Dr. Krish. My name is ${name}.`);
+  $('book').href = 'https://wa.me/917975554666?text=' + encodeURIComponent(`Hi, I'd like to book a 30-minute personal session with Dr. Krish. My name is ${name}.`);
   const year = new Date().getFullYear();
   const T = [['Birth number', n.birthNumber], ['Expression', n.expression], ['Soul urge', n.soulUrge], ['Personal year ' + year, n.personalYear]];
   $('tiles').classList.remove('on'); $('tiles').innerHTML = T.map(([l, v]) => `<div><b>0</b><span>${l}</span><em>${mean(v)}</em></div>`).join('');
