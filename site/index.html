@@ -181,6 +181,19 @@ nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
 .price{font:700 clamp(56px,10vw,88px)/1 var(--serif);color:var(--lamp)}
 nav.top .links{display:none;gap:26px}nav.top .links a{font-weight:500;color:#D9CDB6}nav.top .links a:hover{color:var(--lamp)}
 @media(min-width:900px){nav.top .links{display:flex}}
+.menu-b{background:none;border:1.5px solid var(--lamp);border-radius:4px;color:var(--lamp);font:600 15px var(--sans);padding:9px 16px;min-height:44px;cursor:pointer}
+.menu{position:fixed;inset:0;z-index:29;display:flex;flex-direction:column;gap:2px;padding:92px 26px 30px;background:rgba(13,10,7,.98);overflow-y:auto}
+.menu[hidden]{display:none}
+.menu a:not(.btn){padding:13px 0;border-bottom:1px solid var(--carve);text-decoration:none;font:600 clamp(28px,8vw,40px)/1.1 var(--serif)}
+.menu a:not(.btn):active{color:var(--lamp)}
+@media(max-width:899px){nav.top .cta{display:none}}
+@media(min-width:900px){.menu-b,.menu{display:none!important}}
+/* match */
+.mgrid{display:grid;gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:40px}
+@media(min-width:800px){.mgrid{grid-template-columns:repeat(3,1fr)}}
+.mgrid div{background:var(--stone);padding:26px 24px}
+.mgrid b{display:block;font:700 clamp(72px,12vw,110px)/.85 var(--serif);color:var(--lamp)}.mgrid h3{font-size:26px;margin-top:14px}.mgrid p{color:#CFC3AC;font-size:16.5px;margin-top:6px}
+.sw{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}.sw span{padding:10px 16px;border:1.5px solid var(--carve-2,#3A2E20);border-radius:99px;font:500 16px var(--sans)}.sw b{color:var(--lamp);margin-right:8px}
 /* how it works: five lamps on one line */
 .how svg{width:min(100%,360px);height:min(60svh,520px);margin:0 auto;display:block;overflow:visible}
 .how .trail{fill:none;stroke:var(--carve);stroke-width:3}
@@ -232,7 +245,11 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 </head>
 <body>
 <canvas id="embers" aria-hidden="true"></canvas>
-<nav class="top"><a class="brand" href="/">DESTINY OS</a><span class="links"><a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#pricing">Pricing</a><a href="/sign-in/">Sign in</a></span><a class="gold" href="#ask">Reveal my chart</a></nav>
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><span class="links"><a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#match">Match</a><a href="#pricing">Pricing</a><a href="/sign-in/">Sign in</a></span><a class="gold cta" href="#ask">Reveal my chart</a><button class="menu-b" id="menu-b" aria-expanded="false" aria-controls="menu">Menu</button></nav>
+<div class="menu" id="menu" hidden>
+  <a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#match">HALIA Match</a><a href="#pricing">Pricing</a><a href="/guide/">How to read your report</a><a href="/sign-in/">Sign in</a>
+  <a class="btn" href="#ask" style="margin-top:18px">Reveal my chart</a>
+</div>
 
 <main>
 <!-- 1. the gate -->
@@ -432,6 +449,23 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 </div></div></section>
 <div class="frieze"></div>
 
+<!-- match -->
+<section class="sec" id="match"><div class="wrap">
+  <p class="era">New: HALIA Match</p>
+  <h2 class="title">Find the person who wants the same life.</h2>
+  <p class="lead rv" style="margin-top:22px">Most matchmaking starts with a photo. HALIA Match starts with what decides a shared life: children, where to live, family and tradition, money, and how you handle a disagreement. It compares your answers with theirs and shows you the people who agree with you most.</p>
+  <div class="mgrid">
+    <div class="rv"><b>13</b><h3>Answers compared</h3><p>Each weighted by how much it matters for a life together. Life goals count most.</p></div>
+    <div class="rv"><b>5</b><h3>Areas, scored one by one</h3><p>Life goals, home and values, money, day to day, and handling disagreement.</p></div>
+    <div class="rv"><b>0</b><h3>Guesses</h3><p>No number appears until you have both answered enough. Until then the card says so.</p></div>
+  </div>
+  <div class="sw rv"><span><b>→</b>Swipe right for yes</span><span><b>←</b>Left to pass</span><span><b>↑</b>Up for a strong yes</span></div>
+  <p class="lead rv" style="margin-top:30px">HALIA comes out of our research on public records of nearly 50,000 people, where the best model answered 87 of 100 questions correctly from a person's life as it stands today. That finding is why Match asks about your life and not your birth chart. The score shows how closely two people agree. It is not a promise about any couple.</p>
+  <p class="rv" style="margin-top:30px;display:flex;flex-wrap:wrap;gap:12px"><a class="btn" href="/match/">Open HALIA Match</a><a class="btn line" href="/guide/#match">How the score is calculated</a></p>
+  <p class="cap rv" style="margin-top:18px">For adults. You choose to join, phone numbers are never shown, and you can leave at any time. Want the traditional view as well? A numerology compatibility report is available separately, offered as tradition.</p>
+</div></section>
+<div class="frieze"></div>
+
 <!-- pricing -->
 <section class="sec" id="pricing"><div class="wrap">
   <p class="era">Pricing</p>
@@ -617,6 +651,10 @@ draw.steps = (e, p) => { const d = clamp(p * 1.08); e.style.setProperty('--draw'
     once('how' + i, on, () => { const r = $('how-svg').getBoundingClientRect(); FX.burst(r.left + n.q.x / 340 * r.width, r.top + n.q.y / 520 * r.height, i === 4 ? 600 : 160, i === 4 ? 15 : 8); }); });
   $('how-n').textContent = cur + 1; $('how-h').textContent = HOW[cur][0]; $('how-t').textContent = HOW[cur][1]; };
 draw.ways = (e, p) => { e.style.setProperty('--s', ease(clamp(p / .6)) * .9); e.style.setProperty('--o', clamp((p - .35) / .25)); };
+{ const mb = document.getElementById('menu-b'), mn = document.getElementById('menu');
+  const set = open => { mn.hidden = !open; mb.setAttribute('aria-expanded', open); mb.textContent = open ? 'Close' : 'Menu'; document.documentElement.style.overflow = open ? 'hidden' : ''; };
+  mb.onclick = () => set(mn.hidden); mn.querySelectorAll('a').forEach(a => a.addEventListener('click', () => set(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !mn.hidden) { set(false); mb.focus(); } }); }
 document.querySelectorAll('.js-free').forEach(a => { a.href = window.FREE_REPORT_URL; if (/^https:/.test(a.href)) { a.target = '_blank'; a.rel = 'noopener'; } });
 const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); if (en.target.id === 'last') { const r = en.target.getBoundingClientRect(); FX.burst(innerWidth / 2, r.top + r.height * .4, 900, 18); } } }), { threshold: .2 });
 document.querySelectorAll('.rv,#last').forEach((n, i) => { n.style.transitionDelay = (i % 4) * .09 + 's'; io.observe(n); });
