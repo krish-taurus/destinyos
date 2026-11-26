@@ -52,50 +52,53 @@ nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
 .art *{vector-effect:non-scaling-stroke}
 
 /* 1. the gate */
-.sanctum{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(ellipse at 50% 58%,rgba(231,180,90,.34),rgba(231,180,90,.06) 38%,transparent 62%)}
+.sanctum{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(ellipse at 50% 43%,rgba(255,226,160,.5),rgba(231,180,90,.12) 34%,transparent 62%)}
 .sanctum .deva{font-size:clamp(84px,25vw,290px);opacity:calc((var(--p) - .35)*2.4);transform:scale(calc(.86 + var(--p)*.14))}
 .sanctum p{opacity:calc((var(--p) - .62)*3.4)}
 .star{position:absolute;left:50%;top:50%;width:min(150vw,1100px);aspect-ratio:1;translate:-50% -50%;opacity:.5;animation:turn 240s linear infinite}
 @keyframes turn{to{rotate:360deg}}
 /* the doorway: carved leaves on hinges, a stone frame, and lamps everywhere */
-.temple{--dw:min(84vw,45svh);--dh:72svh;--jamb:clamp(15px,4.4vw,34px);--base:7svh;position:absolute;inset:0;transform-origin:50% 56%;transform:scale(calc(1 + var(--zoom,0)*5));opacity:calc(1 - var(--gone,0))}
+.temple{--dw:min(74vw,33svh);--dh:53svh;--jamb:clamp(14px,3.6vw,30px);--base:32svh;position:absolute;inset:0;transform-origin:50% 41%;transform:scale(calc(1 + var(--zoom,0)*5));opacity:calc(1 - var(--gone,0))}
 .doorway{position:absolute;left:50%;bottom:var(--base);translate:-50% 0;width:var(--dw);height:var(--dh);perspective:1500px;box-shadow:0 0 0 220vmax #110C07}
 .leaf{position:absolute;top:0;bottom:0;width:50%;backface-visibility:hidden;will-change:transform}
 .leaf.l{left:0;transform-origin:0 50%;transform:rotateY(calc(var(--open)*-106deg))}
 .leaf.r{right:0;transform-origin:100% 50%;transform:rotateY(calc(var(--open)*106deg))}
-.leaf svg{width:100%;height:100%;display:block}
-.leaf.r svg{transform:scaleX(-1)}
-.leaf::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% -6%,rgba(246,217,154,.34),transparent 46%),linear-gradient(transparent 55%,rgba(0,0,0,.55));pointer-events:none}
-.lintel{position:absolute;left:50%;translate:-50% 0;bottom:calc(var(--base) + var(--dh));width:calc(var(--dw) + var(--jamb)*2 + 26px);height:10svh;background:linear-gradient(#3A2A18,#1E150C);border-bottom:3px solid #6E4B18;box-shadow:0 14px 30px -8px #000}
+.leaf i{position:absolute;inset:0;background:#3A2410 url(/img/door-leaf.jpg) center/100% 100% no-repeat}
+.leaf.r i{transform:scaleX(-1)}
+.leaf::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,226,160,.10),transparent 30%,rgba(0,0,0,.34));box-shadow:inset 0 0 0 1.5px #5A3C12;pointer-events:none}
+.leaf{box-shadow:0 0 24px rgba(0,0,0,.6)}
+.lintel{position:absolute;left:50%;translate:-50% 0;bottom:calc(var(--base) + var(--dh));width:calc(var(--dw) + var(--jamb)*2 + 26px);height:7.5svh;background:linear-gradient(#3A2A18,#1E150C);border-bottom:3px solid #6E4B18;box-shadow:0 14px 30px -8px #000}
 .lintel::before{content:"";position:absolute;inset:8px 0 auto 0;height:18px;background:radial-gradient(circle at 50% 100%,transparent 6px,#7A5A2A 7px,#7A5A2A 8.5px,transparent 9.5px) 0 0/20px 18px repeat-x;opacity:.8}
-.lintel .crest{position:absolute;left:50%;top:-5svh;translate:-50% 0;width:11svh;height:11svh}
+.lintel .crest{position:absolute;left:50%;top:-3svh;translate:-50% 0;width:8svh;height:8svh}
 .lrow{position:absolute;left:var(--jamb);right:var(--jamb);bottom:3px;display:flex;justify-content:space-around;align-items:flex-end}
 .bells{position:absolute;left:8%;right:8%;top:100%;display:flex;justify-content:space-around;pointer-events:none}
 .bell{width:15px;height:30px;transform-origin:50% 0}
 .jamb{position:absolute;bottom:var(--base);height:var(--dh);width:var(--jamb);background:linear-gradient(90deg,#1E150C,#3A2A18 45%,#1E150C);display:flex;flex-direction:column;justify-content:space-around;align-items:center;border-inline:2px solid #6E4B18}
 .jamb.l{left:calc(50% - var(--dw)/2 - var(--jamb))}.jamb.r{left:calc(50% + var(--dw)/2)}
 .step{position:absolute;left:50%;translate:-50% 0;bottom:calc(var(--base) - 2.4svh);width:calc(var(--dw) + var(--jamb)*2 + 70px);height:2.4svh;background:linear-gradient(#3A2A18,#1A120A);border-top:2px solid #6E4B18}
-.side{position:absolute;top:10svh;bottom:var(--base);display:none;grid-template-columns:repeat(auto-fill,84px);grid-auto-rows:1fr;gap:10px 22px;justify-content:center;align-content:space-around;padding:0 30px;background:repeating-linear-gradient(0deg,transparent 0 78px,rgba(0,0,0,.45) 78px 80px)}
+.side{position:absolute;top:8svh;bottom:var(--base);display:none;grid-template-columns:repeat(auto-fill,84px);grid-auto-rows:1fr;gap:10px 22px;justify-content:center;align-content:space-around;padding:0 30px;background:repeating-linear-gradient(0deg,transparent 0 78px,rgba(0,0,0,.45) 78px 80px)}
 .side.l{left:0;right:calc(50% + var(--dw)/2 + var(--jamb) + 22px)}.side.r{right:0;left:calc(50% + var(--dw)/2 + var(--jamb) + 22px)}
 @media(min-width:820px){.side{display:grid}}
 .niche{display:grid;place-items:end center;height:58px;padding-bottom:7px;border-radius:44% 44% 0 0/62% 62% 0 0;background:radial-gradient(ellipse at 50% 88%,rgba(231,180,90,.4),rgba(0,0,0,.72) 72%)}
 .diya{position:relative;width:17px;height:8px;border-radius:0 0 12px 12px/0 0 8px 8px;background:linear-gradient(#D7A84F,#6E4B18);flex:none}
 .fl{position:absolute;left:50%;bottom:6px;width:10px;height:17px;margin-left:-5px;transform-origin:50% 100%;border-radius:50% 50% 50% 50%/68% 68% 32% 32%;background:radial-gradient(ellipse at 50% 78%,#fff 0,#FBE3A6 30%,#E7B45A 58%,rgba(231,180,90,0) 76%);box-shadow:0 -5px 22px 7px rgba(231,180,90,.42);will-change:transform}
-.stand{position:absolute;bottom:var(--base);width:26px;height:21svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+.stand{position:absolute;bottom:var(--base);width:26px;height:15svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
 .stand.l{left:calc(50% - var(--dw)/2 - var(--jamb) - 34px)}.stand.r{left:calc(50% + var(--dw)/2 + var(--jamb) + 8px)}
 @media(max-width:819px){.stand.l{left:calc(50% - var(--dw)/2 - 6px)}.stand.r{left:calc(50% + var(--dw)/2 - 20px)}}
 .stand .diya{width:26px;height:11px}.stand .fl{width:14px;height:24px;margin-left:-7px;bottom:8px}
 .stand::after{content:"";flex:1;width:5px;background:linear-gradient(90deg,#6E4B18,#E7B45A,#6E4B18);border-radius:2px;box-shadow:0 0 0 0 transparent}
 .stand::before{content:"";position:absolute;bottom:0;width:30px;height:9px;border-radius:50% 50% 0 0;background:linear-gradient(#D7A84F,#6E4B18)}
 /* the presence behind the door */
-.rays{position:absolute;left:50%;top:56%;width:210vmax;height:210vmax;translate:-50% -50%;border-radius:50%;background:repeating-conic-gradient(rgba(246,217,154,.2) 0 4deg,transparent 4deg 14deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 62%);mask:radial-gradient(circle,#000 0,transparent 62%);opacity:calc(var(--open)*.9);animation:turn 90s linear infinite}
-.aura{position:absolute;left:50%;top:56%;width:70vmin;height:70vmin;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,244,214,.75),rgba(231,180,90,.3) 34%,transparent 66%);opacity:var(--open);animation:breathe 5s ease-in-out infinite}
+.rays{position:absolute;left:50%;top:41%;width:210vmax;height:210vmax;translate:-50% -50%;border-radius:50%;background:repeating-conic-gradient(rgba(246,217,154,.2) 0 4deg,transparent 4deg 14deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 62%);mask:radial-gradient(circle,#000 0,transparent 62%);opacity:calc(var(--open)*.9);animation:turn 90s linear infinite}
+.aura{position:absolute;left:50%;top:41%;width:70vmin;height:70vmin;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(255,244,214,.75),rgba(231,180,90,.3) 34%,transparent 66%);opacity:var(--open);animation:breathe 5s ease-in-out infinite}
 @keyframes breathe{50%{scale:1.14}}
-.hero{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 9svh;background:linear-gradient(transparent 42%,rgba(13,10,7,.93) 80%);opacity:calc(1 - var(--p)*5);pointer-events:none}
+.hero{position:absolute;left:0;right:0;bottom:0;height:29svh;padding-bottom:calc(1.6svh + 46px);display:flex;flex-direction:column;justify-content:center;text-align:center;background:linear-gradient(transparent,#0D0A07 22%);opacity:calc(1 - var(--p)*5);pointer-events:none}
+.hero .title{font-size:clamp(31px,8.2vw,62px);line-height:1}
+.hero .lead{font-size:clamp(15.5px,2vw,19px);line-height:1.45;margin-inline:auto;max-width:30em}
 .hero .title{animation:rise 1.5s .5s cubic-bezier(.2,.8,.2,1) both}
-.hero .lead{margin-top:18px;animation:rise 1.5s .8s cubic-bezier(.2,.8,.2,1) both}
-.hero .hint{margin-top:26px;font-size:15px;color:var(--lamp);animation:rise 1.5s 1.2s both}
-.hero .hint::after{content:"";display:block;width:1.5px;height:44px;background:linear-gradient(var(--lamp),transparent);margin-top:10px;animation:drip 2s infinite}
+.hero .lead{margin-top:10px;animation:rise 1.5s .8s cubic-bezier(.2,.8,.2,1) both}
+.hero .hint{margin-top:8px;font-size:14.5px;color:var(--lamp);animation:rise 1.5s 1.2s both}
+.hero .hint::after{content:none;display:block;width:1.5px;height:22px;background:linear-gradient(var(--lamp),transparent);margin:6px auto 0;animation:drip 2s infinite}
 @keyframes rise{from{opacity:0;transform:translateY(34px)}}
 @keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(1);opacity:0}}
 .fx-on .hero{opacity:calc(1 - var(--p)*24)}
@@ -173,6 +176,15 @@ nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
 @media(min-width:760px){.facts{grid-template-columns:repeat(4,1fr)}}
 .facts div{background:var(--stone);padding:20px 18px}.facts span{display:block;font-size:14.5px;color:var(--dim)}.facts b{font:600 28px/1.2 var(--serif)}
 
+.smoke{position:absolute;left:50%;bottom:var(--base);width:var(--dw);height:var(--dh);translate:-50% 0;pointer-events:none;opacity:calc(var(--open,0)*1.5)}
+.puff{position:absolute;bottom:-9%;left:var(--x);width:var(--s);aspect-ratio:1;margin-left:calc(var(--s)/-2);border-radius:50%;background:radial-gradient(circle,rgba(255,244,220,.62),rgba(255,236,200,.22) 45%,transparent 68%);filter:blur(7px);opacity:0;animation:puff var(--t) var(--d) linear infinite;will-change:transform,opacity}
+@keyframes puff{0%{transform:translate(0,12%) scale(.35);opacity:0}18%{opacity:.95}70%{opacity:.5}100%{transform:translate(var(--dx),var(--dy)) scale(1.9);opacity:0}}
+.static .smoke{display:none}
+.snd{position:absolute;left:50%;translate:-50% 0;bottom:1.6svh;z-index:3;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px;border-radius:99px;border:1.5px solid rgba(231,180,90,.6);background:rgba(13,10,7,.7);color:var(--lamp-2);font:500 14px var(--sans);cursor:pointer;opacity:calc(1 - var(--p)*4)}
+.snd{white-space:nowrap}
+@media(max-height:700px){.hero .lead{display:none}.hero{padding-bottom:calc(1.6svh + 42px)}}
+.snd::before{content:"";width:13px;height:15px;background:var(--lamp);clip-path:polygon(50% 0,58% 12%,82% 30%,88% 72%,100% 84%,0 84%,12% 72%,18% 30%,42% 12%)}
+.snd[aria-pressed=true]{border-color:var(--lamp);color:var(--lamp)}
 /* 7. consultation */
 .consult{padding:110px 0;background:radial-gradient(ellipse at 50% 0,rgba(231,180,90,.16),transparent 60%)}
 .consult .card{border:1.5px solid var(--lamp);padding:clamp(26px,5vw,50px);margin-top:38px;display:grid;gap:26px}
@@ -261,6 +273,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
   <div class="rays" aria-hidden="true"></div><div class="aura" aria-hidden="true"></div>
   <div class="temple" id="temple" aria-hidden="true">
     <div class="doorway"><div class="leaf l"></div><div class="leaf r"></div></div>
+    <div class="smoke" id="smoke"></div>
     <div class="side l"></div><div class="side r"></div>
     <div class="jamb l"></div><div class="jamb r"></div>
     <div class="lintel"><svg class="crest medal" viewBox="-100 -100 200 200"></svg><div class="lrow"></div><div class="bells"></div></div>
@@ -269,9 +282,10 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
   </div>
   <div class="hero"><div class="wrap">
     <h1 class="title">Enter the temple of time.</h1>
-    <p class="lead">For three thousand years people in this land have read the sky. Walk through how it began, then see your own chart revealed.</p>
+    <p class="lead">Three thousand years of reading the sky. Walk through how it began, then see your own chart.</p>
     <p class="hint">Scroll to open the doors</p>
   </div></div>
+  <button class="snd" id="snd" aria-pressed="false">Tap for the temple bell</button>
 </div></section>
 <div class="frieze"></div>
 
@@ -577,7 +591,7 @@ document.querySelectorAll('.medal').forEach(s => star(s, [[96, 78, 1.2], [70, 54
         <path d="${lotus(cx, cy, 30)}" fill="#3B2412" stroke="#C9973F" stroke-width="1.1"/><path d="${lotus(cx, cy, 17)}" fill="#5A3A18" stroke="#E7B45A" stroke-width=".9" transform="rotate(22.5 ${cx} ${cy})"/><circle cx="${cx}" cy="${cy}" r="6" fill="url(#brass)"/>`;
       for (const [dx, dy] of [[13, 13], [67, 13], [13, 91], [67, 91]]) g += `<circle cx="${x + dx}" cy="${y + dy}" r="3.2" fill="url(#brass)"/>`; } }
   g += `<circle cx="184" cy="326" r="13" fill="none" stroke="url(#brass)" stroke-width="4"/><circle cx="184" cy="312" r="5" fill="url(#brass)"/>`;
-  document.querySelectorAll('.leaf').forEach(l => l.innerHTML = `<svg viewBox="0 0 200 640" preserveAspectRatio="none">${g}</svg>`);
+  document.querySelectorAll('.leaf').forEach(l => l.innerHTML = '<i></i>');
   const diya = '<span class="diya"><i class="fl"></i></span>', small = innerWidth < 700;
   document.querySelector('.lrow').innerHTML = diya.repeat(small ? 7 : 9);
   document.querySelectorAll('.jamb').forEach(j => j.innerHTML = diya.repeat(5));
@@ -585,6 +599,18 @@ document.querySelectorAll('.medal').forEach(s => star(s, [[96, 78, 1.2], [70, 54
   document.querySelector('.bells').innerHTML = '<svg class="bell" viewBox="0 0 15 30"><path d="M7.5 0V9" stroke="#8A6426" stroke-width="1.2"/><path d="M2.5 22Q2.5 9 7.5 9Q12.5 9 12.5 22L14 24H1Z" fill="#C9973F"/><circle cx="7.5" cy="26" r="2" fill="#E7B45A"/></svg>'.repeat(small ? 4 : 6);
 })();
 /* wind: scrolling stirs the air, every flame and bell leans with its own lag, then settles */
+$('smoke').innerHTML = Array.from({ length: still ? 0 : 14 }, (_, i) => { const x = 8 + Math.random() * 84, side = x < 50 ? -1 : 1;
+  return `<i class="puff" style="--x:${x.toFixed(0)}%;--s:${(34 + Math.random() * 40).toFixed(0)}%;--t:${(5 + Math.random() * 5).toFixed(1)}s;--d:${(-Math.random() * 9).toFixed(1)}s;--dx:${(side * (20 + Math.random() * 90)).toFixed(0)}%;--dy:${(-(10 + Math.random() * 70)).toFixed(0)}%"></i>`; }).join('');
+/* the temple bell: made in the browser, no sound file. Browsers only allow sound after the visitor taps once. */
+const Bell = { on: false, ctx: null,
+  arm() { try { this.ctx = this.ctx || new (window.AudioContext || window.webkitAudioContext)(); this.ctx.resume(); } catch { this.ctx = null; } },
+  strike(when, vol) { const c = this.ctx, out = c.createGain(); out.gain.value = vol; out.connect(c.destination);
+    [[.5, 5.5, .5], [1, 4.4, 1], [1.19, 3.2, .55], [1.5, 2.6, .38], [2, 2.2, .5], [2.51, 1.5, .28], [3.01, 1.1, .2], [4.1, .7, .12]].forEach(([ratio, dur, amp]) => {
+      const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = 392 * ratio * (1 + (Math.random() - .5) * .004);
+      g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(amp, when + .006); g.gain.exponentialRampToValueAtTime(.0001, when + dur);
+      o.connect(g).connect(out); o.start(when); o.stop(when + dur + .05); }); },
+  ring() { if (!this.on || !this.ctx || this.ctx.state !== 'running') return; const t = this.ctx.currentTime + .02; this.strike(t, .2); this.strike(t + 1.05, .13); for (const b of bells) b.w += 1.4; } };
+$('snd').onclick = () => { Bell.on = !Bell.on; if (Bell.on) Bell.arm(); $('snd').setAttribute('aria-pressed', Bell.on); $('snd').textContent = Bell.on ? 'Bell on' : 'Bell off'; if (Bell.on) { Bell.ring(); } };
 const flames = [...document.querySelectorAll('.temple .fl')].map(e => ({ e, w: 0, r: .05 + Math.random() * .13, ph: Math.random() * 6.3, f: 2.2 + Math.random() * 2.4, k: .7 + Math.random() * .7 }));
 const bells = [...document.querySelectorAll('.bell')].map(e => ({ e, w: 0, r: .03 + Math.random() * .04, ph: Math.random() * 6.3 }));
 let wind = 0, lastY = scrollY, gateOn = true;
@@ -614,6 +640,7 @@ const draw = {
   gate(e, p, r) { const open = ease(clamp((p - .1) / .42)); e.style.setProperty('--p', p); e.style.setProperty('--open', open); gateOn = r.bottom > 0 && p < .97;
     const z = clamp((p - .34) / .5); e.style.setProperty('--zoom', z * z); e.style.setProperty('--gone', clamp((p - .74) / .14));
     FX.morph(p, clamp(p * 24) * clamp((r.bottom - innerHeight * .25) / (innerHeight * .75)));
+    if (open > .1 && !draw.gate.rang) { draw.gate.rang = true; Bell.ring(); } if (open < .02) draw.gate.rang = false;
     if (open > .5 && !draw.gate.done) { draw.gate.done = true; for (let k = 0; k < 7; k++) FX.burst(innerWidth / 2, innerHeight * (k + .5) / 7, 70, 11); } if (open < .2) draw.gate.done = false; },
   nalanda(e, p) { e.style.setProperty('--p', p); },
   sky(e, p) { const n = Math.min(27, Math.floor(clamp(p * 1.12) * 27) + 1), [x, y] = pol(132, (n - 1) * 360 / 27 - 90);
