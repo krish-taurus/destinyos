@@ -3,261 +3,347 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FBFAF7">
-<title>HALIA — guidance built on your life | Destiny OS</title>
-<meta name="description" content="HALIA is the guidance engine of Destiny OS. See how it works, how accurate predictions built this way can be, and what has not been proven yet.">
+<meta name="theme-color" content="#0D0A07">
+<title>How we found HALIA — Destiny OS</title>
+<meta name="description" content="We set out to test whether a birth date can predict a life. This is what we tried, what failed, what held up, and how HALIA measures things today.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../halia.css?v=2">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-body{font-size:18px;overflow-x:clip}
-.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
-nav.top{position:fixed;inset:0 0 auto 0;z-index:20;background:rgba(251,250,247,.8);backdrop-filter:saturate(1.6) blur(16px);-webkit-backdrop-filter:saturate(1.6) blur(16px)}
-nav.top .wrap{display:flex;justify-content:space-between;align-items:center;height:58px}
-.giant{font:800 clamp(52px,13.5vw,148px)/.93 var(--display);letter-spacing:-.05em}
-.xl{font:700 clamp(38px,8.4vw,84px)/1 var(--display);letter-spacing:-.04em}
-.lead{font-size:clamp(19px,2.6vw,24px);line-height:1.45;color:var(--muted);max-width:30em}
-.foot{font-size:14px;line-height:1.5;color:var(--muted);max-width:44em}
-.dark .foot,.dark .lead{color:#A6A9B5}
+:root{--stone:#0D0A07;--stone-2:#17120C;--carve:#2A2117;--lamp:#E7B45A;--lamp-2:#F6D99A;--kumkum:#C8442B;--ivory:#F3E9D6;--dim:#A39680;
+  --serif:"Cormorant Garamond",Georgia,serif;--sans:"DM Sans",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:dark}
+body{background:var(--stone);color:var(--ivory);font:400 18px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--lamp);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px;width:100%}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.015em}
+.title{font:600 clamp(42px,8.6vw,104px)/.94 var(--serif);letter-spacing:-.025em}
+.lead{font-size:clamp(18px,2.4vw,22px);line-height:1.55;color:#D9CDB6;max-width:31em;margin-top:18px}
+.cap{font-size:14px;line-height:1.5;color:var(--dim);max-width:42em;margin-top:14px}
+.era{font:600 15px var(--sans);color:var(--lamp);margin-bottom:12px}
+.gold{color:var(--lamp)}
+#fx{position:fixed;inset:0;z-index:5;pointer-events:none}
+main,footer{position:relative;z-index:2}
+nav.top{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:linear-gradient(rgba(13,10,7,.92),transparent)}
+nav.top a{text-decoration:none;font:600 15px var(--sans)}nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:13px 26px;border-radius:4px;border:1.5px solid var(--lamp);background:var(--lamp);color:#1A1208;font:600 16.5px var(--sans);text-decoration:none;transition:box-shadow .3s}
+.btn:hover{box-shadow:0 0 34px rgba(231,180,90,.5)}.btn.line{background:transparent;color:var(--lamp)}
+.frieze{height:34px;background:
+  radial-gradient(circle at 50% 100%,transparent 9px,var(--carve) 10px,var(--carve) 11.5px,transparent 12.5px) 0 0/28px 17px repeat-x,
+  radial-gradient(circle at 50% 0,transparent 9px,var(--carve) 10px,var(--carve) 11.5px,transparent 12.5px) 14px 17px/28px 17px repeat-x;border-block:1.5px solid var(--carve)}
 
-/* hero */
-.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:110px 0 54px;position:relative;overflow:hidden}
-.hero .discs{position:absolute;right:-6vw;top:9vh;width:min(86vw,620px);aspect-ratio:1.55;pointer-events:none}
-.hero .discs i{position:absolute;top:0;width:64.5%;aspect-ratio:1;border-radius:50%;mix-blend-mode:multiply}
-.hero .discs .a{left:0;background:var(--marigold);animation:inA 1.6s cubic-bezier(.2,.8,.2,1) both}
-.hero .discs .b{right:0;background:var(--peacock);animation:inB 1.6s cubic-bezier(.2,.8,.2,1) both}
-@keyframes inA{from{transform:translateX(-46%);opacity:0}}
-@keyframes inB{from{transform:translateX(46%);opacity:0}}
-.hero h1{position:relative;max-width:9.5em}
-.hero .lead{margin:22px 0 26px;position:relative}
-.hero .rise{animation:rise 1s .35s cubic-bezier(.2,.8,.2,1) both}
-@keyframes rise{from{transform:translateY(28px);opacity:0}}
-@media(min-width:900px){
-  .hero{justify-content:center;padding-bottom:0}
-  .hero h1{max-width:5.6em;font-size:clamp(84px,9vw,128px)}
-  .hero .lead{max-width:22em}
-  .hero .discs{width:min(35vw,470px);right:2vw;top:50%;translate:0 -50%}
-}
+/* pinned scenes: the script moves --p from 0 to 1 while each is pinned */
+.scene{position:relative;height:calc(var(--len,3)*100svh);--p:0}
+.pin{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding-top:50px}
+.static .scene{height:auto}.static .pin{position:static;height:auto;min-height:100svh;padding:100px 0}
+.split{display:grid;gap:22px;align-items:center}
+@media(min-width:860px){.split{grid-template-columns:1fr 1fr;gap:60px}}
+.art{width:min(100%,440px);margin:0 auto;display:block;overflow:visible}
+.num{font:700 clamp(120px,34vw,300px)/.82 var(--serif);color:var(--lamp);letter-spacing:-.04em;font-variant-numeric:tabular-nums;text-shadow:0 0 90px rgba(231,180,90,.35)}
+.num small{font-size:.36em;margin-left:.04em}
+.stage{font:600 clamp(22px,3.8vw,36px)/1.2 var(--serif);min-height:2.5em;margin-top:14px}
 
-/* pinned scroll scenes: the script moves each one from 0 to 1 while it is pinned */
-.scene{position:relative;height:calc(var(--len,3)*100svh)}
-.pin{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding-top:58px}
-.pin>.wrap{width:100%}
-.dark{background:var(--ink);color:#fff}
-.static .scene{height:auto}.static .pin{position:static;height:auto;padding:90px 0}
+/* the opening: the title breaks apart and becomes a question mark */
+.open .star{position:absolute;left:50%;top:50%;width:min(150vw,1100px);aspect-ratio:1;translate:-50% -50%;opacity:.4;animation:turn 240s linear infinite}
+@keyframes turn{to{rotate:360deg}}
+.open .glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(231,180,90,calc(var(--p)*.3)),transparent 60%)}
+.open .hero{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:9svh;opacity:calc(1 - var(--p)*5)}
+.fx-on .open .hero{opacity:calc(1 - var(--p)*24)}
+.open .hero .title{animation:rise 1.4s .3s cubic-bezier(.2,.8,.2,1) both}.open .hero .lead{animation:rise 1.4s .6s cubic-bezier(.2,.8,.2,1) both}
+.open .hint{margin-top:26px;font-size:15px;color:var(--lamp);animation:rise 1.4s 1s both}
+@keyframes rise{from{opacity:0;transform:translateY(34px)}}
+.open .q{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.open .mark{font:700 clamp(240px,62vw,520px)/1 var(--serif);color:var(--lamp);opacity:calc((var(--p) - .5)*3)}
+.fx-on .open .mark{visibility:hidden}
+.open .ask{position:absolute;left:0;right:0;bottom:11svh;text-align:center;font:600 clamp(26px,5.4vw,46px)/1.1 var(--serif);padding:0 22px;opacity:calc((var(--p) - .72)*5)}
 
-/* words that light up */
-.words{font:700 clamp(30px,6.4vw,66px)/1.1 var(--display);letter-spacing:-.035em}
-.words span{color:#D2CFC6;transition:color .25s}.words span.lit{color:var(--ink)}
-
-/* one question a day */
-.ask{display:grid;gap:26px;align-items:center}
-@media(min-width:820px){.ask{grid-template-columns:1fr 340px;gap:70px}}
-.caps{position:relative;min-height:9.5em}
-.caps>div{position:absolute;inset:0;opacity:0;transform:translateY(16px);transition:opacity .45s,transform .45s}
-[data-step="0"] .caps>div:nth-child(1),[data-step="1"] .caps>div:nth-child(2),[data-step="2"] .caps>div:nth-child(3){opacity:1;transform:none}
-.caps p{color:var(--muted);margin-top:10px;font-size:clamp(17px,2.2vw,21px)}
-.phone{width:min(100%,340px);margin:0 auto;background:var(--paper);border:1.5px solid var(--ink);border-radius:34px;padding:22px 18px;min-height:330px;box-shadow:0 30px 60px -34px rgba(21,23,31,.5)}
-.phone .q{font:600 19px/1.25 var(--display);margin:6px 0 14px}
-.phone .chip{pointer-events:none}
-[data-step="1"] .phone .pick,[data-step="2"] .phone .pick{background:var(--ink);border-color:var(--ink);color:#fff}
-.phone .saved{margin-top:18px;border-top:1.5px solid var(--line);opacity:0;transform:translateY(10px);transition:opacity .45s,transform .45s}
-[data-step="2"] .phone .saved{opacity:1;transform:none}
-.phone .saved div{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
-.phone .saved span{color:var(--muted)}
-
-/* accuracy */
-.num{font:800 clamp(128px,37vw,330px)/.82 var(--display);letter-spacing:-.07em;font-variant-numeric:tabular-nums}
-.num small{font-size:.36em;letter-spacing:-.04em;margin-left:.04em}
-.dark .num{color:var(--marigold)}
-.meter{height:10px;border-radius:5px;background:#2B2E3A;margin:26px 0 20px;position:relative}
-.meter i{position:absolute;inset:0 auto 0 0;border-radius:5px;background:var(--marigold);width:calc(var(--v,50)*1%)}
-.meter b{position:absolute;left:50%;top:-7px;bottom:-7px;width:2px;background:#fff;opacity:.55}
-.stage{font:600 clamp(21px,3.6vw,34px)/1.2 var(--display);letter-spacing:-.02em;min-height:2.5em}
-
-/* confident or silent */
-.gate{display:grid;gap:26px;align-items:center}
-@media(min-width:820px){.gate{grid-template-columns:1fr 1fr;gap:60px}}
-.dots{display:grid;grid-template-columns:repeat(10,1fr);gap:clamp(5px,1.3vw,10px);max-width:360px}
-.dots i{aspect-ratio:1;border-radius:50%;background:var(--line);transition:background .3s}
-.dots i.on{background:var(--peacock)}
-.gate .num{font-size:clamp(110px,26vw,230px);color:var(--peacock)}
-
-/* birth details */
-.zero{padding:120px 0}
-.bars{max-width:620px;margin:34px 0 22px}
-.bars div{margin-bottom:16px}.bars span{display:flex;justify-content:space-between;font-size:16px;margin-bottom:6px}
-.bars b{display:block;height:12px;border-radius:6px;background:var(--line);overflow:hidden}
-.bars b i{display:block;height:100%;background:var(--ink);border-radius:6px}.bars b i.dim{background:#A9A8A2}
-
-/* alignment */
-.al{display:grid;gap:14px;align-items:center}
-@media(min-width:820px){.al{grid-template-columns:1fr 1fr;gap:60px}}
-.venn{position:relative;width:min(100%,460px);aspect-ratio:1.5;margin:0 auto}
-.venn i{position:absolute;top:8%;left:50%;width:56%;aspect-ratio:1;margin-left:-28%;border-radius:50%;mix-blend-mode:multiply}
-.venn .a{background:var(--marigold);transform:translateX(calc((1 - var(--s,0))*-52% - 18%))}
-.venn .b{background:var(--peacock);transform:translateX(calc((1 - var(--s,0))*52% + 18%))}
-.venn .n{position:absolute;inset:0;display:grid;place-items:center;font:800 clamp(54px,13vw,104px)/1 var(--display);letter-spacing:-.05em;color:#fff;z-index:2}
-.areas{margin-top:18px;opacity:var(--o,0)}
-.areas div{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:16px}
-
-/* features and lists */
+/* 100 people */
+.people{width:100%;display:grid;grid-template-columns:repeat(10,1fr);gap:clamp(5px,1.4vw,11px);max-width:400px;margin:0 auto}
+.people i{aspect-ratio:1;border-radius:50%;background:var(--carve);transition:background .35s,box-shadow .35s}
+.people i.on{background:var(--lamp)}.people i.x{background:var(--kumkum);box-shadow:0 0 16px var(--kumkum)}
+/* the Lo Shu grid */
+.loshu{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);max-width:330px;margin:0 auto}
+.loshu b{aspect-ratio:1;display:grid;place-items:center;background:var(--stone);font:700 clamp(46px,12vw,72px) var(--serif);color:#3A2E20;transition:color .2s,text-shadow .2s}
+.loshu b.on{color:var(--ivory)}.loshu b.lock{color:var(--lamp);text-shadow:0 0 30px rgba(231,180,90,.8)}
+.year{font:700 clamp(54px,13vw,96px)/1 var(--serif);text-align:center;margin-bottom:20px;font-variant-numeric:tabular-nums}
+/* the signal that vanished */
+.fall .num{color:color-mix(in srgb,var(--lamp) calc(var(--live,1)*100%),#5A4A33);text-shadow:0 0 90px rgba(231,180,90,calc(var(--live,1)*.4))}
+.chance{position:relative;height:12px;border-radius:6px;background:var(--carve);margin-top:24px;max-width:560px}
+.chance i{position:absolute;inset:0 auto 0 0;border-radius:6px;background:var(--lamp);width:calc(var(--v,73)*1%)}
+.chance b{position:absolute;left:50%;top:-8px;bottom:-8px;width:2px;background:var(--ivory)}
+.chance span{position:absolute;left:50%;top:22px;translate:-50% 0;font-size:13.5px;color:var(--dim);white-space:nowrap}
+/* the turn */
+.turn{background:radial-gradient(ellipse at 50% 120%,rgba(231,180,90,calc(var(--p)*.4)),transparent 62%)}
+/* the control */
 .block{padding:120px 0}
-.bento{display:grid;gap:14px;margin-top:38px}
-@media(min-width:700px){.bento{grid-template-columns:repeat(6,1fr)}.bento>div{grid-column:span 2}.bento>.w{grid-column:span 3}}
-.bento>div{background:var(--paper);border-radius:26px;padding:28px 26px;min-height:170px}
-.bento>.t{background:var(--peacock);color:#fff}.bento>.m{background:var(--marigold)}
-.bento p{margin:8px 0 0;font-size:16.5px;opacity:.78}
-.two{display:grid;gap:50px;margin-top:10px}
-@media(min-width:820px){.two{grid-template-columns:1fr 1fr;gap:70px}}
-ul.plain{list-style:none;margin-top:20px}ul.plain li{padding:15px 0;border-top:1.5px solid var(--line)}
-.end{padding:130px 0 90px;text-align:center}.end .lead{margin:20px auto 28px}
-footer{padding:34px 0 60px;border-top:1.5px solid var(--line)}footer p{font-size:14px;color:var(--muted);margin-bottom:8px;max-width:60em}
+.bars{max-width:640px;margin:34px 0 0}.bars div{margin-bottom:18px}.bars span{display:flex;justify-content:space-between;font-size:16px;margin-bottom:7px}
+.bars b{display:block;height:12px;border-radius:6px;background:var(--carve);overflow:hidden}.bars b i{display:block;height:100%;background:var(--lamp);border-radius:6px}.bars b i.dim{background:#7C6A4C}
+/* five pillars */
+.radar text{font:500 13px var(--sans);fill:var(--ivory);text-anchor:middle}
+.radar .web{fill:none;stroke:var(--carve);stroke-width:1.5}
+.radar .shape{fill:rgba(231,180,90,.22);stroke:var(--lamp);stroke-width:2}
+.radar circle.pt{fill:var(--lamp)}
+/* alignment */
+.venn{position:relative;width:min(100%,430px);aspect-ratio:1.5;margin:0 auto}
+.venn i{position:absolute;top:8%;left:50%;width:56%;aspect-ratio:1;margin-left:-28%;border-radius:50%;mix-blend-mode:screen}
+.venn .a{background:#B8862F;transform:translateX(calc((1 - var(--s,0))*-52% - 18%))}
+.venn .b{background:#8E2F1D;transform:translateX(calc((1 - var(--s,0))*52% + 18%))}
+.venn .n{position:absolute;inset:0;display:grid;place-items:center;font:700 clamp(60px,14vw,110px)/1 var(--serif);color:#fff;z-index:2}
+.rules{margin-top:20px;border-top:1.5px solid var(--carve);opacity:var(--o,0)}
+.rules div{display:grid;grid-template-columns:7.2em 1fr;gap:12px;padding:10px 0;border-bottom:1.5px solid var(--carve);font-size:15.5px}
+.rules b{color:var(--lamp);font-weight:600}.rules span{color:#D9CDB6}
+@media(max-width:859px){.venn{width:64%}.rules div{font-size:14.5px;padding:7px 0}.people,.dots{max-width:300px}.loshu{max-width:250px}.year{margin-bottom:12px}}
+/* confident or silent */
+.dots{width:100%;display:grid;grid-template-columns:repeat(10,1fr);gap:clamp(5px,1.3vw,10px);max-width:360px;margin:0 auto}
+.dots i{aspect-ratio:1;border-radius:50%;background:var(--carve);transition:background .3s}.dots i.on{background:var(--lamp)}
+.two{display:grid;gap:50px}@media(min-width:820px){.two{grid-template-columns:1fr 1fr;gap:70px}}
+ul.plain{list-style:none;margin-top:20px}ul.plain li{padding:15px 0;border-top:1.5px solid var(--carve);color:#D9CDB6}ul.plain b{color:var(--ivory)}
+.end{padding:130px 0 100px;text-align:center}.end .lead{margin:20px auto 30px}
+footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-size:14px;color:var(--dim);max-width:62em;margin-bottom:8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<nav class="top"><div class="wrap">
-  <a class="mark" href="/halia/how-it-works/"><svg viewBox="0 0 34 22" aria-hidden="true"><circle cx="11" cy="11" r="11" fill="#E9A92B"/><circle cx="23" cy="11" r="11" fill="#0E6A70"/></svg>HALIA</a>
-  <a class="btn sm" href="/halia/">Try HALIA</a>
-</div></nav>
+<canvas id="fx" aria-hidden="true"></canvas>
+<nav class="top"><a class="brand" href="/temple/">DESTINY OS</a><a class="gold" href="/halia/">Open HALIA</a></nav>
 
-<header class="hero">
-  <div class="discs" aria-hidden="true"><i class="a"></i><i class="b"></i></div>
-  <div class="wrap rise">
-    <h1 class="giant">Guidance built on your life.</h1>
-    <p class="lead">HALIA is the engine inside Destiny OS. It learns from what you tell it, one small question a day, and turns that into something you can act on.</p>
-    <a class="btn" href="/halia/">Try HALIA</a>
-  </div>
-</header>
+<main>
+<!-- the question -->
+<section class="scene open" data-scene="open" style="--len:2.8"><div class="pin">
+  <svg class="star" id="star" viewBox="-100 -100 200 200" aria-hidden="true"></svg><div class="glow"></div>
+  <div class="q"><div class="mark" id="mark">?</div></div>
+  <p class="ask">Can the day you were born predict your life?</p>
+  <div class="hero"><div class="wrap">
+    <h1 class="title" id="h1">How we found HALIA.</h1>
+    <p class="lead">We set out to prove that numbers and stars could forecast a life. This is the honest account of what we tested, what broke, and what was left standing.</p>
+    <p class="hint">Scroll</p>
+  </div></div>
+</div></section>
+<div class="frieze"></div>
 
-<section class="scene" data-scene="words" style="--len:2.2"><div class="pin"><div class="wrap">
-  <p class="words">HALIA doesn't read your chart. It asks how things are going right now, remembers what you say, and gives you one small thing to do today. When it doesn't know enough, it says so.</p>
-</div></div></section>
-
-<section class="scene" data-scene="ask" data-step="0" style="--len:3"><div class="pin"><div class="wrap ask">
-  <div class="caps">
-    <div><h2 class="xl">One question a day.</h2><p>In the app or on WhatsApp. A single tap, or skip it.</p></div>
-    <div><h2 class="xl">You answer in a tap.</h2><p>No forms. A skipped question rests for a week.</p></div>
-    <div><h2 class="xl">It becomes your profile.</h2><p>Dated, visible to you, and yours to change or delete.</p></div>
-  </div>
-  <div class="phone" aria-hidden="true">
-    <div class="kicker">One quick question</div>
-    <div class="q">How in control of your money do you feel right now?</div>
-    <div class="chips"><span class="chip">Very low</span><span class="chip">Low</span><span class="chip">OK</span><span class="chip pick">Good</span><span class="chip">Very good</span></div>
-    <div class="saved"><div><span>Focus</span>Money</div><div><span>Money, today</span>Good</div><div><span>Time a day</span>15 minutes</div></div>
-  </div>
-</div></div></section>
-
-<section class="scene dark" data-scene="acc" style="--len:4"><div class="pin"><div class="wrap">
-  <div class="kicker" style="color:var(--marigold)">How accurate can a prediction be?</div>
-  <div class="num"><span id="acc-n">50</span><small>%</small></div>
-  <div class="meter"><i></i><b></b></div>
-  <div class="stage" id="acc-s">A coin flip.</div>
-  <p class="foot">Predicting whether a person will earn above the median next year. 545 men in a public US wage panel, 1980 to 1987, scored on people the model had never seen. The white line marks a coin flip.</p>
-</div></div></section>
-
-<section class="scene" data-scene="gate" style="--len:3.4"><div class="pin"><div class="wrap gate">
+<!-- 1. the first hundred -->
+<section class="scene" data-scene="pilot" style="--len:3.2"><div class="pin"><div class="wrap split">
   <div>
-    <h2 class="xl">Confident, or silent.</h2>
-    <p class="lead" style="margin-top:14px">Harder questions get better answers when the model is allowed to say "not enough to go on".</p>
-    <div class="num" style="margin-top:22px"><span id="gate-n">74</span><small>%</small></div>
-    <div class="stage" id="gate-s" style="min-height:1.4em;margin-top:12px">correct, answering everyone</div>
+    <p class="era">Experiment one</p>
+    <h2 class="title">We began with a hundred people.</h2>
+    <p class="lead" id="pilot-t">A model guessed each person's profession from ordinary facts. It got about 33 in 100 right.</p>
+    <p class="cap">One hundred public biographies, five profession groups.</p>
+  </div>
+  <div class="people" id="people" aria-hidden="true"></div>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- 2. the calendar trap -->
+<section class="scene" data-scene="grid" style="--len:3"><div class="pin"><div class="wrap split">
+  <div>
+    <div class="year" id="year">1901</div>
+    <div class="loshu" id="loshu" aria-hidden="true"><b>4</b><b>9</b><b>2</b><b>3</b><b>5</b><b>7</b><b>8</b><b>1</b><b>6</b></div>
   </div>
   <div>
-    <div class="dots" id="dots" aria-hidden="true"></div>
-    <p class="foot" style="margin-top:20px">Each dot is one person in a hundred. Lit dots get an answer. Predicting whether a professional baseball player is still a regular three seasons later, on 3,583 held-out seasons.</p>
+    <p class="era">Experiment two</p>
+    <h2 class="title">Then we found the calendar hiding in the grid.</h2>
+    <p class="lead">Scroll through the century. Whatever the year, the 1 and the 9 stay lit. Everyone born in the 1900s carries them, so a "missing number" was often just the date system.</p>
+    <p class="cap">We counted every date from 1800 to 2006, 75,605 of them, to measure the bias and correct for it.</p>
   </div>
 </div></div></section>
+<div class="frieze"></div>
 
-<section class="zero"><div class="wrap">
-  <h2 class="xl" style="max-width:11em">Birth details added nothing we could measure.</h2>
-  <p class="lead" style="margin-top:18px">We gave the same baseball model each player's numerology numbers, zodiac sign and lunar phase. Then we gave it a different player's.</p>
+<!-- 3. the signal that vanished -->
+<section class="scene fall" data-scene="fall" style="--len:3.2"><div class="pin"><div class="wrap">
+  <p class="era">Experiment three</p>
+  <h2 class="title" style="max-width:10em">A signal appeared. Then it vanished.</h2>
+  <div class="num" style="margin-top:20px"><span id="fall-n">0.73</span></div>
+  <div class="chance"><i></i><b></b><span>0.50 is chance</span></div>
+  <div class="stage" id="fall-s" style="margin-top:44px">Name numbers seemed to pick out medal winners among 71 young athletes.</div>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- 4. scale -->
+<section class="scene" data-scene="scale" style="--len:3.4"><div class="pin"><div class="wrap">
+  <p class="era">Experiments four to seven</p>
+  <h2 class="title">So we made the test bigger.</h2>
+  <div class="num" style="margin-top:20px;font-size:clamp(84px,22vw,250px)"><span id="scale-n">71</span></div>
+  <div class="stage" id="scale-s">young athletes</div>
+  <p class="lead" style="margin-top:6px">At every size the answer was the same: adding birth details moved the result by less than a hundredth.</p>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- 5. the turn -->
+<section class="scene turn" data-scene="turn" style="--len:4"><div class="pin"><div class="wrap">
+  <p class="era">The turn</p>
+  <h2 class="title" style="font-size:clamp(34px,6.4vw,72px)">Something else was predicting all along.</h2>
+  <div class="num" style="margin-top:14px"><span id="turn-n">50</span><small>%</small></div>
+  <div class="chance" style="margin-top:20px"><i></i><b></b></div>
+  <div class="stage" id="turn-s" style="margin-top:22px">A coin flip.</div>
+  <p class="cap">Predicting whether a person will earn above the median next year. 545 men in a public US wage panel, 1980 to 1987, scored on people the model had never seen.</p>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- 6. the control -->
+<section class="block"><div class="wrap">
+  <p class="era">The control</p>
+  <h2 class="title" style="max-width:11em">We gave the model the wrong birthdays.</h2>
+  <p class="lead">One last check, on 3,583 seasons of baseball careers. Each player's numerology, zodiac sign and lunar phase went in. Then another player's did.</p>
   <div class="bars">
     <div><span>Track record only<strong>73.9%</strong></span><b><i style="width:73.9%"></i></b></div>
     <div><span>Plus real birth details<strong>73.0%</strong></span><b><i class="dim" style="width:73%"></i></b></div>
     <div><span>Plus someone else's birth details<strong>73.2%</strong></span><b><i class="dim" style="width:73.2%"></i></b></div>
   </div>
-  <p class="foot">The differences are within noise. So HALIA runs on what you tell it. Astrology and numerology readings remain a separate, traditional part of Destiny OS and do not feed HALIA.</p>
+  <p class="cap">It made no difference whose birthday it was. So HALIA is built on what you tell it. Astrology and numerology readings remain a separate, traditional part of Destiny OS.</p>
 </div></section>
+<div class="frieze"></div>
 
-<section class="scene" data-scene="align" style="--len:3"><div class="pin"><div class="wrap al">
+<!-- 7. how HALIA measures a life -->
+<section class="scene" data-scene="radar" style="--len:3.2"><div class="pin"><div class="wrap split">
   <div>
-    <h2 class="xl">See where two people align.</h2>
-    <p class="lead" style="margin-top:14px">Send a link to a partner or a co-founder. You each answer the same questions and see the same result.</p>
-    <div class="areas"><div><span>Life goals</span><b>100</b></div><div><span>Home and values</span><b>100</b></div><div><span>Day to day</span><b>67</b></div><div><span>Money</span><b>33</b></div><div><span>Handling disagreement</span><b>0</b></div></div>
+    <p class="era">What we built</p>
+    <h2 class="title">HALIA measures five things.</h2>
+    <p class="lead">Each is one plain question answered from 1 to 5, asked again every month. Where you stand today was the strongest signal we found, so that is what HALIA tracks.</p>
+    <p class="cap">Around them sit 24 more questions about your work, money and relationships: 29 in all, one a day, any of them skippable.</p>
   </div>
+  <svg class="art radar" id="radar" viewBox="-170 -170 340 340" role="img" aria-label="Five measured pillars: career, relationships, money, happiness, wellbeing"></svg>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- 8. alignment -->
+<section class="scene" data-scene="align" style="--len:3.2"><div class="pin"><div class="wrap split">
   <div>
     <div class="venn" aria-hidden="true"><i class="a"></i><i class="b"></i><div class="n" id="al-n">0</div></div>
-    <p class="foot" style="text-align:center;margin:8px auto 0">An example. The score shows how closely your answers match. It is not a prediction of how things will turn out, and there is no score until you have both answered enough.</p>
+    <p class="cap" style="text-align:center;margin:8px auto 0">An example. It shows how closely two sets of answers match, not how things will turn out.</p>
+  </div>
+  <div>
+    <p class="era">How two people are compared</p>
+    <h2 class="title" style="font-size:clamp(38px,7vw,80px)">Five ways to measure a match.</h2>
+    <div class="rules">
+      <div><b>Same</b><span>Do you both want children? Equal answers match; "open" matches anything.</span></div>
+      <div><b>Close</b><span>Saver or spender? Scored by how far apart you are on the scale.</span></div>
+      <div><b>Different</b><span>Co-founders who want the same role score lower than a pair who split them.</span></div>
+      <div><b>At least</b><span>Your years of experience against what a job asks for.</span></div>
+      <div><b>Overlap</b><span>How many of a role's required skills you already have.</span></div>
+    </div>
   </div>
 </div></div></section>
+<div class="frieze"></div>
 
-<section class="block"><div class="wrap">
-  <h2 class="xl">Everything it does.</h2>
-  <div class="bento">
-    <div class="w t"><h3>Chat</h3><p>Ask about work, money, relationships or your day. A short answer and one thing to do.</p></div>
-    <div class="w"><h3>One question a day</h3><p>How HALIA gets to know you, without a long form.</p></div>
-    <div><h3>Partner</h3><p>Five areas, and what is worth talking about.</p></div>
-    <div class="m"><h3>Co-founder</h3><p>Commitment, risk, roles and working style.</p></div>
-    <div><h3>Job fit</h3><p>Your skills and preferences against what a role asks for.</p></div>
-    <div class="w"><h3>Scan to chat</h3><p>A QR code opens HALIA on WhatsApp.</p></div>
-    <div class="w"><h3>Your data</h3><p>See every answer, remove any of them, or delete it all in one tap.</p></div>
+<!-- 9. confident or silent -->
+<section class="scene" data-scene="gate" style="--len:3.2"><div class="pin"><div class="wrap split">
+  <div>
+    <p class="era">The rule we kept</p>
+    <h2 class="title">Confident, or silent.</h2>
+    <div class="num" style="font-size:clamp(100px,24vw,220px);margin-top:16px"><span id="gate-n">74</span><small>%</small></div>
+    <div class="stage" id="gate-s" style="min-height:1.4em">correct, answering everyone</div>
+    <p class="cap">Still a regular player three seasons later, on 3,583 held-out seasons. HALIA follows the same rule: no alignment score until both people have answered enough.</p>
   </div>
-</div></section>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+</div></div></section>
+<div class="frieze"></div>
 
-<section class="block" style="padding-top:20px"><div class="wrap two">
-  <div><h2>What HALIA will not do</h2>
-    <ul class="plain"><li>Predict events, name lucky days or promise outcomes.</li><li>Tell you whether to marry, stay with or leave someone.</li><li>Diagnose a health problem or suggest medicines.</li><li>Recommend investments, loans or trades.</li><li>Send questions about family plans or faith on WhatsApp.</li></ul></div>
-  <div><h2>What is not proven yet</h2>
-    <ul class="plain"><li><b>HALIA does not show you predictions today.</b> The accuracy figures above come from research on public data. Predictions will be switched on only when they reach that standard on our own users' data.</li><li><b>That the guidance improves lives.</b> This needs a controlled study, which has not been run.</li><li><b>That the findings hold in India today.</b> The tests used US earnings data from the 1980s and professional sport.</li></ul></div>
+<section class="block"><div class="wrap two">
+  <div><h2 style="font-size:34px">What HALIA will not do</h2>
+    <ul class="plain"><li>Predict events, name lucky days or promise outcomes.</li><li>Tell you whether to marry, stay with or leave someone.</li><li>Diagnose a health problem or suggest medicines.</li><li>Recommend investments, loans or trades.</li></ul></div>
+  <div><h2 style="font-size:34px">What is not proven yet</h2>
+    <ul class="plain"><li><b>HALIA shows you no predictions today.</b> The accuracy figures come from research on public data.</li><li><b>That its guidance improves lives.</b> That needs a controlled study, which has not been run.</li><li><b>That the findings hold in India today.</b> The tests used US earnings data from the 1980s and professional sport.</li><li><b>Our first four experiments are being re-run</b> from saved code. The figures from the turn onwards are reproducible now.</li></ul></div>
 </div></section>
 
 <section class="end"><div class="wrap">
-  <h2 class="giant">Start with one question.</h2>
+  <h2 class="title">Start with one question.</h2>
   <p class="lead">3 chats free. Then ₹499 a month for 25 chats a day, in the app and on WhatsApp.</p>
-  <a class="btn" href="/halia/">Try HALIA</a>
+  <p style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn" href="/halia/">Open HALIA</a><a class="btn line" href="/temple/#ask">Reveal my chart</a></p>
 </div></section>
+</main>
 
 <footer><div class="wrap">
   <p>HALIA stands for Hybrid Adaptive Life Intelligence. It is an AI built from established methods and is not a medical, financial or legal service. If you are in distress, contact Tele-MANAS on 14416 (free, 24 hours) or emergency services on 112.</p>
-  <p>Figures come from our own analysis of public datasets, dated 26 November 2026. Research on couples: <a href="https://doi.org/10.1073/pnas.1917036117">Joel and colleagues, PNAS, 2020</a>. Daily adaptive guidance: <a href="https://pubmed.ncbi.nlm.nih.gov/27663578/">Nahum-Shani and colleagues, 2018</a>.</p>
+  <p>Figures from the turn onwards come from our analysis of public datasets dated 26 November 2026. Research on couples: <a href="https://doi.org/10.1073/pnas.1917036117">Joel and colleagues, PNAS, 2020</a>.</p>
 </div></footer>
 
 <script>
-const $ = id => document.getElementById(id), clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
-const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (still) document.documentElement.classList.add('static');
-const lerpStops = (p, stops) => { for (let i = 1; i < stops.length; i++) if (p <= stops[i][0]) { const [p0, v0] = stops[i - 1], [p1, v1] = stops[i]; return v0 + (v1 - v0) * (p - p0) / (p1 - p0); } return stops[stops.length - 1][1]; };
+const $ = id => document.getElementById(id), NS = 'http://www.w3.org/2000/svg';
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), ease = t => 1 - Math.pow(1 - t, 3);
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches; if (still) document.documentElement.classList.add('static');
+const el = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text !== undefined) e.textContent = text; return e; };
+const pol = (r, deg) => [r * Math.cos(deg * Math.PI / 180), r * Math.sin(deg * Math.PI / 180)];
+const stops = (p, s) => { for (let i = 1; i < s.length; i++) if (p <= s[i][0]) { const [p0, v0] = s[i - 1], [p1, v1] = s[i]; return v0 + (v1 - v0) * (p - p0) / (p1 - p0); } return s[s.length - 1][1]; };
+const mid = e => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+const fired = {}; function once(k, on, fn) { if (on && !fired[k]) { fired[k] = 1; fn(); } if (!on) fired[k] = 0; }
 
-const words = document.querySelector('.words');
-words.innerHTML = words.textContent.trim().split(/\s+/).map(w => `<span>${w}</span>`).join(' ');
-const wspans = [...words.children];
-$('dots').innerHTML = '<i></i>'.repeat(100);
-const dots = [...$('dots').children];
+$('h1').innerHTML = $('h1').textContent.trim().split(/\s+/).map(w => `<span>${w}</span>`).join(' ');
+(function () { const s = $('star'); for (const [R, r, w] of [[98, 84, .25], [80, 66, .3], [60, 47, .35], [40, 29, .4], [22, 14, .45]]) { let d = ''; for (let i = 0; i < 32; i++) { const [x, y] = pol(i % 2 ? r : R, i * 11.25 - 90); d += (i ? 'L' : 'M') + x.toFixed(2) + ' ' + y.toFixed(2); } s.appendChild(el('path', { d: d + 'Z', fill: 'none', stroke: '#E7B45A', 'stroke-width': w })); } })();
+$('people').innerHTML = '<i></i>'.repeat(100); const people = [...$('people').children];
+$('dots').innerHTML = '<i></i>'.repeat(100); const dots = [...$('dots').children];
+const cells = [...$('loshu').children];
+/* radar: five pillars, each measured 1 to 5 */
+const PIL = ['Career', 'Relationships', 'Money', 'Happiness', 'Wellbeing'], LEVEL = [4, 3, 2, 4, 3], radar = $('radar');
+for (let k = 1; k <= 5; k++) radar.appendChild(el('polygon', { class: 'web', points: PIL.map((_, i) => pol(k * 24, i * 72 - 90).join(',')).join(' ') }));
+PIL.forEach((n, i) => { const [x, y] = pol(120, i * 72 - 90), [tx, ty] = pol(146, i * 72 - 90); radar.appendChild(el('line', { class: 'web', x2: x, y2: y })); radar.appendChild(el('text', { x: tx, y: ty + 4 }, n)); });
+const shape = radar.appendChild(el('polygon', { class: 'shape' })), pts = PIL.map(() => radar.appendChild(el('circle', { class: 'pt', r: 5 }))), lv = PIL.map(() => radar.appendChild(el('text', { style: 'font:700 20px "Cormorant Garamond",serif;fill:#E7B45A' })));
 
 const ACC = [[0, 50], [.12, 50], [.34, 62], [.42, 62], [.6, 66], [.68, 66], [.9, 83], [1, 83]];
 const ACC_S = [[.12, 'A coin flip.'], [.42, 'Knowing a person\'s background.'], [.68, 'Plus their job, hours and household.'], [2, 'Plus where they stand today.']];
+const SCALE = [[0, 71], [.12, 71], [.3, 2603], [.4, 2603], [.58, 28074], [.68, 28074], [.9, 131152], [1, 131152]];
+const SCALE_S = [[.21, 'young athletes'], [.49, 'baseball careers'], [.79, 'Olympic athletes'], [2, 'baseball games, day by day']];
 const draw = {
-  words(el, p) { const n = Math.round(clamp(p * 1.25) * wspans.length); wspans.forEach((s, i) => s.classList.toggle('lit', i < n)); },
-  ask(el, p) { el.dataset.step = p < .3 ? 0 : p < .64 ? 1 : 2; },
-  acc(el, p) { const v = lerpStops(p, ACC); $('acc-n').textContent = Math.round(v); el.style.setProperty('--v', v); $('acc-s').textContent = ACC_S.find(s => p <= s[0])[1]; },
-  gate(el, p) {
-    const acc = lerpStops(p, [[0, 74], [.15, 74], [.5, 84], [.6, 84], [.9, 90], [1, 90]]), share = lerpStops(p, [[0, 100], [.15, 100], [.5, 58], [.6, 58], [.9, 35], [1, 35]]);
-    $('gate-n').textContent = Math.round(acc); const n = Math.round(share);
-    $('gate-s').textContent = n === 100 ? 'correct, answering everyone' : `correct, answering ${n} in 100`;
-    dots.forEach((d, i) => d.classList.toggle('on', (i * 37) % 100 < n));
-  },
-  align(el, p) { const s = clamp(p / .7), e = 1 - Math.pow(1 - s, 3); el.style.setProperty('--s', e * .77); $('al-n').textContent = Math.round(e * 77); el.style.setProperty('--o', clamp((p - .62) / .2)); },
+  open(e, p, r) { e.style.setProperty('--p', p); FX.morph(p, clamp(p * 24) * clamp((r.bottom - innerHeight * .25) / (innerHeight * .75))); },
+  pilot(e, p) { const n = p < .38 ? 33 : 40, seven = p > .7;
+    people.forEach((d, i) => { d.classList.toggle('on', i < Math.min(n, Math.round(clamp(p * 4) * 33) + (p >= .38 ? 7 : 0))); d.classList.toggle('x', seven && i >= 33 && i < 40); });
+    $('pilot-t').textContent = p < .38 ? 'A model guessed each person\'s profession from ordinary facts. It got about 33 in 100 right.' : !seven ? 'We added the planets at birth. It rose to about 40. It looked like a discovery.' : 'The whole gain was seven people. And the slow planets were only marking the year each person was born.';
+    once('pilot', seven, () => { const [x, y] = mid(people[36]); FX.burst(x, y, 260, 9, '#C8442B'); }); },
+  grid(e, p) { const y = 1900 + Math.round(clamp(p * 1.05) * 99), ds = String(y); $('year').textContent = y;
+    cells.forEach(c => { const d = c.textContent; c.classList.toggle('lock', d === '1' || d === '9'); c.classList.toggle('on', ds.slice(2).includes(d)); }); },
+  fall(e, p) { const v = stops(p, [[0, .73], [.3, .73], [.62, .54], [.72, .54], [.9, .64], [1, .64]]); $('fall-n').textContent = v.toFixed(2); e.style.setProperty('--v', v * 100); e.style.setProperty('--live', clamp((v - .54) / .19));
+    $('fall-s').textContent = p < .3 ? 'Name numbers seemed to pick out medal winners among 71 young athletes.' : p < .72 ? 'Tested on countries the model had not seen, it fell to chance.' : 'And when we shifted every birth date to a wrong one, the "signal" came back. It was noise.';
+    once('fall', p > .32, () => { const [x, y] = mid($('fall-n')); FX.burst(x, y, 700, 15); }); },
+  scale(e, p) { $('scale-n').textContent = Math.round(stops(p, SCALE)).toLocaleString('en-IN'); $('scale-s').textContent = SCALE_S.find(s => p <= s[0])[1]; FX.swarm(p > .02 && p < .98 ? 60 + Math.round(p * 640) : 46); },
+  turn(e, p) { const v = stops(p, ACC); e.style.setProperty('--p', p); $('turn-n').textContent = Math.round(v); e.style.setProperty('--v', v); $('turn-s').textContent = ACC_S.find(s => p <= s[0])[1];
+    once('turn', p > .88, () => { const [x, y] = mid($('turn-n')); FX.burst(x, y, 1100, 19); }); },
+  radar(e, p) { const t = ease(clamp(p * 1.4)), P = LEVEL.map((l, i) => pol(l * 24 * t, i * 72 - 90)); shape.setAttribute('points', P.map(q => q.join(',')).join(' '));
+    P.forEach(([x, y], i) => { pts[i].setAttribute('cx', x); pts[i].setAttribute('cy', y); const [tx, ty] = pol(LEVEL[i] * 24 * t + 18, i * 72 - 90); lv[i].setAttribute('x', tx); lv[i].setAttribute('y', ty + 6); lv[i].textContent = t > .1 ? Math.max(1, Math.round(LEVEL[i] * t)) : ''; }); },
+  align(e, p) { const s = clamp(p / .7), k = ease(s); e.style.setProperty('--s', k * .77); $('al-n').textContent = Math.round(k * 77); e.style.setProperty('--o', clamp((p - .3) / .25));
+    once('align', s >= 1, () => { const [x, y] = mid($('al-n')); FX.burst(x, y, 500, 13); }); },
+  gate(e, p) { const acc = stops(p, [[0, 74], [.15, 74], [.5, 84], [.6, 84], [.9, 90], [1, 90]]), n = Math.round(stops(p, [[0, 100], [.15, 100], [.5, 58], [.6, 58], [.9, 35], [1, 35]]));
+    $('gate-n').textContent = Math.round(acc); $('gate-s').textContent = n === 100 ? 'correct, answering everyone' : `correct, answering ${n} in 100`; dots.forEach((d, i) => d.classList.toggle('on', (i * 37) % 100 < n)); },
 };
 const scenes = [...document.querySelectorAll('.scene')];
-function tick() {
-  const vh = innerHeight;
-  for (const el of scenes) { const r = el.getBoundingClientRect(); draw[el.dataset.scene](el, still ? 1 : clamp(-r.top / (r.height - vh))); }
-}
-let queued = false;
-addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; tick(); }); } }, { passive: true });
-addEventListener('resize', tick); tick();
+function tick() { const vh = innerHeight; FX.swarm(46); FX.morph(0, 0); for (const e of scenes) { const r = e.getBoundingClientRect(); if (r.bottom < -vh || r.top > vh * 2) continue; draw[e.dataset.scene](e, still ? 1 : clamp(-r.top / (r.height - vh)), r); } }
+let queued = false; addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; tick(); }); } }, { passive: true }); addEventListener('resize', tick);
+
+/* one canvas: embers, sparks, and the headline that breaks into gold dust and re-forms as a question mark */
+const FX = (function () {
+  const c = $('fx'), x = c.getContext('2d'), N = innerWidth < 700 ? 2600 : 5200; let W, H, A = [], B = [], parts = [], sparks = [], embers = [], want = 46, gp = 0, ga = 0, ready = false;
+  const smooth = t => t * t * (3 - 2 * t);
+  function size() { const d = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; c.style.width = W + 'px'; c.style.height = H + 'px'; x.setTransform(d, 0, 0, d, 0, 0); }
+  function sample(paint) { const o = document.createElement('canvas'); o.width = W; o.height = H; const g = o.getContext('2d'); g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; paint(g);
+    const d = g.getImageData(0, 0, W, H).data, out = [], st = W < 700 ? 2 : 3; for (let yy = 0; yy < H; yy += st) for (let xx = 0; xx < W; xx += st) if (d[(yy * W + xx) * 4 + 3] > 120) out.push([xx, yy]); return out; }
+  function targets() {
+    if (still) return; const pin = document.querySelector('.open .pin'), top = pin.getBoundingClientRect().top, h1 = $('h1'), mk = $('mark'), f = e => { const s = getComputedStyle(e); return `${s.fontWeight} ${s.fontSize} ${s.fontFamily}`; };
+    A = sample(g => { g.font = f(h1); h1.querySelectorAll('span').forEach(w => { const r = w.getBoundingClientRect(); g.fillText(w.textContent, r.left + r.width / 2, r.top - top + r.height / 2); }); });
+    B = sample(g => { g.font = f(mk); const r = mk.getBoundingClientRect(); g.fillText('?', r.left + r.width / 2, r.top - top + r.height / 2); });
+    if (A.length < 50 || B.length < 50) return;
+    parts = []; const R = Math.max(W, H); for (let i = 0; i < N; i++) { const an = Math.random() * 6.283, m = (.12 + Math.pow(Math.random(), 1.6) * .8) * R;
+      parts.push({ a: Math.floor(i * A.length / N), b: Math.floor(Math.random() * B.length), sx: Math.cos(an) * m, sy: Math.sin(an) * m, ph: Math.random() * 6.283, s: 1.2 + Math.random() * 1.5 }); }
+    ready = true; document.documentElement.classList.add('fx-on');
+  }
+  const born = () => ({ x: Math.random() * W, y: H + 10, r: .6 + Math.random() * 1.6, v: .18 + Math.random() * .5, s: Math.random() * 6.3, a: .25 + Math.random() * .55 });
+  function frame(t) {
+    x.clearRect(0, 0, W, H); x.globalCompositeOperation = 'lighter'; x.fillStyle = '#E7B45A';
+    while (embers.length < want) { const p = born(); p.v *= 2.2; embers.push(p); }
+    for (let i = embers.length - 1; i >= 0; i--) { const p = embers[i]; p.y -= p.v; p.s += .012; p.x += Math.sin(p.s) * .25; if (p.y < -10) { if (embers.length > want) { embers.splice(i, 1); continue; } Object.assign(p, born()); }
+      x.globalAlpha = p.a * (.6 + .4 * Math.sin(p.s * 3)); x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.3); x.fill(); }
+    if (ready && ga > .01) { const tt = clamp((gp - .05) / .7), m = tt < .3 ? 0 : smooth((tt - .3) / .7), bell = Math.pow(Math.sin(Math.PI * tt), .7), ca = Math.cos(tt * 1.5), sa = Math.sin(tt * 1.5);
+      for (const p of parts) { const a = A[p.a], b = B[p.b]; x.globalAlpha = ga * (.5 + .5 * Math.sin(t * .004 + p.ph));
+        x.fillRect(a[0] + (b[0] - a[0]) * m + (p.sx * ca - p.sy * sa) * bell + Math.sin(t * .002 + p.ph) * .8, a[1] + (b[1] - a[1]) * m + (p.sx * sa + p.sy * ca) * bell + Math.cos(t * .0017 + p.ph) * .8, p.s, p.s); } }
+    for (let i = sparks.length - 1; i >= 0; i--) { const p = sparks[i]; p.x += p.vx; p.y += p.vy; p.vx *= .955; p.vy = p.vy * .955 - .035; p.l -= p.k; if (p.l <= 0) { sparks.splice(i, 1); continue; } x.globalAlpha = p.l; x.fillStyle = p.c; x.fillRect(p.x, p.y, p.s, p.s); }
+    requestAnimationFrame(frame);
+  }
+  size(); for (let i = 0; i < 46; i++) { const p = born(); p.y = Math.random() * H; embers.push(p); }
+  addEventListener('resize', () => { size(); ready = false; clearTimeout(targets.t); targets.t = setTimeout(() => { if (scrollY < innerHeight * 3) targets(); }, 300); });
+  if (!still) { requestAnimationFrame(frame); setTimeout(targets, 2100); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(targets, 2200)); }
+  return { morph(p, a) { gp = p; ga = a; }, swarm(n) { want = n; },
+    burst(bx, by, n, power, colour) { if (still) return; for (let i = 0; i < n; i++) { const an = Math.random() * 6.283, v = power * (.15 + Math.pow(Math.random(), 2)); sparks.push({ x: bx, y: by, vx: Math.cos(an) * v, vy: Math.sin(an) * v, l: 1, k: .006 + Math.random() * .014, s: 1 + Math.random() * 2.2, c: colour || '#E7B45A' }); } } };
+})();
+tick();
 </script>
 </body>
 </html>
