@@ -48,11 +48,14 @@ rsync -a --delete --exclude tests --exclude __pycache__ --exclude '.env*' "$REPO
 rsync -a --delete "$REPO/site/" "$APP/frontend/"
 chown -R www-data:www-data "$APP/frontend"; chown -R "$SVC_USER" "$APP/backend"
 
-echo "== 6/7 daily WhatsApp timer (7:00 IST)"
+echo "== 6/7 daily WhatsApp timers (guidance 7:00 IST, HALIA question 19:00 IST)"
 sed "s/__USER__/$SVC_USER/" "$REPO/deploy/destinyos-daily.service" > /etc/systemd/system/destinyos-daily.service
 cp "$REPO/deploy/destinyos-daily.timer" /etc/systemd/system/
+sed "s/__USER__/$SVC_USER/" "$REPO/deploy/destinyos-halia-daily.service" > /etc/systemd/system/destinyos-halia-daily.service
+cp "$REPO/deploy/destinyos-halia-daily.timer" /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable -q --now destinyos-daily.timer
+systemctl enable -q --now destinyos-halia-daily.timer
 
 echo "== 7/7 restart and check"
 systemctl restart destinyos-api
@@ -63,5 +66,5 @@ if [ "$ok" != 1 ]; then
   bash "$REPO/deploy/rollback.sh" "$TS"; exit 1
 fi
 echo "   API healthy"
-for u in / /app/ /business/ /free-report/; do printf "   %-14s %s\n" "$u" "$(curl -s -o /dev/null -w '%{http_code}' "https://destinyos.in$u")"; done
+for u in / /app/ /halia/ /business/ /free-report/; do printf "   %-14s %s\n" "$u" "$(curl -s -o /dev/null -w '%{http_code}' "https://destinyos.in$u")"; done
 echo "DEPLOYED $(git -C "$REPO" log -1 --format=%h). If anything looks wrong: bash $REPO/deploy/rollback.sh $TS"

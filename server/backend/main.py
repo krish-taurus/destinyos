@@ -14,7 +14,7 @@ from timezonefinder import TimezoneFinder
 
 from astro import build_chart
 import db, numerology, reports
-import auth, billing, voice
+import auth, billing, voice, halia
 from fastapi.responses import FileResponse
 from auth import current_user
 from billing import is_subscriber, is_voice, require_subscriber, plan_status, retire_plus_if_needed
@@ -37,12 +37,13 @@ logging.basicConfig(level=logging.INFO)
 app.include_router(auth.router)
 app.include_router(billing.router)
 app.include_router(voice.router)
+app.include_router(halia.router)
 app.add_middleware(CORSMiddleware, allow_origins=ORIGINS, allow_methods=["GET", "POST", "PATCH", "DELETE"], allow_credentials=True,
                    allow_headers=["*"])
 
 # ── Rate limiting (in-memory; move to Redis when you scale past one instance) ──
 LIMITS = {"chart": (30, 3600), "brief": (20, 3600), "ask": (40, 3600),
-          "food": (15, 3600), "compass": (6, 3600), "otp": (10, 3600), "report": (6, 3600), "audio": (6, 3600)}
+          "food": (15, 3600), "compass": (6, 3600), "otp": (10, 3600), "report": (6, 3600), "audio": (6, 3600), "halia": (60, 3600)}
 LANG_RULE = {"en": "Reply in simple everyday English.",
              "hi": "Reply in simple everyday Hindi (Devanagari script), the way ordinary people speak; avoid difficult Sanskrit words."}
 _hits: dict[tuple[str, str], deque] = defaultdict(deque)

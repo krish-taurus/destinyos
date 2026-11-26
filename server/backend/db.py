@@ -95,6 +95,60 @@ CREATE TABLE IF NOT EXISTS whatsapp_log (
   user_id INTEGER NOT NULL, day TEXT NOT NULL, status TEXT NOT NULL, detail TEXT,
   PRIMARY KEY (user_id, day)
 );
+-- HALIA: consent, declared answers (append-only; the newest row per field is current), question log,
+-- compare invites and links, chat history (30 days) and WhatsApp inbound de-duplication.
+CREATE TABLE IF NOT EXISTS halia_settings (
+  user_id      INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  consent_at   INTEGER NOT NULL,
+  consent_text TEXT NOT NULL,
+  daily_optin  INTEGER NOT NULL DEFAULT 0      -- one WhatsApp question a day
+);
+CREATE TABLE IF NOT EXISTS halia_answers (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  field       TEXT NOT NULL,
+  question_id TEXT NOT NULL,
+  value       TEXT NOT NULL,                   -- JSON: a code or a list of codes from the question bank
+  source      TEXT NOT NULL,                   -- app | whatsapp | chat
+  day         TEXT NOT NULL,
+  at          INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS halia_answers_user ON halia_answers(user_id, field, id);
+CREATE TABLE IF NOT EXISTS halia_question_log (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  question_id TEXT NOT NULL,
+  channel     TEXT NOT NULL,                   -- app | whatsapp
+  status      TEXT NOT NULL,                   -- asked | answered | skipped
+  day         TEXT NOT NULL,
+  at          INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS halia_qlog_user ON halia_question_log(user_id, day);
+CREATE TABLE IF NOT EXISTS halia_invites (
+  token_hash TEXT PRIMARY KEY,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  domain     TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  used       INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS halia_links (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  domain     TEXT NOT NULL,
+  user_a     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_b     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at INTEGER NOT NULL,
+  UNIQUE (domain, user_a, user_b)
+);
+CREATE TABLE IF NOT EXISTS halia_chat (
+  id      INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  role    TEXT NOT NULL,                       -- user | assistant
+  content TEXT NOT NULL,
+  channel TEXT NOT NULL,                       -- app | whatsapp
+  at      INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS halia_chat_user ON halia_chat(user_id, id);
+CREATE TABLE IF NOT EXISTS wa_inbound (msg_id TEXT PRIMARY KEY, at INTEGER NOT NULL);
 """
 
 

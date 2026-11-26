@@ -1,4 +1,5 @@
-"""Razorpay: ₹599/month Destiny Plus subscription (UPI AutoPay / card mandate) and one-time add-ons.
+"""Razorpay: monthly subscriptions (HALIA Chat ₹499, Destiny Plus ₹599, Destiny Voice ₹999; UPI AutoPay / card
+mandate) and one-time add-ons.
 
 Setup (Razorpay dashboard):
   - Subscriptions → Plans → create "Destiny Plus", monthly, ₹599 → copy plan_… id into RAZORPAY_PLAN_ID
@@ -24,10 +25,12 @@ KEY_ID = os.getenv("RAZORPAY_KEY_ID", "")
 KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "")
 PLAN_ID = os.getenv("RAZORPAY_PLAN_ID", "")                # ₹599/month Destiny Plus
 PLAN_ID_VOICE = os.getenv("RAZORPAY_PLAN_ID_VOICE", "")    # ₹999/month Destiny Voice
+PLAN_ID_CHAT = os.getenv("RAZORPAY_PLAN_ID_CHAT", "")      # ₹499/month HALIA Chat
 WEBHOOK_SECRET = os.getenv("RAZORPAY_WEBHOOK_SECRET", "")
 API = "https://api.razorpay.com/v1"
 
 PLANS = {
+    "chat":  {"name": "HALIA Chat", "price_inr": 499, "period": "month", "chats_per_day": 25},
     "plus":  {"name": "Destiny Plus", "price_inr": 599, "period": "month"},
     "voice": {"name": "Destiny Voice", "price_inr": 999, "period": "month", "voice_minutes": 60},
 }
@@ -35,7 +38,10 @@ PLAN = PLANS["plus"]
 
 
 def plan_id(plan: str) -> str:
-    return {"plus": PLAN_ID, "voice": PLAN_ID_VOICE}.get(plan, "")
+    return {"chat": PLAN_ID_CHAT, "plus": PLAN_ID, "voice": PLAN_ID_VOICE}.get(plan, "")
+
+
+RANK = {"free": 0, "chat": 1, "plus": 2, "voice": 3}       # each plan includes HALIA chat; Plus and Voice add the rest
 ADDONS = {   # amounts in paise
     "consultation":  {"name": "One-to-one consultation with Dr. Krish (45 min)", "amount": 299900},
     "compatibility": {"name": "Compatibility report", "amount": 99900},
@@ -83,7 +89,13 @@ def _row_grants(s: dict) -> bool:
 
 
 def is_subscriber(user_id: int) -> bool:
-    """Access if ANY of the user's subscriptions qualifies (a late webhook on an old one mustn't hide a live one)."""
+    """Destiny Plus access if ANY Plus or Voice subscription qualifies (a late webhook on an old one mustn't
+    hide a live one). HALIA Chat on its own does not unlock Plus features."""
+    return any(_row_grants(s) for s in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan!='chat'", user_id))
+
+
+def is_chat(user_id: int) -> bool:
+    """HALIA chat access: any paid plan."""
     return any(_row_grants(s) for s in db.all_("SELECT * FROM subscriptions WHERE user_id=?", user_id))
 
 
@@ -92,7 +104,7 @@ def is_voice(user_id: int) -> bool:
 
 
 def tier(user_id: int) -> str:
-    return "voice" if is_voice(user_id) else "plus" if is_subscriber(user_id) else "free"
+    return "voice" if is_voice(user_id) else "plus" if is_subscriber(user_id) else "chat" if is_chat(user_id) else "free"
 
 
 def plan_status(user_id: int) -> dict:
@@ -101,12 +113,16 @@ def plan_status(user_id: int) -> dict:
         s = next((r for r in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan='voice' "
                                      "ORDER BY updated_at DESC", user_id) if _row_grants(r)), s)
     t = tier(user_id)
-    return {"subscribed": t != "free", "tier": t,
+    if t == "plus":
+        s = next((r for r in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan='plus' "
+                                     "ORDER BY updated_at DESC", user_id) if _row_grants(r)), s)
+    return {"subscribed": t in ("plus", "voice"), "chat": t != "free", "tier": t,
             "status": s["status"] if s else None,
             "paid_until": s["current_end"] if s else None,
             "renews": bool(s and s["status"] == "active" and not s.get("cancel_requested")),
             "plan": PLANS.get(t, PLAN), "plans": PLANS,
-            "payments_ready": configured(), "voice_ready": bool(PLAN_ID_VOICE and configured())}
+            "payments_ready": configured(), "voice_ready": bool(PLAN_ID_VOICE and configured()),
+            "chat_ready": bool(PLAN_ID_CHAT and KEY_ID and KEY_SECRET)}
 
 
 def require_subscriber(user=Depends(current_user)) -> dict:
@@ -127,6 +143,22 @@ def _upsert_sub(user_id: int, sub_id: str, status: str, current_end: int | None,
                   "VALUES (?,?,?,?,?,?) ON CONFLICT(provider_sub_id) DO UPDATE SET status=excluded.status, "
                   "current_end=COALESCE(excluded.current_end, subscriptions.current_end), updated_at=excluded.updated_at",
                   (user_id, sub_id, status, current_end, db.now(), plan or "plus"))
+
+
+def _retire_chat(user_id: int):
+    """After Plus or Voice is paid, stop a ₹499 HALIA Chat plan from renewing (both include HALIA chat), so
+    the customer isn't billed twice. Ends at the close of the period already paid for."""
+    for r in db.all_("SELECT * FROM subscriptions WHERE user_id=? AND plan='chat' AND cancel_requested=0 "
+                     "AND status NOT IN ('cancelled','completed','expired')", user_id):
+        try:
+            _rzp("POST", f"/subscriptions/{r['provider_sub_id']}/cancel", json={"cancel_at_cycle_end": 1})
+        except HTTPException:
+            log.error("could not stop HALIA Chat subscription %s on upgrade", r["provider_sub_id"])
+            db.log_event(user_id, "chat_retire_failed", {"sub": r["provider_sub_id"]})
+            continue
+        with db.tx() as c:
+            c.execute("UPDATE subscriptions SET cancel_requested=1, updated_at=? WHERE id=?", (db.now(), r["id"]))
+        db.log_event(user_id, "chat_retired_on_upgrade", {"sub": r["provider_sub_id"]})
 
 
 def _retire_plus(user_id: int):
@@ -173,9 +205,9 @@ def subscribe(body: SubscribeIn | None = None, user=Depends(current_user)):
     if plan not in PLANS:
         raise HTTPException(404, "Unknown plan.")
     t = tier(user["id"])
-    if t == "voice" or (t == "plus" and plan == "plus"):
+    if RANK[plan] <= RANK[t]:
         raise HTTPException(409, f"You're already on {PLANS[t]['name']}.")
-    if not configured() or not plan_id(plan):
+    if not (KEY_ID and KEY_SECRET) or not plan_id(plan):
         raise HTTPException(503, "Payments aren't switched on yet. Please try again soon.")
     s = _rzp("POST", "/subscriptions", json={
         "plan_id": plan_id(plan), "total_count": 120, "customer_notify": 1, "quantity": 1,
@@ -207,6 +239,8 @@ def subscribe_verify(body: SubVerifyIn, user=Depends(current_user)):
     db.log_event(user["id"], "subscribe_paid", {"sub": s["id"], "status": s.get("status"), "plan": own["plan"]})
     if own["plan"] == "voice" and is_voice(user["id"]):
         _retire_plus(user["id"])
+    if own["plan"] in ("plus", "voice") and is_subscriber(user["id"]):
+        _retire_chat(user["id"])
     return plan_status(user["id"])
 
 
@@ -214,7 +248,7 @@ def subscribe_verify(body: SubVerifyIn, user=Depends(current_user)):
 def cancel(user=Depends(current_user)):
     # cancel the plan the customer is paying for now: Voice first, then Plus; skip ones already stopping
     rows = db.all_("SELECT * FROM subscriptions WHERE user_id=? AND cancel_requested=0 AND status NOT IN "
-                   "('cancelled','completed','expired') ORDER BY (plan='voice') DESC, updated_at DESC, id DESC", user["id"])
+                   "('cancelled','completed','expired') ORDER BY (plan='voice') DESC, (plan='plus') DESC, updated_at DESC, id DESC", user["id"])
     s = next((r for r in rows if _row_grants(r)), None)
     if not s:
         raise HTTPException(409, "There's no active subscription to cancel.")
@@ -302,6 +336,8 @@ async def webhook(req: Request):
             sub = db.one("SELECT plan FROM subscriptions WHERE provider_sub_id=?", s["id"])
             if sub and sub["plan"] == "voice" and kind in ("subscription.activated", "subscription.charged") and is_voice(row["user_id"]):
                 _retire_plus(row["user_id"])
+            if sub and sub["plan"] in ("plus", "voice") and kind in ("subscription.activated", "subscription.charged") and is_subscriber(row["user_id"]):
+                _retire_chat(row["user_id"])
     elif kind == "order.paid":
         o = payload.get("order", {}).get("entity", {})
         pay = payload.get("payment", {}).get("entity", {})
