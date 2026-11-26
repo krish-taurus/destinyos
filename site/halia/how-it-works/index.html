@@ -59,6 +59,29 @@ nav.top a{text-decoration:none;font:600 15px var(--sans)}nav.top .brand{font:600
 .fx-on .open .mark{visibility:hidden}
 .open .ask{position:absolute;left:0;right:0;bottom:11svh;text-align:center;font:600 clamp(26px,5.4vw,46px)/1.1 var(--serif);padding:0 22px;opacity:calc((var(--p) - .72)*5)}
 
+/* the goal: words that light as you scroll */
+.goal .words{font:600 clamp(34px,7.4vw,84px)/1.04 var(--serif);letter-spacing:-.02em}
+.goal .words span{color:#3A2E20;transition:color .3s,text-shadow .3s}
+.goal .words span.lit{color:var(--ivory)}.goal .words span.lit.g{color:var(--lamp);text-shadow:0 0 40px rgba(231,180,90,.55)}
+/* the path: seven steps drawn as one line */
+.path svg{width:min(100%,380px);height:min(64svh,560px);margin:0 auto;display:block;overflow:visible}
+.path .trail{fill:none;stroke:var(--carve);stroke-width:3}
+.path .lit{fill:none;stroke:var(--lamp);stroke-width:3;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--draw,0));filter:drop-shadow(0 0 8px rgba(231,180,90,.8))}
+.path .node circle{fill:var(--stone);stroke:var(--carve);stroke-width:2.5;transition:fill .3s,stroke .3s,r .3s}
+.path .node text{font:500 14px var(--sans);fill:#5E5140;transition:fill .3s}
+.path .node.on circle{fill:var(--lamp);stroke:var(--lamp-2);r:11px}.path .node.on text{fill:var(--ivory)}
+.path .now{font:600 clamp(30px,5.6vw,56px)/1.05 var(--serif);min-height:2.2em;margin-top:18px}
+.path .count{font:700 clamp(70px,16vw,150px)/.9 var(--serif);color:var(--lamp)}
+/* a rail of lamps that tracks where you are in the story */
+.rail{position:fixed;right:10px;top:50%;translate:0 -50%;z-index:20;display:flex;flex-direction:column;gap:9px;align-items:flex-end;pointer-events:none}
+.rail i{width:7px;height:7px;border-radius:50%;background:#3A2E20;transition:background .3s,box-shadow .3s,transform .3s;position:relative}
+.rail i.done{background:#8A6D38}.rail i.on{background:var(--lamp);box-shadow:0 0 14px 3px rgba(231,180,90,.7);transform:scale(1.5)}
+.rail i.on::after{content:attr(data-n);position:absolute;right:16px;top:50%;translate:0 -50%;white-space:nowrap;font:600 12.5px var(--sans);color:var(--lamp);background:rgba(13,10,7,.85);padding:3px 8px;border-radius:3px}
+@media(max-width:700px){.rail{right:5px}.rail i.on::after{display:none}}
+.pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}@keyframes pop{from{transform:scale(.2)}}
+.flip{animation:flip .45s ease}@keyframes flip{from{transform:rotateX(90deg)}}
+.loshu{perspective:600px}
+
 /* 100 people */
 .people{width:100%;display:grid;grid-template-columns:repeat(10,1fr);gap:clamp(5px,1.4vw,11px);max-width:400px;margin:0 auto}
 .people i{aspect-ratio:1;border-radius:50%;background:var(--carve);transition:background .35s,box-shadow .35s}
@@ -79,7 +102,7 @@ nav.top a{text-decoration:none;font:600 15px var(--sans)}nav.top .brand{font:600
 /* the control */
 .block{padding:120px 0}
 .bars{max-width:640px;margin:34px 0 0}.bars div{margin-bottom:18px}.bars span{display:flex;justify-content:space-between;font-size:16px;margin-bottom:7px}
-.bars b{display:block;height:12px;border-radius:6px;background:var(--carve);overflow:hidden}.bars b i{display:block;height:100%;background:var(--lamp);border-radius:6px}.bars b i.dim{background:#7C6A4C}
+.bars b{display:block;height:12px;border-radius:6px;background:var(--carve);overflow:hidden}.bars b i{display:block;height:100%;width:0;background:var(--lamp);border-radius:6px;transition:width 1.6s cubic-bezier(.2,.8,.2,1)}.bars.in b i{width:var(--w)}.bars b i.dim{background:#7C6A4C}
 /* five pillars */
 .radar text{font:500 13px var(--sans);fill:var(--ivory);text-anchor:middle}
 .radar .web{fill:none;stroke:var(--carve);stroke-width:1.5}
@@ -107,11 +130,12 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 </head>
 <body>
 <canvas id="fx" aria-hidden="true"></canvas>
+<div class="rail" id="rail" aria-hidden="true"></div>
 <nav class="top"><a class="brand" href="/temple/">DESTINY OS</a><a class="gold" href="/halia/">Open HALIA</a></nav>
 
 <main>
 <!-- the question -->
-<section class="scene open" data-scene="open" style="--len:2.8"><div class="pin">
+<section class="scene open" data-scene="open" data-step="The question" style="--len:2.8"><div class="pin">
   <svg class="star" id="star" viewBox="-100 -100 200 200" aria-hidden="true"></svg><div class="glow"></div>
   <div class="q"><div class="mark" id="mark">?</div></div>
   <p class="ask">Can the day you were born predict your life?</p>
@@ -123,8 +147,30 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 </div></section>
 <div class="frieze"></div>
 
+<!-- the goal -->
+<section class="scene goal" data-scene="goal" data-step="The goal" style="--len:2.6"><div class="pin"><div class="wrap">
+  <p class="era">The goal of HALIA</p>
+  <p class="words" id="goal">To help you make <em>one better decision today</em>, using what is true about <em>your life right now</em>. Not a prophecy. A next step.</p>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- the path -->
+<section class="scene path" data-scene="path" data-step="The path" style="--len:4"><div class="pin"><div class="wrap split">
+  <div>
+    <p class="era">How we got here</p>
+    <div class="count"><span id="path-n">1</span><small style="font-size:.3em;color:var(--dim)"> of 7</small></div>
+    <div class="now" id="path-t"></div>
+    <p class="cap">Seven steps from a question to HALIA. Each one is told in full below.</p>
+  </div>
+  <svg id="path" viewBox="0 0 340 540" role="img" aria-label="Seven steps from a question to HALIA">
+    <path class="trail" id="trail" d="M60 26 C300 40 310 120 170 138 S30 214 170 240 S310 318 170 342 S30 420 170 446 S250 500 290 520"/>
+    <path class="lit" pathLength="1" d="M60 26 C300 40 310 120 170 138 S30 214 170 240 S310 318 170 342 S30 420 170 446 S250 500 290 520"/>
+  </svg>
+</div></div></section>
+<div class="frieze"></div>
+
 <!-- 1. the first hundred -->
-<section class="scene" data-scene="pilot" style="--len:3.2"><div class="pin"><div class="wrap split">
+<section class="scene" data-scene="pilot" data-step="A hundred people" style="--len:3.2"><div class="pin"><div class="wrap split">
   <div>
     <p class="era">Experiment one</p>
     <h2 class="title">We began with a hundred people.</h2>
@@ -136,7 +182,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 <div class="frieze"></div>
 
 <!-- 2. the calendar trap -->
-<section class="scene" data-scene="grid" style="--len:3"><div class="pin"><div class="wrap split">
+<section class="scene" data-scene="grid" data-step="The calendar trap" style="--len:3"><div class="pin"><div class="wrap split">
   <div>
     <div class="year" id="year">1901</div>
     <div class="loshu" id="loshu" aria-hidden="true"><b>4</b><b>9</b><b>2</b><b>3</b><b>5</b><b>7</b><b>8</b><b>1</b><b>6</b></div>
@@ -151,7 +197,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 <div class="frieze"></div>
 
 <!-- 3. the signal that vanished -->
-<section class="scene fall" data-scene="fall" style="--len:3.2"><div class="pin"><div class="wrap">
+<section class="scene fall" data-scene="fall" data-step="The signal that vanished" style="--len:3.2"><div class="pin"><div class="wrap">
   <p class="era">Experiment three</p>
   <h2 class="title" style="max-width:10em">A signal appeared. Then it vanished.</h2>
   <div class="num" style="margin-top:20px"><span id="fall-n">0.73</span></div>
@@ -161,7 +207,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 <div class="frieze"></div>
 
 <!-- 4. scale -->
-<section class="scene" data-scene="scale" style="--len:3.4"><div class="pin"><div class="wrap">
+<section class="scene" data-scene="scale" data-step="Bigger tests" style="--len:3.4"><div class="pin"><div class="wrap">
   <p class="era">Experiments four to seven</p>
   <h2 class="title">So we made the test bigger.</h2>
   <div class="num" style="margin-top:20px;font-size:clamp(84px,22vw,250px)"><span id="scale-n">71</span></div>
@@ -171,7 +217,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 <div class="frieze"></div>
 
 <!-- 5. the turn -->
-<section class="scene turn" data-scene="turn" style="--len:4"><div class="pin"><div class="wrap">
+<section class="scene turn" data-scene="turn" data-step="The turn" style="--len:4"><div class="pin"><div class="wrap">
   <p class="era">The turn</p>
   <h2 class="title" style="font-size:clamp(34px,6.4vw,72px)">Something else was predicting all along.</h2>
   <div class="num" style="margin-top:14px"><span id="turn-n">50</span><small>%</small></div>
@@ -186,17 +232,17 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
   <p class="era">The control</p>
   <h2 class="title" style="max-width:11em">We gave the model the wrong birthdays.</h2>
   <p class="lead">One last check, on 3,583 seasons of baseball careers. Each player's numerology, zodiac sign and lunar phase went in. Then another player's did.</p>
-  <div class="bars">
-    <div><span>Track record only<strong>73.9%</strong></span><b><i style="width:73.9%"></i></b></div>
-    <div><span>Plus real birth details<strong>73.0%</strong></span><b><i class="dim" style="width:73%"></i></b></div>
-    <div><span>Plus someone else's birth details<strong>73.2%</strong></span><b><i class="dim" style="width:73.2%"></i></b></div>
+  <div class="bars" id="bars">
+    <div><span>Track record only<strong>73.9%</strong></span><b><i style="--w:73.9%"></i></b></div>
+    <div><span>Plus real birth details<strong>73.0%</strong></span><b><i class="dim" style="--w:73%"></i></b></div>
+    <div><span>Plus someone else's birth details<strong>73.2%</strong></span><b><i class="dim" style="--w:73.2%"></i></b></div>
   </div>
   <p class="cap">It made no difference whose birthday it was. So HALIA is built on what you tell it. Astrology and numerology readings remain a separate, traditional part of Destiny OS.</p>
 </div></section>
 <div class="frieze"></div>
 
 <!-- 7. how HALIA measures a life -->
-<section class="scene" data-scene="radar" style="--len:3.2"><div class="pin"><div class="wrap split">
+<section class="scene" data-scene="radar" data-step="Five measures" style="--len:3.2"><div class="pin"><div class="wrap split">
   <div>
     <p class="era">What we built</p>
     <h2 class="title">HALIA measures five things.</h2>
@@ -208,7 +254,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 <div class="frieze"></div>
 
 <!-- 8. alignment -->
-<section class="scene" data-scene="align" style="--len:3.2"><div class="pin"><div class="wrap split">
+<section class="scene" data-scene="align" data-step="Measuring a match" style="--len:3.2"><div class="pin"><div class="wrap split">
   <div>
     <div class="venn" aria-hidden="true"><i class="a"></i><i class="b"></i><div class="n" id="al-n">0</div></div>
     <p class="cap" style="text-align:center;margin:8px auto 0">An example. It shows how closely two sets of answers match, not how things will turn out.</p>
@@ -228,7 +274,7 @@ footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-siz
 <div class="frieze"></div>
 
 <!-- 9. confident or silent -->
-<section class="scene" data-scene="gate" style="--len:3.2"><div class="pin"><div class="wrap split">
+<section class="scene" data-scene="gate" data-step="Confident, or silent" style="--len:3.2"><div class="pin"><div class="wrap split">
   <div>
     <p class="era">The rule we kept</p>
     <h2 class="title">Confident, or silent.</h2>
@@ -274,6 +320,18 @@ $('h1').innerHTML = $('h1').textContent.trim().split(/\s+/).map(w => `<span>${w}
 $('people').innerHTML = '<i></i>'.repeat(100); const people = [...$('people').children];
 $('dots').innerHTML = '<i></i>'.repeat(100); const dots = [...$('dots').children];
 const cells = [...$('loshu').children];
+/* the goal: split into words, keeping which ones are emphasised */
+(function () { const g = $('goal'); let h = ''; g.childNodes.forEach(n => n.textContent.trim().split(/\s+/).filter(Boolean).forEach(w => h += `<span${n.nodeName === 'EM' ? ' class="g"' : ''}>${w}</span> `)); g.innerHTML = h.replace(/ <span([^>]*)>([,.])/g, '<span$1>$2'); })();
+const goalWords = [...$('goal').children];
+/* the path: seven nodes placed along the line */
+const STEPS = [['The question', 'Can a birth date predict a life?'], ['A hundred people', 'A gain that was seven people.'], ['The calendar trap', 'The grid was reading the date system.'], ['The signal that vanished', 'It failed on people it had not seen.'],
+  ['Bigger tests', 'Up to 1,31,152 records. Nothing.'], ['The turn', 'Where you stand today predicts. 83%.'], ['HALIA', 'So we built on that.']];
+const trail = $('trail'), TL = trail.getTotalLength(), nodes = STEPS.map(([n], i) => { const f = i / (STEPS.length - 1), q = trail.getPointAtLength(TL * f), g = $('path').appendChild(el('g', { class: 'node' }));
+  g.appendChild(el('circle', { cx: q.x, cy: q.y, r: 8 })); const left = q.x > 200; g.appendChild(el('text', { x: q.x + (left ? -18 : 18), y: q.y + 5, 'text-anchor': left ? 'end' : 'start' }, n)); return { g, f, q }; });
+/* the rail */
+const railSteps = [...document.querySelectorAll('[data-step]')]; $('rail').innerHTML = railSteps.map(e => `<i data-n="${e.dataset.step}"></i>`).join(''); const railDots = [...$('rail').children];
+new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); o.disconnect(); } }), { threshold: .5 }).observe($('bars'));
+let lastYear = 0, lastLit = 0;
 /* radar: five pillars, each measured 1 to 5 */
 const PIL = ['Career', 'Relationships', 'Money', 'Happiness', 'Wellbeing'], LEVEL = [4, 3, 2, 4, 3], radar = $('radar');
 for (let k = 1; k <= 5; k++) radar.appendChild(el('polygon', { class: 'web', points: PIL.map((_, i) => pol(k * 24, i * 72 - 90).join(',')).join(' ') }));
@@ -286,12 +344,18 @@ const SCALE = [[0, 71], [.12, 71], [.3, 2603], [.4, 2603], [.58, 28074], [.68, 2
 const SCALE_S = [[.21, 'young athletes'], [.49, 'baseball careers'], [.79, 'Olympic athletes'], [2, 'baseball games, day by day']];
 const draw = {
   open(e, p, r) { e.style.setProperty('--p', p); FX.morph(p, clamp(p * 24) * clamp((r.bottom - innerHeight * .25) / (innerHeight * .75))); },
+  goal(e, p) { const n = Math.round(clamp(p * 1.2) * goalWords.length); goalWords.forEach((w, i) => w.classList.toggle('lit', i < n));
+    once('goal', n >= goalWords.length, () => { const [x, y] = mid($('goal')); FX.burst(x, y, 600, 16); }); },
+  path(e, p) { const d = clamp(p * 1.08); e.style.setProperty('--draw', d); let cur = 0;
+    nodes.forEach((n, i) => { const on = d >= n.f - .005; n.g.classList.toggle('on', on); if (on) cur = i;
+      once('node' + i, on, () => { const r = $('path').getBoundingClientRect(); FX.burst(r.left + n.q.x / 340 * r.width, r.top + n.q.y / 540 * r.height, i === 6 ? 700 : 150, i === 6 ? 16 : 8); }); });
+    $('path-n').textContent = cur + 1; $('path-t').textContent = STEPS[cur][1]; },
   pilot(e, p) { const n = p < .38 ? 33 : 40, seven = p > .7;
-    people.forEach((d, i) => { d.classList.toggle('on', i < Math.min(n, Math.round(clamp(p * 4) * 33) + (p >= .38 ? 7 : 0))); d.classList.toggle('x', seven && i >= 33 && i < 40); });
+    const lit = Math.min(n, Math.round(clamp(p * 4) * 33) + (p >= .38 ? 7 : 0)); people.forEach((d, i) => { const on = i < lit; if (on && !d.classList.contains('on')) { d.classList.remove('pop'); void d.offsetWidth; d.classList.add('pop'); } d.classList.toggle('on', on); d.classList.toggle('x', seven && i >= 33 && i < 40); });
     $('pilot-t').textContent = p < .38 ? 'A model guessed each person\'s profession from ordinary facts. It got about 33 in 100 right.' : !seven ? 'We added the planets at birth. It rose to about 40. It looked like a discovery.' : 'The whole gain was seven people. And the slow planets were only marking the year each person was born.';
     once('pilot', seven, () => { const [x, y] = mid(people[36]); FX.burst(x, y, 260, 9, '#C8442B'); }); },
   grid(e, p) { const y = 1900 + Math.round(clamp(p * 1.05) * 99), ds = String(y); $('year').textContent = y;
-    cells.forEach(c => { const d = c.textContent; c.classList.toggle('lock', d === '1' || d === '9'); c.classList.toggle('on', ds.slice(2).includes(d)); }); },
+    cells.forEach(c => { const d = c.textContent, on = ds.slice(2).includes(d); if (y !== lastYear && on && !c.classList.contains('on')) { c.classList.remove('flip'); void c.offsetWidth; c.classList.add('flip'); } c.classList.toggle('lock', d === '1' || d === '9'); c.classList.toggle('on', on); }); lastYear = y; },
   fall(e, p) { const v = stops(p, [[0, .73], [.3, .73], [.62, .54], [.72, .54], [.9, .64], [1, .64]]); $('fall-n').textContent = v.toFixed(2); e.style.setProperty('--v', v * 100); e.style.setProperty('--live', clamp((v - .54) / .19));
     $('fall-s').textContent = p < .3 ? 'Name numbers seemed to pick out medal winners among 71 young athletes.' : p < .72 ? 'Tested on countries the model had not seen, it fell to chance.' : 'And when we shifted every birth date to a wrong one, the "signal" came back. It was noise.';
     once('fall', p > .32, () => { const [x, y] = mid($('fall-n')); FX.burst(x, y, 700, 15); }); },
@@ -306,7 +370,7 @@ const draw = {
     $('gate-n').textContent = Math.round(acc); $('gate-s').textContent = n === 100 ? 'correct, answering everyone' : `correct, answering ${n} in 100`; dots.forEach((d, i) => d.classList.toggle('on', (i * 37) % 100 < n)); },
 };
 const scenes = [...document.querySelectorAll('.scene')];
-function tick() { const vh = innerHeight; FX.swarm(46); FX.morph(0, 0); for (const e of scenes) { const r = e.getBoundingClientRect(); if (r.bottom < -vh || r.top > vh * 2) continue; draw[e.dataset.scene](e, still ? 1 : clamp(-r.top / (r.height - vh)), r); } }
+function tick() { const vh = innerHeight; FX.swarm(46); FX.morph(0, 0); let at = -1; railSteps.forEach((e, i) => { if (e.getBoundingClientRect().top < vh * .5) at = i; }); railDots.forEach((d, i) => { d.classList.toggle('on', i === at); d.classList.toggle('done', i < at); }); for (const e of scenes) { const r = e.getBoundingClientRect(); if (r.bottom < -vh || r.top > vh * 2) continue; draw[e.dataset.scene](e, still ? 1 : clamp(-r.top / (r.height - vh)), r); } }
 let queued = false; addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; tick(); }); } }, { passive: true }); addEventListener('resize', tick);
 
 /* one canvas: embers, sparks, and the headline that breaks into gold dust and re-forms as a question mark */
