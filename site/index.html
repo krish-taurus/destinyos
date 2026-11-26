@@ -3,756 +3,656 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FBFAF7">
-<title>Destiny OS — Your numbers, decoded</title>
-<meta name="description" content="Numerology, Vedic astrology and mindset guidance in one place, by Dr. Krish Bharggav. Get your free report, then daily guidance on WhatsApp.">
+<meta name="theme-color" content="#0D0A07">
+<title>Destiny OS — numerology and Vedic astrology, read with discipline</title>
+<meta name="description" content="Walk through three thousand years of Jyotisha, see your own chart and numbers revealed, get a free report, and meet HALIA, practical guidance built on your life today.">
+<script src="/config.js"></script>
+<script>window.FREE_REPORT_URL = window.DESTINY_SIGNUP_OPEN !== true ? (window.DESTINY_WHATSAPP || "https://wa.me/917975554666") : "/free-report/?src=website";</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600&family=Noto+Serif+Devanagari:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#FBFAF7; --paper:#FFFFFF; --ink:#15171F; --muted:#6B6F7E; --line:#E9E6DE;
-  --gold:#B38A2E; --gold-2:#D9B45A; --gold-soft:#F6EEDB; --violet:#6B5BD6; --violet-soft:#EEEBFB;
-  --green:#2F8F6B;
-}
+:root{--stone:#0D0A07;--stone-2:#17120C;--carve:#2A2117;--lamp:#E7B45A;--lamp-2:#F6D99A;--kumkum:#C8442B;--ivory:#F3E9D6;--dim:#A39680;
+  --serif:"Cormorant Garamond",Georgia,serif;--deva:"Noto Serif Devanagari","Cormorant Garamond",serif;--sans:"DM Sans",system-ui,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font:400 16.5px/1.65 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-img,svg{display:block}
-.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
-.serif{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;letter-spacing:-.005em}
-.em{font-style:italic;color:var(--gold)}
-.mono{font-family:"DM Mono",monospace}
-.eyebrow{font:500 12px/1 "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:10px}
-.eyebrow::before{content:"";width:22px;height:1px;background:currentColor}
-h2{font-size:clamp(34px,4.6vw,54px);line-height:1.05;margin:16px 0 14px}
-.sub{color:var(--muted);max-width:620px;font-size:17.5px}
-section{padding:110px 0}
-.center{text-align:center}.center .sub{margin-left:auto;margin-right:auto}
+html{color-scheme:dark}
+body{background:var(--stone);color:var(--ivory);font:400 18px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--lamp);outline-offset:3px}
+.hide{display:none!important}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px;width:100%}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.015em}
+.title{font:600 clamp(46px,10.5vw,124px)/.92 var(--serif);letter-spacing:-.025em}
+.deva{font-family:var(--deva);font-weight:700;line-height:1.25;color:var(--lamp);text-shadow:0 0 60px rgba(231,180,90,.45)}
+.lead{font-size:clamp(18px,2.4vw,22px);line-height:1.55;color:#D9CDB6;max-width:31em}
+.cap{font-size:14px;line-height:1.5;color:var(--dim);max-width:40em}
+.gold{color:var(--lamp)}
+#embers{position:fixed;inset:0;z-index:5;pointer-events:none}
+main,nav.top,footer{position:relative;z-index:2}
+nav.top{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:linear-gradient(rgba(13,10,7,.9),transparent)}
+nav.top a{text-decoration:none;font:600 15px var(--sans)}
+nav.top .brand{font:600 19px var(--serif);letter-spacing:.2em}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:13px 26px;border-radius:4px;border:1.5px solid var(--lamp);background:var(--lamp);color:#1A1208;font:600 16.5px var(--sans);cursor:pointer;text-decoration:none;transition:box-shadow .3s,transform .15s}
+.btn:hover{box-shadow:0 0 34px rgba(231,180,90,.5)}.btn:active{transform:scale(.98)}
+.btn.line{background:transparent;color:var(--lamp)}.btn:disabled{opacity:.5;cursor:default}
 
-/* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:600;font-size:15.5px;transition:transform .25s,box-shadow .25s,background .25s}
-.btn-dark{background:var(--ink);color:#fff;box-shadow:0 10px 30px -12px rgba(21,23,31,.5)}
-.btn-dark:hover{transform:translateY(-2px);box-shadow:0 16px 36px -14px rgba(21,23,31,.55)}
-.btn-line{border:1px solid var(--line);background:var(--paper)}
-.btn-line:hover{border-color:var(--gold)}
-.btn .arr{transition:transform .25s}.btn:hover .arr{transform:translateX(4px)}
+/* carved frieze between scenes: a band of lotus petals */
+.frieze{height:34px;background:
+  radial-gradient(circle at 50% 100%,transparent 9px,var(--carve) 10px,var(--carve) 11.5px,transparent 12.5px) 0 0/28px 17px repeat-x,
+  radial-gradient(circle at 50% 0,transparent 9px,var(--carve) 10px,var(--carve) 11.5px,transparent 12.5px) 14px 17px/28px 17px repeat-x;
+  border-block:1.5px solid var(--carve)}
 
-/* nav */
-header.nav{position:sticky;top:0;z-index:50;background:rgba(251,250,247,.82);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid transparent;transition:border-color .3s}
-header.nav.scrolled{border-color:var(--line)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;height:70px}
-.logo{display:flex;align-items:center;gap:11px}
-.logo span{font:600 21px/1 "Cormorant Garamond",serif;letter-spacing:.16em}
-.logo b{font-weight:600;color:var(--gold)}
-.links{display:flex;gap:28px;font-size:14.5px;color:var(--muted)}
-.links a:hover{color:var(--ink)}
-.nav .btn{padding:11px 20px;font-size:14px}
+/* pinned scenes: the script moves --p from 0 to 1 while each is pinned */
+.scene{position:relative;height:calc(var(--len,3)*100svh)}
+.pin{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.static .scene{height:auto}.static .pin{position:static;height:auto;min-height:100svh;padding:100px 0}
+.split{display:grid;gap:26px;align-items:center}
+@media(min-width:860px){.split{grid-template-columns:1fr 1fr;gap:60px}}
+.art{width:min(100%,470px);margin:0 auto;display:block}
+.art *{vector-effect:non-scaling-stroke}
 
-/* reveal */
-.rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
-.rv.in{opacity:1;transform:none}
-.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+/* 1. the gate */
+.sanctum{position:absolute;inset:0;display:grid;place-items:center;text-align:center;background:radial-gradient(ellipse at 50% 58%,rgba(231,180,90,.34),rgba(231,180,90,.06) 38%,transparent 62%)}
+.sanctum .deva{font-size:clamp(84px,25vw,290px);opacity:calc((var(--p) - .35)*2.4);transform:scale(calc(.86 + var(--p)*.14))}
+.sanctum p{opacity:calc((var(--p) - .62)*3.4)}
+.star{position:absolute;left:50%;top:50%;width:min(150vw,1100px);aspect-ratio:1;translate:-50% -50%;opacity:.5;animation:turn 240s linear infinite}
+@keyframes turn{to{rotate:360deg}}
+.door{position:absolute;top:0;bottom:0;width:50.5%;background:
+  linear-gradient(90deg,rgba(0,0,0,.5),transparent 18%,transparent 82%,rgba(0,0,0,.5)),
+  repeating-linear-gradient(0deg,transparent 0 118px,rgba(231,180,90,.16) 118px 120px),
+  repeating-linear-gradient(90deg,transparent 0 98px,rgba(231,180,90,.1) 98px 100px),var(--stone-2);
+  box-shadow:inset 0 0 120px #000;will-change:transform}
+.door.l{left:0;border-right:2px solid rgba(231,180,90,.5);transform:translateX(calc(var(--open)*-100%))}
+.door.r{right:0;border-left:2px solid rgba(231,180,90,.5);transform:translateX(calc(var(--open)*100%))}
+.door svg{position:absolute;top:27%;width:min(34vw,230px);translate:0 -50%;opacity:.75}
+.door.l svg{right:7%}.door.r svg{left:7%}
+.hero{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 9svh;opacity:calc(1 - var(--p)*5);pointer-events:none}
+.hero .title{animation:rise 1.5s .5s cubic-bezier(.2,.8,.2,1) both}
+.hero .lead{margin-top:18px;animation:rise 1.5s .8s cubic-bezier(.2,.8,.2,1) both}
+.hero .hint{margin-top:26px;font-size:15px;color:var(--lamp);animation:rise 1.5s 1.2s both}
+.hero .hint::after{content:"";display:block;width:1.5px;height:44px;background:linear-gradient(var(--lamp),transparent);margin-top:10px;animation:drip 2s infinite}
+@keyframes rise{from{opacity:0;transform:translateY(34px)}}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}100%{transform:scaleY(1);opacity:0}}
+.flame{position:absolute;left:50%;top:27svh;translate:-50% 0;width:20px;height:34px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 72%,#fff,var(--lamp-2) 34%,var(--lamp) 60%,transparent 74%);filter:blur(.4px);box-shadow:0 0 70px 26px rgba(231,180,90,.36);animation:flick 3.2s infinite ease-in-out;opacity:calc(1 - var(--p)*4)}
+@keyframes flick{0%,100%{transform:scale(1) rotate(-1.5deg)}30%{transform:scale(1.07,.95) rotate(2deg)}62%{transform:scale(.95,1.06) rotate(-2.5deg)}}
 
-/* HERO */
-.hero{padding:70px 0 90px;position:relative}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
-.hero h1{font-size:clamp(46px,7vw,86px);line-height:.98;margin:22px 0 24px}
-.hero .lead{font-size:19px;color:var(--muted);max-width:540px}
-.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
-.trust{display:flex;flex-wrap:wrap;gap:22px;margin-top:38px;font-size:13.5px;color:var(--muted)}
-.trust span{display:flex;align-items:center;gap:8px}
-.trust i{width:6px;height:6px;border-radius:50%;background:var(--gold-2);display:inline-block}
-.orbit{position:relative;aspect-ratio:1;max-width:500px;margin-left:auto;width:100%}
-.orbit svg{width:100%;height:100%}
-.ring{transform-origin:250px 250px}
-.spin-slow{animation:spin 80s linear infinite}
-.spin-rev{animation:spin 60s linear infinite reverse}
-@keyframes spin{to{transform:rotate(360deg)}}
-.num-node text{font:500 22px "Cormorant Garamond",serif;fill:var(--ink)}
-.pulse{animation:pulse 3.6s ease-in-out infinite;transform-origin:250px 250px}
-@keyframes pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.75;transform:scale(1.04)}}
-.hero-card{position:absolute;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 18px 40px -22px rgba(21,23,31,.25);font-size:13px;animation:float 6s ease-in-out infinite}
-.hero-card b{display:block;font:600 22px "DM Sans",system-ui,sans-serif;margin-top:2px}
-.hero-card small{color:var(--muted);font-size:11.5px}
-.hc1{left:-6%;top:17%}.hc2{left:-6%;bottom:12%;animation-delay:-3s}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.fx-on .hero{opacity:calc(1 - var(--p)*24)}
+.fx-on .sanctum .deva{visibility:hidden}
+.sanctum>div{transform:scale(calc(1 + var(--p)*.08))}
 
-/* HOW */
-.how{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:56px;position:relative}
-.steps .track{position:absolute;top:34px;left:12%;right:12%;height:2px;background:var(--line);overflow:hidden}
-.steps .track::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--gold-2),var(--violet));transform:scaleX(0);transform-origin:left;transition:transform 1.8s cubic-bezier(.2,.7,.2,1) .3s}
-.steps.in .track::after{transform:scaleX(1)}
-.step{text-align:center;position:relative;padding:0 10px}
-.step .bubble{width:68px;height:68px;border-radius:50%;margin:0 auto 22px;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;font:600 24px "Cormorant Garamond",serif;color:var(--gold);position:relative;z-index:1}
-.step h3{font-size:19px;margin-bottom:8px}
-.step p{color:var(--muted);font-size:15px;max-width:290px;margin:0 auto}
+/* Nalanda: a brick city of learning at dusk, with people walking through it */
+.nalanda .pin{background:linear-gradient(#0D0A07 0%,#1C1109 22%,#4A2610 42%,#9A531A 56%,#D98A2B 64%,#D98A2B 100%);justify-content:flex-start;padding-top:86px}
+.city{position:absolute;inset:0;width:100%;height:100%;transform:scale(calc(1.02 + var(--p)*.2));transform-origin:50% 78%}
+.city .sun{fill:#FBE3A6;filter:blur(10px)}
+.city .far{transform:translateX(calc(var(--p)*-26px))}
+.city .mid{transform:translateX(calc(var(--p)*-60px))}
+.city .front{transform:translateX(calc(var(--p)*-120px))}
+.city .cell{fill:#E7B45A;animation:lampglow 4s ease-in-out infinite alternate}
+.city .cell:nth-child(3n){animation-delay:-1.7s}.city .cell:nth-child(4n){animation-delay:-2.9s;opacity:.25}
+@keyframes lampglow{from{opacity:.38}to{opacity:.8}}
+.walker{animation:walk var(--d) linear var(--delay) infinite}
+.walker.rev{animation-direction:reverse}
+@keyframes walk{from{transform:translateX(-70px)}to{transform:translateX(1270px)}}
+.walker .leg{transform-box:fill-box;transform-origin:50% 0;animation:step .62s ease-in-out infinite alternate}
+.walker .leg.b{animation-delay:-.62s}
+@keyframes step{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
+.nalanda .over{position:relative;z-index:2;text-shadow:0 2px 24px #0D0A07,0 0 50px #0D0A07}
+.nalanda .pin::before{content:"";position:absolute;inset:0 0 45% 0;z-index:1;background:linear-gradient(rgba(13,10,7,.92) 30%,transparent);pointer-events:none}
+.nalanda .title{font-size:clamp(64px,15vw,190px);opacity:calc(var(--p)*6);transform:translateY(calc((1 - min(var(--p)*5,1))*30px))}
+.nalanda .lead,.nalanda .cap,.nalanda .era{opacity:calc((var(--p) - .22)*5);margin-top:14px}
+.static .nalanda .title,.static .nalanda .lead,.static .nalanda .cap,.static .nalanda .era{opacity:1;transform:none}
+.slam{animation:slam .7s cubic-bezier(.2,.9,.2,1)}
+@keyframes slam{from{transform:scale(2.6);filter:blur(14px);opacity:0}}
 
-/* DECODER */
-.decoder{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start;margin-top:56px}
-.input-card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:28px}
-.input-card label{display:block;font-size:13px;color:var(--muted);margin:0 0 8px}
-.input-card input{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font:500 18px "DM Sans",system-ui,sans-serif;color:var(--ink);background:var(--bg);outline:none;transition:border-color .2s}
-.input-card input:focus{border-color:var(--gold)}
-.input-card .row{margin-bottom:18px}
-.sys-toggle{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:22px}
-.sys-toggle button{border:0;background:none;padding:9px 16px;border-radius:999px;font:500 13.5px "DM Sans",system-ui,sans-serif;color:var(--muted);cursor:pointer;transition:.25s}
-.sys-toggle button.on{background:var(--ink);color:#fff}
-.hint{font-size:13px;color:var(--muted);margin-top:4px}
-.board{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:28px;min-height:420px}
-.tiles{display:flex;flex-wrap:wrap;gap:8px;min-height:92px}
-.tile{width:48px;border-radius:12px;background:var(--bg);border:1px solid var(--line);text-align:center;padding:8px 0 6px;animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
-.tile .l{font:600 17px "DM Sans",system-ui,sans-serif;display:block}
-.tile .n{font:500 15px "DM Mono",ui-monospace,monospace;color:var(--gold);display:block;border-top:1px dashed var(--line);margin-top:6px;padding-top:4px}
-.tile.space{width:16px;border:0;background:none}
-@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.8)}to{opacity:1;transform:none}}
-.reduce{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:26px 0 8px;font:500 18px "DM Mono",ui-monospace,monospace;color:var(--muted)}
-.reduce .chip{padding:6px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);color:var(--ink);animation:pop .5s both}
-.reduce .eq{color:var(--line)}
-.result{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;margin-top:20px;padding-top:24px;border-top:1px solid var(--line)}
-.bignum{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;font:500 52px "Cormorant Garamond",serif;color:var(--gold);background:var(--gold-soft);position:relative}
-.bignum::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--gold-2);opacity:.5;animation:ring 2.6s ease-out infinite}
-@keyframes ring{from{transform:scale(.9);opacity:.7}to{transform:scale(1.25);opacity:0}}
-.result h4{font:600 19px "DM Sans",system-ui,sans-serif;margin-bottom:4px}
-.result p{color:var(--muted);font-size:15px}
-.result .label{font:500 11px "DM Mono",ui-monospace,monospace;letter-spacing:.1em;color:var(--violet);text-transform:uppercase}
-.mini{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
-.mini div{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:14px}
-.mini small{display:block;font:500 11px "DM Mono",ui-monospace,monospace;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
-.mini b{font:500 30px "Cormorant Garamond",serif;color:var(--ink)}
-.mini span{font-size:13px;color:var(--muted);display:block}
+/* 2 to 4. the story */
+.era{font:600 15px var(--sans);color:var(--lamp);margin-bottom:12px}
+.story .title{font-size:clamp(40px,7.6vw,92px)}
+.story .lead{margin-top:20px}.story .cap{margin-top:16px}
+.ring text{font:500 13px var(--sans);fill:var(--dim)}
+.nak{font:600 clamp(24px,5vw,34px) var(--serif);fill:var(--ivory);text-anchor:middle}
+.spoke{stroke:var(--lamp);stroke-width:1.2;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--draw,0))}
+.glyph{font:400 21px serif;fill:var(--lamp);text-anchor:middle;dominant-baseline:central}
+.rishi path,.rishi ellipse,.rishi circle,.rishi line{fill:none;stroke:var(--lamp);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--draw,0))}
+.rishi .glow{fill:rgba(231,180,90,.22);stroke:none;opacity:var(--draw,0)}
+.parashara .deva{font-size:clamp(26px,5.4vw,50px);margin-bottom:6px}
 
-/* NINE */
-.nine{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;margin-top:52px}
-.n9{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px 10px 18px;text-align:center;cursor:default;transition:transform .35s,border-color .35s,box-shadow .35s;position:relative;overflow:hidden}
-.n9 .d{font:500 46px/1 "Cormorant Garamond",serif;color:var(--ink);transition:color .3s}
-.n9 .w{font:600 12.5px "DM Sans",system-ui,sans-serif;margin-top:10px;display:block}
-.n9 .k{font-size:12px;color:var(--muted);margin-top:4px;display:block;line-height:1.4}
-.n9:hover{transform:translateY(-6px);border-color:var(--gold-2);box-shadow:0 20px 40px -26px rgba(179,138,46,.6)}
-.n9:hover .d{color:var(--gold)}
-.n9::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--gold-2),var(--violet));transform:scaleX(0);transition:transform .4s}
-.n9:hover::before{transform:scaleX(1)}
+/* 5. the rishi asks */
+.ask{padding:120px 0 90px;text-align:center}
+.ask .title{font-size:clamp(42px,8.6vw,100px)}
+.ask form{max-width:440px;margin:34px auto 0;text-align:left}
+.q{margin-top:26px;opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s;pointer-events:none}
+.q.on{opacity:1;transform:none;pointer-events:auto}
+.q label{display:block;font:italic 500 clamp(24px,5vw,30px)/1.2 var(--serif);color:var(--lamp-2);margin-bottom:10px}
+.q input{width:100%;min-height:56px;padding:12px 2px;background:transparent;border:0;border-bottom:1.5px solid var(--dim);font-size:22px;border-radius:0}
+.q input:focus{outline:0;border-color:var(--lamp)}
+.q .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.q small{display:block;color:var(--dim);font-size:14px;margin-top:8px}
+.err{color:#F08A6E;font-size:15px;min-height:1.4em;margin-top:14px}
 
-/* CONCEPTS */
-.concepts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px}
-.cc{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:26px;transition:transform .35s,box-shadow .35s}
-.cc:hover{transform:translateY(-4px);box-shadow:0 26px 50px -34px rgba(21,23,31,.35)}
-.cc .viz{height:120px;border-radius:14px;background:var(--bg);margin-bottom:20px;display:grid;place-items:center;overflow:hidden}
-.cc .viz svg{width:100%;height:100%}
-.cc h3{font-size:19px;margin-bottom:6px}
-.cc .how-calc{font:500 12px "DM Mono",ui-monospace,monospace;color:var(--violet);margin-bottom:10px;display:block}
-.cc p{color:var(--muted);font-size:15px}
-.draw{stroke-dasharray:400;stroke-dashoffset:400}
-.in .draw{animation:draw 2.2s cubic-bezier(.4,0,.2,1) forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-.bar-grow{transform-origin:left;transform:scaleX(0)}
-.in .bar-grow{animation:grow 1.4s cubic-bezier(.2,.7,.2,1) forwards}
-@keyframes grow{to{transform:scaleX(1)}}
-.blink{animation:blink 2s ease-in-out infinite}
-@keyframes blink{50%{opacity:.25}}
+/* 6. the reveal */
+.reveal{padding:40px 0 110px}
+.sum{font:600 clamp(20px,4.6vw,34px)/1.3 var(--serif);color:var(--dim);min-height:1.4em;letter-spacing:.06em}
+.big{font:700 clamp(150px,42vw,360px)/.8 var(--serif);color:var(--lamp);text-shadow:0 0 90px rgba(231,180,90,.4);letter-spacing:-.04em}
+.tiles{opacity:0;transition:opacity .5s;display:grid;grid-template-columns:repeat(2,1fr);gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:44px}
+@media(min-width:760px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tiles.on{opacity:1}
+.tiles div{background:var(--stone);padding:24px 18px;opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}
+.tiles div.on{opacity:1;transform:none}
+.tiles b{display:block;font:700 62px/1 var(--serif);color:var(--ivory)}
+.tiles span{display:block;font-size:14.5px;color:var(--dim);margin-top:8px}.tiles em{display:block;font-style:normal;color:var(--lamp);font-size:15px;margin-top:2px}
+.chartwrap{margin-top:110px}
+.wheel{width:min(100%,560px);margin:26px auto 0;display:block;overflow:visible}
+.wheel .sec{fill:none;stroke:var(--carve);stroke-width:1.5}
+.wheel .sn{font:500 11.5px var(--sans);fill:var(--dim);text-anchor:middle;dominant-baseline:central}
+.wheel .pl circle{fill:var(--stone);stroke:var(--lamp);stroke-width:1.5}
+.wheel .pl text{font:400 17px serif;fill:var(--lamp-2);text-anchor:middle;dominant-baseline:central}
+.wheel .asc{stroke:var(--kumkum);stroke-width:2.5}
+.facts{display:grid;gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:34px}
+@media(min-width:760px){.facts{grid-template-columns:repeat(4,1fr)}}
+.facts div{background:var(--stone);padding:20px 18px}.facts span{display:block;font-size:14.5px;color:var(--dim)}.facts b{font:600 28px/1.2 var(--serif)}
 
-/* HOLISTIC */
-.holistic{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.venn-wrap{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:30px}
-.venn svg{width:100%;max-width:470px;margin:0 auto}
-.venn circle{transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
-.venn .c1{transform:translate(-40px,-30px)}.venn .c2{transform:translate(40px,-30px)}.venn .c3{transform:translate(0,40px)}
-.venn.in .c1,.venn.in .c2,.venn.in .c3{transform:none}
-.venn text{font:600 14px "DM Sans",system-ui,sans-serif;fill:var(--ink)}
-.venn .core{opacity:0;transition:opacity .8s 1.2s}.venn.in .core{opacity:1}
-.pillars{display:grid;gap:14px}
-.pillar{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
-.pillar .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font:600 18px "Cormorant Garamond",serif}
-.pillar h4{font-size:16.5px;margin-bottom:2px}
-.pillar p{font-size:14.5px;color:var(--muted)}
-
-/* MANIFEST */
-.manifest-grid{display:grid;grid-template-columns:1fr .9fr;gap:60px;align-items:center}
-.phone{width:320px;max-width:100%;margin:0 auto;background:#ECE5DD;border-radius:38px;padding:14px;box-shadow:0 40px 80px -40px rgba(21,23,31,.45);border:8px solid var(--ink)}
-.phone .top{display:flex;align-items:center;gap:10px;background:#075E54;color:#fff;margin:-14px -14px 12px;padding:16px 16px 12px;border-radius:30px 30px 0 0}
-.phone .av{width:34px;height:34px;border-radius:50%;background:var(--gold-2);display:grid;place-items:center;color:#fff;font:600 14px "DM Sans",system-ui,sans-serif}
-.phone .top b{font-size:14px;display:block}.phone .top small{font-size:11px;opacity:.8}
-.chat{display:flex;flex-direction:column;gap:8px;min-height:380px}
-.msg{background:#fff;border-radius:2px 12px 12px 12px;padding:9px 11px 6px;font-size:13.2px;line-height:1.45;max-width:92%;box-shadow:0 1px 1px rgba(0,0,0,.08);opacity:0;transform:translateY(10px) scale(.97);transition:opacity .5s,transform .5s}
-.msg.show{opacity:1;transform:none}
-.msg .t{display:block;text-align:right;font-size:10px;color:#999;margin-top:2px}
-.msg b{color:#075E54}
-.typing{background:#fff;border-radius:12px;padding:10px 14px;width:56px;display:none;gap:4px}
-.typing.on{display:flex}
-.typing i{width:6px;height:6px;border-radius:50%;background:#bbb;animation:bounce 1.2s infinite}
-.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
-@keyframes bounce{0%,60%,100%{transform:none}30%{transform:translateY(-4px)}}
-.m-list{display:grid;gap:14px;margin-top:28px}
-.m-list div{display:grid;grid-template-columns:32px 1fr;gap:14px;align-items:start}
-.m-list .k{width:32px;height:32px;border-radius:50%;background:var(--violet-soft);color:var(--violet);display:grid;place-items:center;font:500 13px "DM Mono",ui-monospace,monospace}
-.m-list p{color:var(--muted);font-size:15px}.m-list b{color:var(--ink);display:block;font-size:16px}
-
-/* PRICING */
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:56px;align-items:stretch}
-.plan{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:32px 28px;display:flex;flex-direction:column}
-.plan.hot{background:var(--ink);color:#fff;border-color:var(--ink);transform:translateY(-10px);box-shadow:0 40px 70px -40px rgba(21,23,31,.6)}
-.plan.hot .muted,.plan.hot li{color:#C9CBD6}
-.plan .tag{align-self:flex-start;font:500 11px "DM Mono",ui-monospace,monospace;letter-spacing:.1em;padding:6px 10px;border-radius:999px;background:var(--gold-soft);color:var(--gold);margin-bottom:16px}
-.plan.hot .tag{background:rgba(217,180,90,.18);color:var(--gold-2)}
-.plan h3{font:500 30px/1 "Cormorant Garamond",serif}
-.plan .muted{color:var(--muted);font-size:14.5px;margin:8px 0 22px}
-.plan .price{font:600 44px/1 "DM Sans",system-ui,sans-serif;letter-spacing:-.02em}
-.plan .price small{font-size:15px;font-weight:400;opacity:.65}
-.plan ul{list-style:none;display:grid;gap:11px;margin:26px 0 30px;flex:1;font-size:15px}
-.plan li{padding-left:28px;position:relative;color:#3A3D49}
-.plan li::before{content:"";position:absolute;left:0;top:4px;width:17px;height:17px;border-radius:50%;background:var(--gold-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.2l2.6 2.6L12 5.4' fill='none' stroke='%23B38A2E' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
-.plan.hot li::before{background-color:rgba(217,180,90,.18)}
-.plan.hot .btn-dark{background:var(--gold-2);color:var(--ink)}
-.plan .btn{width:100%}
-.addons{margin-top:30px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px 26px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
-.addons .chips{display:flex;flex-wrap:wrap;gap:10px}
-.addons .chips span{border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:14px;background:var(--bg)}
-.addons .chips b{color:var(--gold)}
-.fine{font-size:13px;color:var(--muted);margin-top:16px}
-
-/* ABOUT */
-.about{background:var(--ink);color:#fff;border-radius:32px;margin:0 20px;padding:90px 0;position:relative;overflow:hidden}
-.about .eyebrow{color:var(--gold-2)}
-.about .sub{color:#B9BCC8}
-.about-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:60px;align-items:start}
-.quote{font:500 clamp(24px,2.6vw,32px)/1.3 "Cormorant Garamond",serif;margin-top:26px;color:#fff}
-.quote em{color:var(--gold-2)}
-.sig{margin-top:22px;display:flex;align-items:center;gap:14px}
-.sig .av{width:52px;height:52px;border-radius:50%;background:rgba(217,180,90,.18);border:1px solid var(--gold-2);display:grid;place-items:center;font:600 19px "Cormorant Garamond",serif;color:var(--gold-2)}
-.sig b{display:block}.sig small{color:#9EA1AE}
-.creds{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.cred{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px;background:rgba(255,255,255,.03);transition:border-color .3s,background .3s}
-.cred:hover{border-color:var(--gold-2);background:rgba(217,180,90,.06)}
-.cred .y{font:500 11px "DM Mono",ui-monospace,monospace;letter-spacing:.1em;color:var(--gold-2);text-transform:uppercase}
-.cred b{display:block;font-size:16px;margin:6px 0 3px}
-.cred span{font-size:13.5px;color:#9EA1AE}
-.press{margin-top:20px;font-size:13px;color:#9EA1AE}
-.press a{color:#D7D9E2;border-bottom:1px solid rgba(255,255,255,.2)}
-.about .grid-bg{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(ellipse at 80% 20%,#000 0%,transparent 60%);pointer-events:none}
-
-/* FAQ */
-.faq{max-width:780px;margin:50px auto 0}
-.faq details{border-bottom:1px solid var(--line)}
-.faq summary{list-style:none;cursor:pointer;padding:22px 0;font:600 17px "DM Sans",system-ui,sans-serif;display:flex;justify-content:space-between;gap:20px}
+/* 7. consultation */
+.consult{padding:110px 0;background:radial-gradient(ellipse at 50% 0,rgba(231,180,90,.16),transparent 60%)}
+.consult .card{border:1.5px solid var(--lamp);padding:clamp(26px,5vw,50px);margin-top:38px;display:grid;gap:26px}
+@media(min-width:820px){.consult .card{grid-template-columns:1.3fr 1fr;align-items:center}}
+.consult ul{list-style:none}.consult li{padding:12px 0;border-top:1.5px solid var(--carve)}
+.price{font:700 clamp(56px,10vw,88px)/1 var(--serif);color:var(--lamp)}
+nav.top .links{display:none;gap:26px}nav.top .links a{font-weight:500;color:#D9CDB6}nav.top .links a:hover{color:var(--lamp)}
+@media(min-width:900px){nav.top .links{display:flex}}
+/* how it works: five lamps on one line */
+.how svg{width:min(100%,360px);height:min(60svh,520px);margin:0 auto;display:block;overflow:visible}
+.how .trail{fill:none;stroke:var(--carve);stroke-width:3}
+.how .lit{fill:none;stroke:var(--lamp);stroke-width:3;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--draw,0));filter:drop-shadow(0 0 8px rgba(231,180,90,.8))}
+.how .node circle{fill:var(--stone);stroke:var(--carve);stroke-width:2.5;transition:fill .3s,stroke .3s}
+.how .node text{font:500 14px var(--sans);fill:#5E5140;transition:fill .3s}
+.how .node.on circle{fill:var(--lamp);stroke:var(--lamp-2)}.how .node.on text{fill:var(--ivory)}
+.how .count{font:700 clamp(84px,19vw,170px)/.86 var(--serif);color:var(--lamp);text-shadow:0 0 80px rgba(231,180,90,.35)}
+.how .count small{font-size:.26em;color:var(--dim);text-shadow:none}
+.how h3{font-size:clamp(32px,6vw,60px);line-height:1;margin-top:14px;min-height:2em}
+.how .lead{min-height:5.5em;margin-top:14px}
+@media(max-width:859px){.how .pin{justify-content:flex-start;padding-top:74px}.how svg{height:min(46svh,400px)}.how .lead{min-height:4.6em;font-size:17px}.how h3{min-height:1.1em}.how .count{font-size:72px}}
+/* two ways of seeing */
+.ways .discs{position:relative;width:min(100%,460px);aspect-ratio:1.55;margin:0 auto}
+.ways .discs i{position:absolute;top:6%;left:50%;width:54%;aspect-ratio:1;margin-left:-27%;border-radius:50%;mix-blend-mode:screen;display:grid;place-items:center;font:600 clamp(17px,3.4vw,24px)/1.1 var(--serif);font-style:normal;text-align:center;color:#fff}
+.ways .discs .a{padding-right:9%;background:#B8862F;transform:translateX(calc((1 - var(--s,0))*-60% - 30%))}
+.ways .discs .b{padding-left:9%;background:#8E2F1D;transform:translateX(calc((1 - var(--s,0))*60% + 30%))}
+.ways .pair{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:22px;opacity:var(--o,0)}
+.ways .pair div{background:var(--stone);padding:16px 14px;font-size:15.5px;color:#D9CDB6}.ways .pair b{display:block;font:600 22px var(--serif);color:var(--ivory);margin-bottom:4px}
+/* plans */
+.sec{padding:120px 0}
+.plans{display:grid;gap:1.5px;background:var(--carve);border:1.5px solid var(--carve);margin-top:40px}
+@media(min-width:760px){.plans{grid-template-columns:repeat(2,1fr)}}@media(min-width:1040px){.plans{grid-template-columns:repeat(4,1fr)}}
+.plan{background:var(--stone);padding:30px 24px;display:flex;flex-direction:column}
+.plan.hot{background:linear-gradient(rgba(231,180,90,.13),var(--stone) 70%)}
+.plan h3{font-size:30px}.plan .for{font-size:15px;color:var(--dim);min-height:3em;margin-top:4px}
+.plan .amt{font:700 62px/1 var(--serif);color:var(--lamp);margin:14px 0 4px}.plan .amt small{font:400 15px var(--sans);color:var(--dim)}
+.plan ul{list-style:none;margin:16px 0 24px;flex:1}.plan li{padding:9px 0;border-top:1.5px solid var(--carve);font-size:15.5px;color:#D9CDB6}
+.addons{margin-top:26px;color:#D9CDB6;font-size:16px}.addons b{color:var(--ivory);font-weight:600}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
+.static .rv{opacity:1;transform:none}
+/* about */
+.about{display:grid;gap:40px}@media(min-width:900px){.about{grid-template-columns:1.1fr 1fr;gap:70px}}
+.about blockquote{font:500 italic clamp(24px,3.6vw,36px)/1.25 var(--serif);color:var(--lamp-2)}
+.cv{list-style:none}.cv li{display:grid;grid-template-columns:7.5em 1fr;gap:14px;padding:12px 0;border-top:1.5px solid var(--carve);font-size:15.5px}
+.cv span{color:var(--lamp);font-weight:600}.cv b{display:block;font-weight:600}.cv em{font-style:normal;color:var(--dim)}
+/* questions */
+.faq details{border-top:1.5px solid var(--carve)}.faq details:last-child{border-bottom:1.5px solid var(--carve)}
+.faq summary{cursor:pointer;list-style:none;padding:20px 34px 20px 0;font:600 clamp(21px,3vw,27px)/1.2 var(--serif);position:relative}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";font:400 24px/1 "DM Sans",system-ui,sans-serif;color:var(--gold);transition:transform .3s}
-.faq details[open] summary::after{transform:rotate(45deg)}
-.faq details p{color:var(--muted);padding:0 0 22px;font-size:15.5px}
-
-/* CTA */
-.final{text-align:center;padding:120px 0}
-.final h2{font-size:clamp(40px,6vw,72px)}
-.final .btn{margin-top:30px}
-footer{border-top:1px solid var(--line);padding:34px 0 46px;font-size:13px;color:var(--muted)}
-footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
-footer nav{display:flex;gap:20px;flex-wrap:wrap}
-.disc{max-width:1120px;margin:0 auto 20px;padding:0 20px;font-size:12.5px;color:var(--muted);line-height:1.6}
-
-/* responsive */
-@media (max-width:980px){
-  .hero-grid,.decoder,.venn-wrap,.manifest-grid,.about-grid{grid-template-columns:1fr}
-  .orbit{margin:20px auto 0;max-width:400px}
-  .nine{grid-template-columns:repeat(3,1fr)}
-  .concepts,.plans{grid-template-columns:1fr}
-  .plan.hot{transform:none}
-  .steps{grid-template-columns:1fr;gap:40px}.steps .track{display:none}
-  .links{display:none}
-  section{padding:80px 0}
-  .addons{grid-template-columns:1fr}
-}
-@media (max-width:560px){
-  .creds,.mini{grid-template-columns:1fr}
-  .hc1{left:0;top:6%}.hc2{left:0;bottom:4%}
-  .about{margin:0 10px;border-radius:24px;padding:70px 0}
-  .nav .btn{padding:9px 14px;font-size:13px}
-}
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
-  .rv{opacity:1;transform:none}.draw{stroke-dashoffset:0}.bar-grow{transform:none}
-  .venn .c1,.venn .c2,.venn .c3{transform:none}.venn .core{opacity:1}.msg{opacity:1;transform:none}
-}
+.faq summary::after{content:"+";position:absolute;right:4px;top:50%;translate:0 -50%;color:var(--lamp);font:400 30px var(--sans);transition:rotate .3s}
+.faq details[open] summary::after{rotate:45deg}
+.faq p{color:#D9CDB6;padding:0 0 22px;max-width:44em}
+.last{padding:150px 0 130px;text-align:center}.last .title{font-size:clamp(52px,12vw,150px)}
+footer nav{display:flex;gap:22px;flex-wrap:wrap;margin-top:14px}footer nav a{font-size:15px;color:#D9CDB6;text-decoration:none}
+footer{padding:36px 0 70px;border-top:1.5px solid var(--carve)}footer p{font-size:14px;color:var(--dim);max-width:60em;margin-bottom:8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<canvas id="embers" aria-hidden="true"></canvas>
+<nav class="top"><a class="brand" href="/">DESTINY OS</a><span class="links"><a href="#ask">Your chart</a><a href="#how">How it works</a><a href="#halia">HALIA</a><a href="#pricing">Pricing</a><a href="/app/">Sign in</a></span><a class="gold" href="#ask">Reveal my chart</a></nav>
 
-<!-- Free report link: change this one value when the registration flow is live -->
-<script src="/config.js?v=3"></script>
-<script>window.FREE_REPORT_URL = window.DESTINY_SIGNUP_OPEN !== true ? (window.DESTINY_WHATSAPP || "https://wa.me/917975554666") : "/free-report/?src=website";</script>
-
-<header class="nav" id="nav">
-  <div class="wrap nav-in">
-    <a class="logo" href="#top" aria-label="Destiny OS">
-      <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><path d="M16 2.5 28 9.5v13L16 29.5 4 22.5v-13L16 2.5Z" stroke="#B38A2E" stroke-width="1.5"/><circle cx="16" cy="16" r="3.4" fill="#B38A2E"/></svg>
-      <span>DESTINY <b>OS</b></span>
-    </a>
-    <nav class="links">
-      <a href="#decode">Decode your name</a><a href="#concepts">Concepts</a><a href="/halia/how-it-works/">HALIA</a><a href="#manifest">Manifestation</a><a href="#pricing">Pricing</a><a href="#about">Dr. Krish</a><a href="/business/">Business</a>
-    </nav>
-    <span style="display:flex;gap:16px;align-items:center"><a href="/app/" class="signin" style="font-size:14.5px;color:var(--muted)">Sign in</a><a class="btn btn-dark js-free" href="/free-report/">Free report</a></span>
+<main>
+<!-- 1. the gate -->
+<section class="scene" data-scene="gate" style="--len:2.8;--p:0;--open:0"><div class="pin">
+  <div class="sanctum">
+    <svg class="star" id="star" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+    <div><div class="deva" lang="sa">ज्योतिष</div><p class="lead" style="margin:0 auto;text-align:center">Jyotisha. The study of light.</p></div>
   </div>
-</header>
+  <div class="door l"><svg class="medal" viewBox="-100 -100 200 200" aria-hidden="true"></svg></div>
+  <div class="door r"><svg class="medal" viewBox="-100 -100 200 200" aria-hidden="true"></svg></div>
+  <div class="flame" aria-hidden="true"></div>
+  <div class="hero"><div class="wrap">
+    <h1 class="title">Enter the temple of time.</h1>
+    <p class="lead">For three thousand years people in this land have read the sky. Walk through how it began, then see your own chart revealed.</p>
+    <p class="hint">Scroll to open the doors</p>
+  </div></div>
+</div></section>
+<div class="frieze"></div>
 
-<main id="top">
+<!-- Nalanda -->
+<section class="scene nalanda" data-scene="nalanda" style="--len:3.4;--p:0"><div class="pin">
+  <svg class="city" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs><pattern id="brick" width="26" height="12" patternUnits="userSpaceOnUse"><path d="M0 .5H26M0 6.5H26M13 0V6M0 6V12" stroke="#000" stroke-opacity=".4" fill="none"/></pattern></defs>
+    <circle class="sun" cx="640" cy="330" r="150"/>
+    <g class="far">
+      <path fill="#1A0F07" d="M150 400V338H178V312Q200 286 222 312V338H250V400ZM950 400V338H978V312Q1000 286 1022 312V338H1050V400Z"/>
+      <path id="stupa" fill="#140B05" d="M400 400V352H440V308H482V264H522V222H560V188Q640 112 720 188V222H758V264H798V308H840V352H880V400Z"/>
+      <path fill="#2A1809" d="M612 400L628 190H652L668 400Z"/>
+      <path fill="url(#brick)" d="M400 400V352H440V308H482V264H522V222H560V188Q640 112 720 188V222H758V264H798V308H840V352H880V400Z"/>
+    </g>
+    <g class="mid">
+      <rect x="-120" y="384" width="1440" height="96" fill="#1B1009"/><rect x="-120" y="384" width="1440" height="96" fill="url(#brick)"/>
+      <rect x="-120" y="378" width="1440" height="8" fill="#2E1C0E"/>
+      <g id="cells"></g>
+    </g>
+    <g id="walk-far"></g>
+    <rect x="-120" y="478" width="1440" height="130" fill="#2B1A0D"/><rect x="-120" y="478" width="1440" height="130" fill="url(#brick)" opacity=".7"/><rect x="-120" y="478" width="1440" height="10" fill="#0C0805" opacity=".6"/>
+    <g id="walk-mid"></g>
+    <g class="front">
+      <path fill="#070504" d="M-40 600V150H0V118H96V150H136V600ZM-12 150H108V172H-12ZM1104 600V150H1144V118H1240V150H1280V600ZM1132 150H1252V172H1132Z"/>
+      <path fill="#070504" d="M136 600V548H260V572H380V600ZM1104 600V548H980V572H860V600Z"/>
+    </g>
+    <g id="walk-near"></g>
+  </svg>
+  <div class="wrap over">
+    <h2 class="title">Nalanda.</h2>
+    <p class="era">From the fifth century CE</p>
+    <p class="lead">A city of brick where monks and scholars lived and studied in their thousands. Alongside philosophy they learned grammar, medicine, logic, mathematics and astronomy, and its library drew pilgrims from as far as China.</p>
+    <p class="cap">Traditional accounts speak of 10,000 students and 2,000 teachers. Nalanda was a Buddhist monastery and place of learning; the sky was one of many things studied here.</p>
+  </div>
+</div></section>
+<div class="frieze"></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="wrap hero-grid">
+<!-- 2. the sky -->
+<section class="scene story" data-scene="sky" style="--len:3"><div class="pin"><div class="wrap split">
+  <div>
+    <p class="era">Before 500 BCE</p>
+    <h2 class="title">First, they kept time.</h2>
+    <p class="lead">The oldest text we have, the Vedanga Jyotisha attributed to Lagadha, is a calendar. It follows the sun and the moon through 27 groups of stars, the nakshatras, so that each ritual fell on the right day.</p>
+    <p class="cap">The surviving text is dated to the last centuries BCE and may carry a tradition from around 700 to 600 BCE.</p>
+  </div>
+  <svg class="art ring" id="ring" viewBox="-170 -170 340 340" role="img" aria-label="The moon passing through 27 nakshatras"></svg>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- 3. the twelve -->
+<section class="scene story" data-scene="twelve" style="--len:3"><div class="pin"><div class="wrap split">
+  <svg class="art" id="zodiac" viewBox="-170 -170 340 340" role="img" aria-label="The sky divided into twelve signs"></svg>
+  <div>
+    <p class="era">The first centuries CE</p>
+    <h2 class="title">Then the sky was divided into twelve.</h2>
+    <p class="lead">The twelve signs and the birth chart enter Indian texts. By the sixth century Varahamihira of Ujjain had set the system down in the Brihat Jataka.</p>
+    <p class="cap">Scholars still debate how much arrived through exchange with Greek astronomers and how much grew here.</p>
+  </div>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- 4. Parashara -->
+<section class="scene story parashara" data-scene="rishi" style="--len:3"><div class="pin"><div class="wrap split">
+  <div>
+    <p class="deva" lang="sa">बृहत् पराशर होरा शास्त्र</p>
+    <h2 class="title">Parashara.</h2>
+    <p class="lead">Tradition says the sage Parashara taught this knowledge to his student Maitreya. The Brihat Parashara Hora Shastra, the fullest classical text on reading a birth chart, carries his name.</p>
+    <p class="cap">Scholars date the text as we have it to some time after 600 CE. The drawing is an artist's impression; no portrait of Parashara exists.</p>
+  </div>
+  <svg class="art rishi" viewBox="0 0 340 360" role="img" aria-label="A sage seated under a tree with a palm-leaf manuscript and a lamp">
+    <circle class="glow" cx="170" cy="170" r="150"/>
+    <path pathLength="1" d="M40 330 H300"/>
+    <path pathLength="1" d="M252 330 C250 250 262 190 250 120 C246 92 252 60 262 30"/>
+    <path pathLength="1" d="M262 30 C210 6 130 10 78 52 C120 34 176 38 214 66 C160 52 104 70 70 112 C116 86 172 86 216 108"/>
+    <circle pathLength="1" cx="150" cy="150" r="24"/>
+    <path pathLength="1" d="M138 128 C136 108 164 108 162 128 M150 110 C146 100 154 100 150 110"/>
+    <path pathLength="1" d="M134 164 C138 200 162 200 166 164"/>
+    <path pathLength="1" d="M128 178 C96 196 84 244 92 286 M172 178 C204 196 216 244 208 286"/>
+    <path pathLength="1" d="M74 300 C104 270 196 270 226 300 C196 322 104 322 74 300 Z"/>
+    <path pathLength="1" d="M92 262 C112 280 132 286 150 284 M208 262 C188 280 168 286 150 284"/>
+    <path pathLength="1" d="M118 276 H182 V290 H118 Z M126 283 H174"/>
+    <path pathLength="1" d="M34 330 C34 316 62 316 62 330 M48 316 C42 302 54 296 48 284 C56 296 54 306 48 316"/>
+  </svg>
+</div></div></section>
+<div class="frieze"></div>
+
+<!-- 5. the rishi asks -->
+<section class="ask" id="ask"><div class="wrap">
+  <p class="era">Your turn</p>
+  <h2 class="title">The rishi asks.</h2>
+  <form id="f" novalidate>
+    <div class="q on" id="q1"><label for="in-name">What name do you go by?</label><input id="in-name" autocomplete="name" maxlength="120" placeholder="Your full name"></div>
+    <div class="q" id="q2"><label for="in-dob">On which day were you born?</label><input id="in-dob" type="date" min="1900-01-01"></div>
+    <div class="q" id="q3"><label for="in-time">Do you know the hour and the place?</label>
+      <div class="two"><input id="in-time" type="time" aria-label="Time of birth"><input id="in-city" placeholder="City" maxlength="120" aria-label="City of birth"></div>
+      <small>Optional. With both, your rising sign can be worked out.</small></div>
+    <p class="err" id="err" role="alert"></p>
+    <button class="btn" id="go" style="width:100%">Continue</button>
+    <p class="cap" style="margin-top:14px;text-align:center">Nothing you enter here is stored.</p>
+  </form>
+</div></section>
+
+<!-- 6. the reveal -->
+<section class="reveal hide" id="reveal"><div class="wrap">
+  <div style="text-align:center">
+    <p class="era" id="r-name"></p>
+    <p class="sum" id="r-sum"></p>
+    <div class="big" id="r-big">0</div>
+    <h2 class="title" style="font-size:clamp(34px,6.4vw,64px);margin-top:18px" id="r-mean"></h2>
+    <p class="cap" style="margin:10px auto 0">Your Life Path number: the day, month and year of your birth, each reduced and then added until one number remains.</p>
+  </div>
+  <div class="tiles" id="tiles"></div>
+  <div class="chartwrap">
+    <p class="era" style="text-align:center">The sky at your birth</p>
+    <h2 class="title" style="text-align:center;font-size:clamp(38px,7.4vw,84px)">Your chart.</h2>
+    <svg class="wheel" id="wheel" viewBox="-200 -200 400 400" role="img" aria-label="Your birth chart"></svg>
+    <div class="facts" id="facts"></div>
+    <p class="cap" id="r-note" style="margin-top:16px"></p>
+    <p class="cap" style="margin-top:8px">Positions are calculated with the Lahiri sidereal system used in Jyotisha. What they mean is a matter of tradition, shown here as tradition and not as a prediction.</p>
+  </div>
+</div></section>
+
+<!-- 7. consultation -->
+<section class="consult hide" id="consult"><div class="wrap">
+  <h2 class="title">A chart needs a reader.</h2>
+  <p class="lead" style="margin-top:18px">Numbers and positions are the start. What you do with them is a conversation.</p>
+  <div class="card">
     <div>
-      <div class="eyebrow rv">Numerology · Vedic astrology · Mindset</div>
-      <h1 class="serif rv d1">Your numbers,<br><span class="em">decoded.</span></h1>
-      <p class="lead rv d2">One reading that brings together your numerology, your Vedic chart and the habits that shape your days. Start with a free report, then get guidance on WhatsApp every morning.</p>
-      <div class="ctas rv d3">
-        <a class="btn btn-dark js-free" href="/free-report/">Get my free report <span class="arr">→</span></a>
-        <a class="btn btn-line" href="#decode">Try the name decoder</a>
-      </div>
-      <div class="trust rv d4">
-        <span><i></i>Pythagorean + Chaldean</span>
-        <span><i></i>Sidereal (Lahiri) Vedic chart</span>
-        <span><i></i>By Dr. Krish Bharggav, PhD</span>
-      </div>
+      <h3 style="font-size:clamp(28px,4.6vw,40px);line-height:1.1">One to one with Dr. Krish Bharggav</h3>
+      <ul style="margin-top:18px">
+        <li>45 minutes, on a call.</li>
+        <li>Your chart and numbers, read in the traditional way.</li>
+        <li>A practical plan built with the HALIA framework, from where your work, money and relationships stand today.</li>
+      </ul>
     </div>
-
-    <div class="orbit rv d2" aria-hidden="true">
-      <svg viewBox="0 0 500 500">
-        <defs>
-          <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F6EEDB"/><stop offset="1" stop-color="#FBFAF7" stop-opacity="0"/></radialGradient>
-          <linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#D9B45A"/><stop offset="1" stop-color="#6B5BD6"/></linearGradient>
-        </defs>
-        <circle cx="250" cy="250" r="240" fill="url(#glow)"/>
-        <circle class="pulse" cx="250" cy="250" r="96" fill="none" stroke="#D9B45A" stroke-width="1"/>
-        <g class="ring spin-rev">
-          <circle cx="250" cy="250" r="150" fill="none" stroke="#E9E6DE" stroke-dasharray="2 7"/>
-          <g id="zod"></g>
-        </g>
-        <g class="ring">
-          <circle cx="250" cy="250" r="212" fill="none" stroke="#E9E6DE"/>
-          <g id="nums"></g>
-        </g>
-        <path d="M250 175 315 212.5v75L250 325 185 287.5v-75Z" fill="#fff" stroke="url(#gl)" stroke-width="1.6"/>
-        <text x="250" y="262" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="58" font-style="italic" fill="#B38A2E" id="heroNum">7</text>
-        <text x="250" y="292" text-anchor="middle" font-family="DM Mono, ui-monospace, monospace" font-size="10" letter-spacing="2" fill="#6B6F7E">LIFE PATH</text>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how">
-  <div class="wrap center">
-    <div class="eyebrow rv">How it works</div>
-    <h2 class="serif rv d1">Three steps to <span class="em">your blueprint.</span></h2>
-    <div class="steps rv" id="steps">
-      <div class="track"></div>
-      <div class="step"><div class="bubble">1</div><h3>Register in a minute</h3><p>Your name as given at birth, date, time and city of birth, and your phone number.</p></div>
-      <div class="step"><div class="bubble">2</div><h3>Get your free report</h3><p>Your core numbers in both systems, your Vedic chart and current Dasha, explained in plain language.</p></div>
-      <div class="step"><div class="bubble">3</div><h3>Go deeper every day</h3><p>Subscribe for the full report, unlimited questions, and daily guidance and manifestation reminders on WhatsApp.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- DECODER -->
-<section id="decode">
-  <div class="wrap">
-    <div class="eyebrow rv">The power of numbers</div>
-    <h2 class="serif rv d1">Watch your name <span class="em">become numbers.</span></h2>
-    <p class="sub rv d2">Numerology gives every letter a number. Add them up, reduce to a single digit, and you have the number tradition links to how you express yourself. Type your name and see it happen, in either system.</p>
-
-    <div class="decoder">
-      <div class="input-card rv">
-        <div class="sys-toggle" role="tablist">
-          <button class="on" data-sys="py" role="tab">Pythagorean</button>
-          <button data-sys="ch" role="tab">Chaldean</button>
-        </div>
-        <div class="row">
-          <label for="nm">Your full name</label>
-          <input id="nm" value="Priya Sharma" maxlength="40" autocomplete="off">
-        </div>
-        <div class="row">
-          <label for="dob">Date of birth</label>
-          <input id="dob" type="date" value="1994-08-17">
-        </div>
-        <p class="hint" id="sysHint">Pythagorean maps letters A to Z onto 1 to 9 in sequence. It is the system most used in the West.</p>
-      </div>
-
-      <div class="board rv d2" aria-live="polite">
-        <div class="mono" style="font-size:11.5px;letter-spacing:.1em;color:var(--muted);margin-bottom:14px">LETTER → NUMBER</div>
-        <div class="tiles" id="tiles"></div>
-        <div class="reduce" id="reduce"></div>
-        <div class="result">
-          <div class="bignum" id="expr">0</div>
-          <div><span class="label">Expression number</span><h4 id="exprTitle"></h4><p id="exprText"></p></div>
-        </div>
-        <div class="mini">
-          <div><small>Life Path (from birth date)</small><b id="lp">0</b><span id="lpText"></span></div>
-          <div><small>Personal Year 2026</small><b id="py">0</b><span id="pyText"></span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- NINE NUMBERS -->
-<section style="padding-top:20px">
-  <div class="wrap center">
-    <div class="eyebrow rv">How numbers work</div>
-    <h2 class="serif rv d1">Nine numbers, <span class="em">nine energies.</span></h2>
-    <p class="sub rv d2">Every calculation reduces to one of these. Each carries a traditional meaning, a ruling planet in Vedic numerology, and a colour.</p>
-    <div class="nine rv d2" id="nine"></div>
-  </div>
-</section>
-
-<!-- CONCEPTS -->
-<section id="concepts" style="padding-top:60px">
-  <div class="wrap">
-    <div class="eyebrow rv">Concepts explained</div>
-    <h2 class="serif rv d1">What your report <span class="em">actually reads.</span></h2>
-    <div class="concepts">
-      <div class="cc rv">
-        <div class="viz"><svg viewBox="0 0 300 120"><text x="40" y="70" font-family="DM Mono, ui-monospace, monospace" font-size="20" fill="#6B6F7E">17·08·1994</text><path class="draw" d="M150 62 C 190 62, 200 40, 236 40" stroke="#D9B45A" stroke-width="1.6" fill="none"/><circle cx="250" cy="40" r="20" fill="#F6EEDB"/><text x="250" y="48" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#B38A2E">3</text></svg></div>
-        <span class="how-calc">from your full birth date</span>
-        <h3>Life Path number</h3>
-        <p>The broad theme of your life, reduced from your complete date of birth. The number most readings start from.</p>
-      </div>
-      <div class="cc rv d1">
-        <div class="viz"><svg viewBox="0 0 300 120"><g font-family="DM Mono, ui-monospace, monospace" font-size="15" fill="#15171F"><text x="34" y="50">K R I S H</text><text x="34" y="80" fill="#B38A2E">2 9 9 1 8</text></g><path class="draw" d="M150 66 H 220" stroke="#6B5BD6" stroke-width="1.6"/><circle cx="246" cy="66" r="20" fill="#EEEBFB"/><text x="246" y="74" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#6B5BD6">2</text></svg></div>
-        <span class="how-calc">from every letter of your birth name</span>
-        <h3>Expression (Destiny) number</h3>
-        <p>How you naturally express your talents. Calculated from your full name exactly as given at birth.</p>
-      </div>
-      <div class="cc rv d2">
-        <div class="viz"><svg viewBox="0 0 300 120"><g font-family="DM Mono, ui-monospace, monospace" font-size="15"><text x="34" y="62" fill="#D9D5CA">K R </text><text x="70" y="62" fill="#B38A2E">I</text><text x="86" y="62" fill="#D9D5CA"> S H</text></g><circle class="blink" cx="77" cy="36" r="4" fill="#B38A2E"/><path class="draw" d="M150 58 H 220" stroke="#D9B45A" stroke-width="1.6"/><circle cx="246" cy="58" r="20" fill="#F6EEDB"/><text x="246" y="66" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="24" fill="#B38A2E">9</text></svg></div>
-        <span class="how-calc">from the vowels of your name</span>
-        <h3>Soul Urge number</h3>
-        <p>What you want most deeply. Drawn from the vowels alone, the sounds that carry a name.</p>
-      </div>
-      <div class="cc rv">
-        <div class="viz"><svg viewBox="0 0 300 120"><g font-family="DM Mono, ui-monospace, monospace" font-size="10" fill="#6B6F7E"><text x="30" y="98">2026</text><text x="250" y="98">2027</text></g><rect x="30" y="58" width="240" height="8" rx="4" fill="#E9E6DE"/><rect class="bar-grow" x="30" y="58" width="196" height="8" rx="4" fill="#D9B45A"/><circle cx="226" cy="62" r="7" fill="#fff" stroke="#B38A2E" stroke-width="2"/></svg></div>
-        <span class="how-calc">birth day + month + current year</span>
-        <h3>Personal Year, Month and Day</h3>
-        <p>Your numbers in motion. They run in nine-year cycles and set the theme for each year, month and day.</p>
-      </div>
-      <div class="cc rv d1">
-        <div class="viz"><svg viewBox="0 0 300 120"><g transform="translate(150 60)"><circle r="48" fill="none" stroke="#E9E6DE"/><circle r="30" fill="none" stroke="#E9E6DE"/><g class="spin-slow" style="transform-origin:0 0">
-          <g stroke="#E9E6DE"><line x1="0" y1="-48" x2="0" y2="48"/><line x1="-48" y1="0" x2="48" y2="0"/><line x1="-34" y1="-34" x2="34" y2="34"/><line x1="-34" y1="34" x2="34" y2="-34"/></g>
-          <circle cx="0" cy="-39" r="5" fill="#D9B45A"/><circle cx="34" cy="20" r="4" fill="#6B5BD6"/><circle cx="-28" cy="26" r="4" fill="#2F8F6B"/></g><circle r="5" fill="#15171F"/></g></svg></div>
-        <span class="how-calc">sidereal positions, Lahiri ayanamsa</span>
-        <h3>Your Vedic chart</h3>
-        <p>Where the nine grahas stood at your birth, in twelve houses. The map behind every Jyotish reading.</p>
-      </div>
-      <div class="cc rv d2">
-        <div class="viz"><svg viewBox="0 0 300 120"><g font-family="DM Mono, ui-monospace, monospace" font-size="9" fill="#6B6F7E"><text x="30" y="40">SATURN</text><text x="112" y="40">MERCURY</text><text x="206" y="40">KETU</text></g><rect x="30" y="52" width="76" height="16" rx="5" fill="#E9E6DE"/><rect class="bar-grow" x="112" y="52" width="88" height="16" rx="5" fill="#D9B45A"/><rect x="206" y="52" width="64" height="16" rx="5" fill="#E9E6DE"/><path d="M150 76 v16" stroke="#B38A2E" stroke-width="1.6"/><text x="150" y="106" text-anchor="middle" font-family="DM Mono, ui-monospace, monospace" font-size="9" fill="#B38A2E">YOU ARE HERE</text></svg></div>
-        <span class="how-calc">Vimshottari Dasha, 120-year cycle</span>
-        <h3>Dasha periods</h3>
-        <p>The planetary chapters of your life. Knowing which one you are in explains why some years feel so different.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOLISTIC -->
-<section class="holistic">
-  <div class="wrap">
-    <div class="center">
-      <div class="eyebrow rv">One holistic reading</div>
-      <h2 class="serif rv d1">Three lenses, <span class="em">one you.</span></h2>
-      <p class="sub rv d2">Most apps give you a horoscope. Destiny OS reads your numbers, your chart and your habits together, so the guidance fits the life you are actually living.</p>
-    </div>
-    <div class="venn-wrap">
-      <div class="venn rv" id="venn">
-        <svg viewBox="0 0 400 380">
-          <circle class="c1" cx="150" cy="150" r="110" fill="#B38A2E" fill-opacity=".09" stroke="#D9B45A"/>
-          <circle class="c2" cx="250" cy="150" r="110" fill="#6B5BD6" fill-opacity=".08" stroke="#6B5BD6" stroke-opacity=".6"/>
-          <circle class="c3" cx="200" cy="235" r="110" fill="#2F8F6B" fill-opacity=".07" stroke="#2F8F6B" stroke-opacity=".55"/>
-          <text x="96" y="118">Numerology</text>
-          <text x="248" y="118">Astrology</text>
-          <text x="166" y="306">Mindset</text>
-          <g class="core"><circle cx="200" cy="180" r="30" fill="#fff" stroke="#15171F"/><text x="200" y="185" text-anchor="middle" font-size="12">You</text></g>
-        </svg>
-      </div>
-      <div class="pillars">
-        <div class="pillar rv"><div class="ic" style="background:var(--gold-soft);color:var(--gold)">1–9</div><div><h4>Numerology</h4><p>Pythagorean and Chaldean, computed side by side and cross-checked. Your core numbers and your cycles.</p></div></div>
-        <div class="pillar rv d1"><div class="ic" style="background:var(--violet-soft);color:var(--violet)">☉</div><div><h4>Vedic astrology</h4><p>Classical Jyotish: your sidereal chart, Dasha periods and today's transits.</p></div></div>
-        <div class="pillar rv d2"><div class="ic" style="background:#E5F3EC;color:var(--green)">◎</div><div><h4>Mindset and habits</h4><p>Reflection prompts, energy, sleep and focus, so guidance turns into small daily actions.</p></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MANIFEST -->
-<section id="manifest">
-  <div class="wrap manifest-grid">
     <div>
-      <div class="eyebrow rv">Manifestation, personalised</div>
-      <h2 class="serif rv d1">A daily intention, <span class="em">set by your numbers.</span></h2>
-      <p class="sub rv d2">Every morning subscribers get a short WhatsApp message: today's Personal Day, a colour to wear, and a manifestation practice matched to the day's energy.</p>
-      <div class="m-list">
-        <div class="rv"><span class="k">01</span><p><b>Matched to your cycle</b>A 1 day gets a starting ritual, an 8 day a money-focus practice, a 7 day a quiet reflection.</p></div>
-        <div class="rv d1"><span class="k">02</span><p><b>Techniques you can actually do</b>369 writing, scripting, visualisation and gratitude lists, in two minutes or less.</p></div>
-        <div class="rv d2"><span class="k">03</span><p><b>Your goal, your words</b>Tell Destiny what you are working towards and the affirmations are written around it.</p></div>
-      </div>
-    </div>
-    <div class="rv d2">
-      <div class="phone">
-        <div class="top"><div class="av">D</div><div><b>Destiny OS</b><small>online</small></div></div>
-        <div class="chat" id="chat">
-          <div class="msg"><b>Good morning, Priya ☀️</b><br>Today is a <b>Personal Day 5</b>: change, travel and new conversations.<span class="t">7:00 am</span></div>
-          <div class="msg">🎨 Wear: <b>light green</b><br>⏰ Best window: 11:00 am – 1:30 pm<span class="t">7:00 am</span></div>
-          <div class="msg">✨ <b>Today's practice (2 min)</b><br>Write 6 times: "I welcome new opportunities that move my career forward."<span class="t">7:01 am</span></div>
-          <div class="msg">Reply with any question. Ask as many as you like 🙏<span class="t">7:01 am</span></div>
-          <div class="typing" id="typing"><i></i><i></i><i></i></div>
-        </div>
-      </div>
+      <div class="price">₹2,999</div>
+      <p style="margin:14px 0 18px"><a class="btn" id="book" href="#" style="width:100%">Book on WhatsApp</a></p>
+      <p><a class="btn line js-free" href="/free-report/" style="width:100%">Get the free report first</a></p>
+      <p class="cap" style="margin-top:14px"><a href="/halia/how-it-works/">What is the HALIA framework?</a></p>
     </div>
   </div>
-</section>
+</div></section>
+<div class="frieze"></div>
+<!-- how it works -->
+<section class="scene how" id="how" data-scene="steps" style="--len:4"><div class="pin"><div class="wrap split">
+  <div>
+    <p class="era">How Destiny OS works</p>
+    <div class="count"><span id="how-n">1</span><small> of 5</small></div>
+    <h3 id="how-h"></h3>
+    <p class="lead" id="how-t"></p>
+  </div>
+  <svg id="how-svg" viewBox="0 0 340 520" role="img" aria-label="Five steps: birth details, free report, Ask Destiny, daily guidance, talk it through">
+    <path class="trail" id="how-trail" d="M70 30 C290 60 290 130 170 150 S50 240 170 262 S290 350 170 374 S110 450 250 492"/>
+    <path class="lit" pathLength="1" d="M70 30 C290 60 290 130 170 150 S50 240 170 262 S290 350 170 374 S110 450 250 492"/>
+  </svg>
+</div></div></section>
+<div class="frieze"></div>
 
 <!-- HALIA -->
-<section id="halia" style="padding-top:40px">
-  <div class="wrap center">
-    <div class="eyebrow rv">New: HALIA</div>
-    <h2 class="serif rv d1">Guidance built on <span class="em">your life today.</span></h2>
-    <p class="sub rv d2">HALIA is our AI guide for work, money and relationships. It learns from one small question a day, gives you one thing to do, and shows where you and a partner or co-founder align. It uses what you tell it, not your chart.</p>
-    <p class="rv d3" style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn btn-dark" href="/halia/">Try HALIA <span class="arr">→</span></a><a class="btn btn-line" href="/halia/how-it-works/">How it works</a></p>
+<section class="scene ways" id="halia" data-scene="ways" style="--len:3.2"><div class="pin"><div class="wrap split">
+  <div>
+    <div class="discs" aria-hidden="true"><i class="a">Your chart</i><i class="b">Your life today</i></div>
   </div>
-</section>
+  <div>
+    <p class="era">New: HALIA</p>
+    <h2 class="title" style="font-size:clamp(40px,7.4vw,88px)">Two ways of seeing.</h2>
+    <p class="lead" style="margin-top:18px">Jyotisha reads the sky you were born under. HALIA asks how your life stands today and gives you one thing to do about it. Destiny OS offers both and keeps them apart.</p>
+    <div class="pair">
+      <div><b>Tradition</b>Your numbers and chart, read by documented rules. For reflection.</div>
+      <div><b>HALIA</b>One question a day, a short answer, a next step. Built on what you tell it.</div>
+    </div>
+    <p style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="/halia/">Open HALIA</a><a class="btn line" href="/halia/how-it-works/">How we found HALIA</a></p>
+  </div>
+</div></div></section>
+<div class="frieze"></div>
 
-<!-- PRICING -->
-<section id="pricing" style="padding-top:40px">
-  <div class="wrap">
-    <div class="center">
-      <div class="eyebrow rv">Pricing</div>
-      <h2 class="serif rv d1">Start free. <span class="em">Go deeper when ready.</span></h2>
-    </div>
-    <div class="plans">
-      <div class="plan rv">
-        <span class="tag">START HERE</span>
-        <h3>Free report</h3>
-        <p class="muted">Your blueprint, once, after a quick registration</p>
-        <div class="price">₹0</div>
-        <ul>
-          <li>Life Path, Expression and Soul Urge numbers</li>
-          <li>Both Pythagorean and Chaldean</li>
-          <li>Your Vedic chart and current Dasha</li>
-          <li>Your number for 2026</li>
-          <li>Preview of the full report</li>
-        </ul>
-        <a class="btn btn-line js-free" href="/free-report/">Get my free report</a>
-      </div>
-      <div class="plan hot rv d1">
-        <span class="tag">MOST POPULAR</span>
-        <h3>Destiny Plus</h3>
-        <p class="muted">Everything, every day, on WhatsApp and the app</p>
-        <div class="price">₹599<small> / month</small></div>
-        <ul>
-          <li>The full numerology and astrology report</li>
-          <li>Ask Destiny: unlimited questions*</li>
-          <li>Daily guidance on WhatsApp</li>
-          <li>Personalised manifestation reminders</li>
-          <li>Life Compass and Food Lens</li>
-          <li>Cancel anytime</li>
-        </ul>
-        <a class="btn btn-dark js-free" href="/free-report/">Start with the free report</a>
-      </div>
-      <div class="plan rv d2">
-        <span class="tag">MOST PERSONAL</span>
-        <h3>Destiny Voice</h3>
-        <p class="muted">Talk it through, out loud, in Hindi or English</p>
-        <div class="price">₹999<small> / month</small></div>
-        <ul>
-          <li>Everything in Destiny Plus</li>
-          <li>Talk to Dr. Krish's AI voice guide</li>
-          <li>60 minutes of voice calls a month</li>
-          <li>Answers from your own numbers and chart</li>
-          <li>Cancel anytime</li>
-        </ul>
-        <a class="btn btn-line js-free" href="/free-report/">Start with the free report</a>
-      </div>
-    </div>
-    <div class="addons rv">
-      <b>Add to any plan</b>
-      <div class="chips">
-        <span>One-to-one consultation with Dr. Krish · <b>from ₹2,999</b></span>
-        <span>Compatibility report · <b>₹999</b></span>
-        <span>Annual forecast · <b>₹1,999</b></span>
-        <span><a href="/business/">Brand naming for founders · <b>from ₹999</b></a></span>
-      </div>
-    </div>
-    <p class="fine">*Fair use applies: up to 30 questions a day. Prices in INR; GST is not charged at present.</p>
+<!-- pricing -->
+<section class="sec" id="pricing"><div class="wrap">
+  <p class="era">Pricing</p>
+  <h2 class="title">Start free. Go deeper when ready.</h2>
+  <div class="plans">
+    <div class="plan rv"><h3>Free report</h3><p class="for">Your blueprint, once, after a quick registration.</p><div class="amt">₹0</div>
+      <ul><li>Life Path, Expression and Soul Urge numbers</li><li>Both Pythagorean and Chaldean</li><li>Your Vedic chart and current Dasha</li><li>Your number for this year</li><li>A preview of the full report</li></ul>
+      <a class="btn js-free" href="/free-report/">Get my free report</a></div>
+    <div class="plan rv"><h3>HALIA Chat</h3><p class="for">Practical guidance from what you tell it, here and on WhatsApp.</p><div class="amt">₹499<small> / month</small></div>
+      <ul><li>25 chats a day</li><li>One short question a day, if you want it</li><li>Compare answers with a partner or co-founder</li><li>3 chats free to start</li><li>Cancel anytime</li></ul>
+      <a class="btn line" href="/halia/">Open HALIA</a></div>
+    <div class="plan hot rv"><h3>Destiny Plus</h3><p class="for">Everything, every day, on WhatsApp and the app.</p><div class="amt">₹599<small> / month</small></div>
+      <ul><li>The full numerology and astrology report</li><li>Ask Destiny: unlimited questions*</li><li>Daily guidance on WhatsApp</li><li>Personalised manifestation reminders</li><li>Life Compass, Food Lens and HALIA chat</li><li>Cancel anytime</li></ul>
+      <a class="btn js-free" href="/free-report/">Start with the free report</a></div>
+    <div class="plan rv"><h3>Destiny Voice</h3><p class="for">Talk it through, out loud, in Hindi or English.</p><div class="amt">₹999<small> / month</small></div>
+      <ul><li>Everything in Destiny Plus</li><li>Talk to Dr. Krish's AI voice guide</li><li>60 minutes of voice calls a month</li><li>Answers from your own numbers and chart</li><li>Cancel anytime</li></ul>
+      <a class="btn js-free" href="/free-report/">Start with the free report</a></div>
   </div>
-</section>
+  <p class="addons"><b>Add to any plan:</b> one-to-one consultation with Dr. Krish from ₹2,999, compatibility report ₹999, annual forecast ₹1,999, <a href="/business/">brand naming for founders</a> from ₹999.</p>
+  <p class="cap">*Fair use applies: up to 30 questions a day. Prices in INR; GST is not charged at present.</p>
+</div></section>
+<div class="frieze"></div>
 
-<!-- ABOUT -->
-<section id="about" class="about">
-  <div class="grid-bg"></div>
-  <div class="wrap about-grid">
-    <div>
-      <div class="eyebrow rv">Why Dr. Krish Bharggav</div>
-      <h2 class="serif rv d1">A data scientist <span class="em" style="color:var(--gold-2)">who reads numbers.</span></h2>
-      <p class="quote rv d2">"I've spent my career finding patterns in numbers: in banks, in analytics companies, in AI. Numerology is the oldest pattern system we have. I built Destiny OS to read it with the <em>same discipline</em>: documented systems, consistent rules, no guesswork."</p>
-      <div class="sig rv d3"><div class="av">KB</div><div><b>Dr. Krish Bharggav</b><small>Founder, Destiny OS</small></div></div>
-    </div>
-    <div>
-      <div class="creds">
-        <div class="cred rv"><span class="y">Education</span><b>PhD in Data Science</b><span>Research training in statistics, modelling and pattern-finding</span></div>
-        <div class="cred rv d1"><span class="y">London</span><b>London Business School</b><span>Master's in Entrepreneurship</span></div>
-        <div class="cred rv d2"><span class="y">Oxford</span><b>University of Oxford</b><span>Master's in Blockchain</span></div>
-        <div class="cred rv d3"><span class="y">Banking, UK</span><b>Lloyds Bank, London Bridge</b><span>Began his career as a bank manager in London</span></div>
-        <div class="cred rv"><span class="y">Analytics</span><b>Built analytics companies</b><span>Founded and ran several data and analytics businesses</span></div>
-        <div class="cred rv d1"><span class="y">Founder & CEO</span><b>BrowseJobs.ai and Taurus AI</b><span>IT training and placement, and an agentic AI employee platform</span></div>
-        <div class="cred rv d2"><span class="y">Host</span><b>The Offer Letter</b><span>Career-advice podcast and show</span></div>
-        <div class="cred rv d3"><span class="y">Speaker</span><b>TEDx and industry stages</b><span>On technology, careers and entrepreneurship</span></div>
-      </div>
-      <p class="press rv">As featured in <a href="https://bhaskardigital.com/dr-krish-bharggav-technology-data-science-and-entrepreneurship/" target="_blank" rel="noopener">Bhaskar Digital</a>, <a href="https://english.dainikjagranmpcg.com/business/from-data-science-to-ai-driven-recruitment-dr-krish-bharggav%E2%80%99s-work/article-34139" target="_blank" rel="noopener">Dainik Jagran</a>, <a href="https://pioneeredge.in/technology-skills-and-careers-how-dr-krish-bharggav-is-bridging-the-employment-gap/" target="_blank" rel="noopener">Pioneer Edge</a> and <a href="https://www.oneindia.com/partner-content/dr-krish-bharggavs-journey-technology-talent-entrepreneurship-career-insights-012-8218647.html" target="_blank" rel="noopener">Oneindia</a>.</p>
-    </div>
+<!-- about -->
+<section class="sec" id="about"><div class="wrap about">
+  <div>
+    <p class="era">Why Dr. Krish Bharggav</p>
+    <h2 class="title" style="font-size:clamp(40px,7vw,84px)">A data scientist who reads numbers.</h2>
+    <blockquote style="margin-top:26px">"I've spent my career finding patterns in numbers: in banks, in analytics companies, in AI. Numerology is the oldest pattern system we have. I built Destiny OS to read it with the same discipline: documented systems, consistent rules, no guesswork."</blockquote>
+    <p class="cap">As featured in Bhaskar Digital, Dainik Jagran, Pioneer Edge and Oneindia.</p>
   </div>
-</section>
+  <ul class="cv">
+    <li><span>Education</span><div><b>PhD in Data Science</b><em>Research training in statistics, modelling and pattern-finding</em></div></li>
+    <li><span>London</span><div><b>London Business School</b><em>Master's in Entrepreneurship</em></div></li>
+    <li><span>Oxford</span><div><b>University of Oxford</b><em>Master's in Blockchain</em></div></li>
+    <li><span>Banking, UK</span><div><b>Lloyds Bank, London Bridge</b><em>Began his career as a bank manager in London</em></div></li>
+    <li><span>Analytics</span><div><b>Built analytics companies</b><em>Founded and ran several data and analytics businesses</em></div></li>
+    <li><span>Founder</span><div><b>BrowseJobs.ai and Taurus AI</b><em>IT training and placement, and an agentic AI employee platform</em></div></li>
+    <li><span>Host</span><div><b>The Offer Letter</b><em>Career-advice podcast and show</em></div></li>
+    <li><span>Speaker</span><div><b>TEDx and industry stages</b><em>On technology, careers and entrepreneurship</em></div></li>
+  </ul>
+</div></section>
+<div class="frieze"></div>
 
-<!-- FAQ -->
-<section id="faq">
-  <div class="wrap">
-    <div class="center">
-      <div class="eyebrow rv">Questions</div>
-      <h2 class="serif rv d1">Good to <span class="em">know.</span></h2>
-    </div>
-    <div class="faq rv">
-      <details><summary>Is the report really free?</summary><p>Yes. Register with your birth details and phone number and you get one full free report. Destiny Plus at ₹599 a month unlocks the complete report, unlimited questions and daily WhatsApp guidance.</p></details>
-      <details><summary>Is the free report in Hindi?</summary><p>Yes. Choose Hindi or English when you sign up, and switch any time. Every report is written in simple, everyday language, and you can listen to a 2-minute voice briefing of it.</p></details>
-      <details><summary>Is the voice really Dr. Krish?</summary><p>It's an AI voice guide created from Dr. Krish Bharggav's own voice, and it answers from your numbers and chart. It always says it's an AI. To speak with Dr. Krish in person, book a one-to-one consultation.</p></details>
-      <details><summary>Why both Pythagorean and Chaldean?</summary><p>They map letters to numbers differently and can give different results. Reading both and cross-checking them gives a fuller, more consistent picture than relying on one system.</p></details>
-      <details><summary>Is this predictive?</summary><p>No. Numerology and astrology are traditional, interpretive systems. Destiny OS uses documented methods and consistent rules, and offers guidance for reflection. It does not predict the future and is not a substitute for medical, legal, financial or mental-health advice.</p></details>
-      <details><summary>What does "unlimited questions" mean?</summary><p>Ask Destiny anything about your timing, decisions, colours or day, as often as you like, up to a fair-use limit of 30 questions a day.</p></details>
-      <details><summary>What happens to my birth details?</summary><p>They are used only to generate your guidance, never sold or shared, and you can delete your account and data at any time, in line with India's Digital Personal Data Protection Act, 2023.</p></details>
-      <details><summary>Can I cancel Destiny Plus?</summary><p>Yes, anytime from your customer panel. You keep access until the end of the month you have paid for.</p></details>
-    </div>
-  </div>
-</section>
+<!-- questions -->
+<section class="sec faq" id="faq"><div class="wrap" style="max-width:860px">
+  <p class="era">Questions</p>
+  <h2 class="title" style="margin-bottom:34px">Good to know.</h2>
+  <details><summary>Is the report really free?</summary><p>Yes. Register with your birth details and phone number and you get one full free report. Destiny Plus at ₹599 a month unlocks the complete report, unlimited questions and daily WhatsApp guidance.</p></details>
+  <details><summary>Is this predictive?</summary><p>No. Numerology and astrology are traditional, interpretive systems. Destiny OS uses documented methods and consistent rules, and offers guidance for reflection. It does not predict the future and is not a substitute for medical, legal, financial or mental-health advice.</p></details>
+  <details><summary>What is HALIA?</summary><p>HALIA is our AI guide for work, money and relationships. It uses only what you tell it, not your chart, asks one short question a day, and gives you one thing to do. It can also show where your answers and a partner's or co-founder's align. <a href="/halia/how-it-works/">Read how we arrived at it.</a></p></details>
+  <details><summary>Is the free report in Hindi?</summary><p>Yes. Choose Hindi or English when you sign up, and switch any time. Every report is written in simple, everyday language, and you can listen to a 2-minute voice briefing of it.</p></details>
+  <details><summary>Is the voice really Dr. Krish?</summary><p>It's an AI voice guide created from Dr. Krish Bharggav's own voice, and it answers from your numbers and chart. It always says it's an AI. To speak with Dr. Krish in person, book a one-to-one consultation.</p></details>
+  <details><summary>Why both Pythagorean and Chaldean?</summary><p>They map letters to numbers differently and can give different results. Reading both and cross-checking them gives a fuller, more consistent picture than relying on one system.</p></details>
+  <details><summary>What does "unlimited questions" mean?</summary><p>Ask Destiny anything about your timing, decisions, colours or day, as often as you like, up to a fair-use limit of 30 questions a day.</p></details>
+  <details><summary>What happens to my birth details?</summary><p>They are used only to generate your guidance, never sold or shared, and you can delete your account and data at any time, in line with India's Digital Personal Data Protection Act, 2023.</p></details>
+  <details><summary>Can I cancel?</summary><p>Yes, anytime from your customer panel. You keep access until the end of the month you have paid for.</p></details>
+</div></section>
 
-<!-- FINAL -->
-<section class="final">
-  <div class="wrap">
-    <div class="eyebrow rv">Your blueprint is waiting</div>
-    <h2 class="serif rv d1">Know your numbers.<br><span class="em">Own your days.</span></h2>
-    <a class="btn btn-dark rv d2 js-free" href="/free-report/">Get my free report <span class="arr">→</span></a>
-  </div>
-</section>
+<section class="last" id="last"><div class="wrap">
+  <h2 class="title">Know your numbers. Own your days.</h2>
+  <p style="margin-top:34px"><a class="btn js-free" href="/free-report/">Get my free report</a></p>
+</div></section>
 </main>
 
-<p class="disc">Destiny OS offers traditional numerology and astrology guidance for reflection and self-understanding. It is not predictive and does not replace medical, legal, financial or mental-health advice. If you are struggling, please reach out to Tele-MANAS on 14416 or a trusted person.</p>
-<footer>
-  <div class="wrap">
-    <span>© 2026 Destiny OS · by Dr. Krish Bharggav · Bengaluru</span>
-    <nav><a href="/halia/how-it-works/">HALIA</a><a href="/business/">Business</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="https://wa.me/917975554666" target="_blank" rel="noopener">WhatsApp</a></nav>
-  </div>
-</footer>
+<footer><div class="wrap">
+  <p>Destiny OS offers traditional numerology and astrology guidance for reflection and self-understanding. It is not predictive and does not replace medical, legal, financial or mental-health advice. If you are struggling, please reach out to Tele-MANAS on 14416 or a trusted person.</p>
+  <p>History drawn from the Vedanga Jyotisha, the Brihat Jataka and the Brihat Parashara Hora Shastra, with the dates scholars give for the texts as they survive.</p>
+  <p>© 2026 Destiny OS · by Dr. Krish Bharggav · Bengaluru</p>
+  <nav><a href="/halia/how-it-works/">HALIA</a><a href="/business/">Business</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/app/">Sign in</a><a href="https://wa.me/917975554666" target="_blank" rel="noopener">WhatsApp</a></nav>
+</div></footer>
 
 <script>
-// free report links
-document.querySelectorAll('.js-free').forEach(a => { a.href = window.FREE_REPORT_URL; if (/^https:/.test(a.href)) { a.target = '_blank'; a.rel = 'noopener'; } });
+const API = (window.DESTINY_API || '').replace(/\/$/, ''), $ = id => document.getElementById(id), NS = 'http://www.w3.org/2000/svg';
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), ease = t => 1 - Math.pow(1 - t, 3);
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches; if (still) document.documentElement.classList.add('static');
+const el = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text !== undefined) e.textContent = text; return e; };
+const pol = (r, deg) => [r * Math.cos(deg * Math.PI / 180), r * Math.sin(deg * Math.PI / 180)];
+const NAK = ['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+const SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const RASHI = ['Mesha','Vrishabha','Mithuna','Karka','Simha','Kanya','Tula','Vrischika','Dhanu','Makara','Kumbha','Meena'];
+const SG = [...'♈♉♊♋♌♍♎♏♐♑♒♓'].map(g => g + '︎'), PG = { Sun: '☉', Moon: '☽', Mars: '♂', Mercury: '☿', Jupiter: '♃', Venus: '♀', Saturn: '♄', Rahu: '☊', Ketu: '☋' };
 
-// nav border on scroll
-const nav = document.getElementById('nav');
-addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 10), {passive:true});
-
-// reveal on scroll
-const io = new IntersectionObserver(es => es.forEach(e => {
-  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-}), {threshold:.15});
-document.querySelectorAll('.rv,.cc,#venn,#steps').forEach(el => io.observe(el));
-
-// hero orbit numbers and zodiac glyphs
-const NS='http://www.w3.org/2000/svg';
-const numsG=document.getElementById('nums'), zodG=document.getElementById('zod');
-for(let i=1;i<=9;i++){
-  const a=((i-1)*40-80)*Math.PI/180, x=250+212*Math.cos(a), y=250+212*Math.sin(a);
-  const g=document.createElementNS(NS,'g'); g.setAttribute('class','num-node');
-  g.innerHTML=`<circle cx="${x}" cy="${y}" r="21" fill="#fff" stroke="#E9E6DE"/><text x="${x}" y="${y+7}" text-anchor="middle">${i}</text>`;
-  numsG.appendChild(g);
+document.querySelectorAll('.hero h1').forEach(h => h.innerHTML = h.textContent.trim().split(/\s+/).map(w => `<span>${w}</span>`).join(' '));
+/* the star-shaped plan of a Hoysala shrine: nested sixteen-pointed stars */
+function star(svg, rings, colour) {
+  for (const [R, r, w] of rings) { let d = ''; for (let i = 0; i < 32; i++) { const [x, y] = pol(i % 2 ? r : R, i * 11.25 - 90); d += (i ? 'L' : 'M') + x.toFixed(2) + ' ' + y.toFixed(2); }
+    svg.appendChild(el('path', { d: d + 'Z', fill: 'none', stroke: colour, 'stroke-width': w })); }
+  svg.appendChild(el('circle', { r: rings[rings.length - 1][1] * .7, fill: 'none', stroke: colour, 'stroke-width': .4 }));
 }
-'♈♉♊♋♌♍♎♏♐♑♒♓'.split('').forEach((s,i)=>{
-  const a=i/12*Math.PI*2, x=250+150*Math.cos(a), y=250+150*Math.sin(a);
-  const t=document.createElementNS(NS,'text');
-  t.setAttribute('x',x);t.setAttribute('y',y+5);t.setAttribute('text-anchor','middle');
-  t.setAttribute('font-size','14');t.setAttribute('fill','#B9B4A6');t.textContent=s+'\uFE0E'; t.setAttribute('font-family','Segoe UI Symbol,Noto Sans Symbols 2,DejaVu Sans,serif'); zodG.appendChild(t);
-});
-const heroNum=document.getElementById('heroNum'); let hn=7;
-setInterval(()=>{ hn=hn%9+1; heroNum.style.opacity=0; setTimeout(()=>{heroNum.textContent=hn;heroNum.style.opacity=1;hl(hn)},300)},2600);
-function hl(n){numsG.querySelectorAll('circle').forEach((c,i)=>{c.setAttribute('stroke',i+1===n?'#D9B45A':'#E9E6DE');c.setAttribute('fill',i+1===n?'#F6EEDB':'#fff')})} hl(7);
-heroNum.style.transition='opacity .3s';
+star($('star'), [[98, 84, .25], [80, 66, .3], [60, 47, .35], [40, 29, .4], [22, 14, .45]], '#E7B45A');
+document.querySelectorAll('.medal').forEach(s => star(s, [[96, 78, 1.2], [70, 54, 1], [44, 30, .9]], '#E7B45A'));
 
-// numerology engine
-const PY={a:1,j:1,s:1,b:2,k:2,t:2,c:3,l:3,u:3,d:4,m:4,v:4,e:5,n:5,w:5,f:6,o:6,x:6,g:7,p:7,y:7,h:8,q:8,z:8,i:9,r:9};
-const CH={a:1,i:1,j:1,q:1,y:1,b:2,k:2,r:2,c:3,g:3,l:3,s:3,d:4,m:4,t:4,e:5,h:5,n:5,x:5,u:6,v:6,w:6,o:7,z:7,f:8,p:8};
-const MEAN={
- 1:['The Leader','Independent, driven and original. You start things and inspire others to follow.'],
- 2:['The Diplomat','Sensitive, cooperative and intuitive. You bring people and ideas together.'],
- 3:['The Communicator','Expressive, creative and warm. Words, art and ideas flow through you.'],
- 4:['The Builder','Steady, practical and loyal. You turn plans into lasting structures.'],
- 5:['The Explorer','Curious, adaptable and free. Change and new experiences fuel you.'],
- 6:['The Nurturer','Caring, responsible and harmonious. Home, family and service matter most.'],
- 7:['The Seeker','Analytical, spiritual and deep. You look for the truth beneath the surface.'],
- 8:['The Achiever','Ambitious, capable and strategic. Money, power and results come into focus.'],
- 9:['The Humanitarian','Compassionate, wise and generous. You see the bigger picture.'],
- 11:['Master 11 · The Visionary','Highly intuitive and inspiring. A master number, kept unreduced in Pythagorean.'],
- 22:['Master 22 · The Master Builder','Big vision with practical power. A master number, kept unreduced in Pythagorean.'],
- 33:['Master 33 · The Master Teacher','Compassion at scale. A master number, kept unreduced in Pythagorean.']
+/* 27 nakshatras */
+const ring = $('ring'), dots = [];
+ring.appendChild(el('circle', { r: 132, fill: 'none', stroke: '#2A2117', 'stroke-width': 1.5 }));
+NAK.forEach((n, i) => { const [x, y] = pol(132, i * 360 / 27 - 90); dots.push(ring.appendChild(el('circle', { cx: x, cy: y, r: 4.5, fill: '#2A2117' }))); });
+const moon = ring.appendChild(el('circle', { r: 11, fill: '#F3E9D6' })), nakName = ring.appendChild(el('text', { class: 'nak', y: 4 })), nakNo = ring.appendChild(el('text', { y: 32, 'text-anchor': 'middle' }));
+/* twelve signs */
+const zod = $('zodiac'); zod.appendChild(el('circle', { r: 150, fill: 'none', stroke: '#E7B45A', 'stroke-width': 1.2, class: 'spoke', pathLength: 1 })); zod.appendChild(el('circle', { r: 96, fill: 'none', stroke: '#2A2117', 'stroke-width': 1.5 }));
+const spokes = [], glyphs = [];
+for (let i = 0; i < 12; i++) { const [x1, y1] = pol(96, i * 30 - 90), [x2, y2] = pol(150, i * 30 - 90); spokes.push(zod.appendChild(el('line', { x1, y1, x2, y2, class: 'spoke', pathLength: 1 })));
+  const [gx, gy] = pol(123, -(i * 30 + 15) - 90); glyphs.push(zod.appendChild(el('text', { x: gx, y: gy, class: 'glyph', opacity: 0 }, SG[i]))); }
+const zc = zod.appendChild(el('text', { class: 'nak', y: 6 }));
+
+const draw = {
+  gate(e, p, r) { const open = ease(clamp((p - .12) / .7)); e.style.setProperty('--p', p); e.style.setProperty('--open', open);
+    FX.morph(p, clamp(p * 24) * clamp((r.bottom - innerHeight * .25) / (innerHeight * .75)));
+    if (open > .5 && !draw.gate.done) { draw.gate.done = true; for (let k = 0; k < 7; k++) FX.burst(innerWidth / 2, innerHeight * (k + .5) / 7, 70, 11); } if (open < .2) draw.gate.done = false; },
+  nalanda(e, p) { e.style.setProperty('--p', p); },
+  sky(e, p) { const n = Math.min(27, Math.floor(clamp(p * 1.12) * 27) + 1), [x, y] = pol(132, (n - 1) * 360 / 27 - 90);
+    dots.forEach((d, i) => d.setAttribute('fill', i < n ? '#E7B45A' : '#2A2117')); moon.setAttribute('cx', x); moon.setAttribute('cy', y); nakName.textContent = NAK[n - 1]; nakNo.textContent = `${n} of 27`; },
+  twelve(e, p) { const t = clamp(p * 1.15); zod.firstChild.style.setProperty('--draw', clamp(t * 3));
+    spokes.forEach((s, i) => s.style.setProperty('--draw', clamp(t * 14 - i - 1.5))); glyphs.forEach((g, i) => g.setAttribute('opacity', clamp(t * 14 - i - 2.2)));
+    const k = Math.floor(clamp(t * 14 - 2.2, 0, 11.99)); zc.textContent = t * 14 > 2.2 ? RASHI[k] : ''; },
+  rishi(e, p) { e.style.setProperty('--draw', clamp(p * 1.3)); },
 };
-const SHORT={1:'new beginnings',2:'patience and partnership',3:'expression and joy',4:'hard work and foundations',5:'change and freedom',6:'family and responsibility',7:'reflection and learning',8:'money and results',9:'completion and release',11:'intuition',22:'big building',33:'service'};
-const digits=n=>String(n).split('').reduce((s,d)=>s+ +d,0);
-function reduce(n,keepMaster){ const chain=[n]; while(n>9 && !(keepMaster&&[11,22,33].includes(n))){ n=digits(n); chain.push(n);} return chain; }
-
-let sys='py';
-const hints={py:'Pythagorean maps letters A to Z onto 1 to 9 in sequence. It is the system most used in the West.',
-             ch:'Chaldean, from ancient Babylon, assigns numbers by sound and never uses 9 for a letter, since 9 is considered sacred.'};
-const tilesEl=document.getElementById('tiles'), redEl=document.getElementById('reduce');
-function run(){
-  const map= sys==='py'?PY:CH;
-  const name=document.getElementById('nm').value;
-  tilesEl.innerHTML=''; let total=0, i=0;
-  for(const ch of name){
-    const k=ch.toLowerCase();
-    if(ch===' '){ tilesEl.insertAdjacentHTML('beforeend','<div class="tile space"></div>'); continue;}
-    if(!map[k]) continue;
-    total+=map[k];
-    tilesEl.insertAdjacentHTML('beforeend',`<div class="tile" style="animation-delay:${i++*45}ms"><span class="l">${ch.toUpperCase()}</span><span class="n">${map[k]}</span></div>`);
+(function () {
+  const cells = $('cells'); for (let xx = -90; xx < 1300; xx += 58) cells.appendChild(el('path', { class: 'cell', d: `M${xx} 478V436Q${xx + 13} 414 ${xx + 26} 436V478Z` }));
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const robes = ['#C8843A', '#B5651D', '#C8442B', '#8A4A17', '#0A0705'];
+  const rows = [['walk-far', 478, .46, 10, 70, .95], ['walk-mid', 530, .8, 9, 52, 1], ['walk-near', 594, 1.35, 5, 38, 1]];
+  for (const [id, base, sc, n, dur, op] of rows) for (let i = 0; i < n; i++) {
+    const d = dur * (.75 + rnd() * .6), fill = id === 'walk-near' ? '#070504' : robes[Math.floor(rnd() * robes.length)];
+    const outer = $(id).appendChild(el('g', { transform: `translate(0 ${base}) scale(${sc * (.9 + rnd() * .2)})`, opacity: op }));
+    const g = outer.appendChild(el('g', { class: 'walker' + (rnd() < .45 ? ' rev' : ''), style: `--d:${d.toFixed(1)}s;--delay:-${(rnd() * d).toFixed(1)}s` }));
+    g.appendChild(el('rect', { class: 'leg', x: -4, y: -13, width: 3, height: 13, fill })); g.appendChild(el('rect', { class: 'leg b', x: 1, y: -13, width: 3, height: 13, fill }));
+    g.appendChild(el('path', { d: 'M-6 -37Q0 -42 6 -37L8 -11H-8Z', fill })); g.appendChild(el('circle', { cy: -44, r: 4.2, fill }));
+    if (rnd() < .4) g.appendChild(el('rect', { x: 5, y: -30, width: 7, height: 3, fill: '#F3E9D6', opacity: .8 }));      /* a palm-leaf manuscript under the arm */
   }
-  const chain= total? reduce(total, sys==='py') : [0];
-  redEl.innerHTML = total ? chain.map((c,j)=>`${j?'<span class="eq">→</span>':''}<span class="chip" style="animation-delay:${i*45+j*180}ms">${j===0?'Σ ':''}${c}</span>`).join('') : '<span>Type a name to begin</span>';
-  const fin=chain[chain.length-1]; document.getElementById('expr').textContent=fin||'–';
-  const m=MEAN[fin]; document.getElementById('exprTitle').textContent=m?m[0]:''; document.getElementById('exprText').textContent=m?m[1]:'';
-  // life path & personal year
-  const d=document.getElementById('dob').value;
-  if(d){ const [Y,M,D]=d.split('-').map(Number);
-    const lp=reduce(digits(D)+digits(M)+digits(Y),true).pop();
-    const py=reduce(digits(D)+digits(M)+digits(2026),false).pop();
-    document.getElementById('lp').textContent=lp; document.getElementById('lpText').textContent=(MEAN[lp]||['',''])[0];
-    document.getElementById('py').textContent=py; document.getElementById('pyText').textContent='A year of '+SHORT[py];
+})();
+/* how it works: five lamps */
+const fired = {}; function once(k, on, fn) { if (on && !fired[k]) { fired[k] = 1; fn(); } if (!on) fired[k] = 0; }
+const HOW = [['Tell us when you were born', 'Register with your mobile number and birth details. Choose Hindi or English.', 'Your details'],
+  ['Your free report', 'Twelve sections drawn from your numbers and your Vedic chart, five of them open at once, with a two-minute voice briefing.', 'Free report'],
+  ['Ask Destiny', 'Three free questions about timing, decisions, colours or your day.', 'Ask Destiny'],
+  ['Every morning at seven', 'Destiny Plus sends the day\'s guidance and a two-minute practice on WhatsApp.', 'Daily guidance'],
+  ['Talk it through', 'HALIA for a practical next step, or a one-to-one consultation with Dr. Krish.', 'HALIA or Dr. Krish']];
+const howTrail = $('how-trail'), HL = howTrail.getTotalLength(), howNodes = HOW.map((h, i) => { const f = i / (HOW.length - 1), q = howTrail.getPointAtLength(HL * f), g = $('how-svg').appendChild(el('g', { class: 'node' }));
+  g.appendChild(el('circle', { cx: q.x, cy: q.y, r: 10 })); const left = q.x > 200; g.appendChild(el('text', { x: q.x + (left ? -20 : 20), y: q.y + 5, 'text-anchor': left ? 'end' : 'start' }, h[2])); return { g, f, q }; });
+draw.steps = (e, p) => { const d = clamp(p * 1.08); e.style.setProperty('--draw', d); let cur = 0;
+  howNodes.forEach((n, i) => { const on = d >= n.f - .005; n.g.classList.toggle('on', on); if (on) cur = i;
+    once('how' + i, on, () => { const r = $('how-svg').getBoundingClientRect(); FX.burst(r.left + n.q.x / 340 * r.width, r.top + n.q.y / 520 * r.height, i === 4 ? 600 : 160, i === 4 ? 15 : 8); }); });
+  $('how-n').textContent = cur + 1; $('how-h').textContent = HOW[cur][0]; $('how-t').textContent = HOW[cur][1]; };
+draw.ways = (e, p) => { e.style.setProperty('--s', ease(clamp(p / .6)) * .9); e.style.setProperty('--o', clamp((p - .35) / .25)); };
+document.querySelectorAll('.js-free').forEach(a => { a.href = window.FREE_REPORT_URL; if (/^https:/.test(a.href)) { a.target = '_blank'; a.rel = 'noopener'; } });
+const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); if (en.target.id === 'last') { const r = en.target.getBoundingClientRect(); FX.burst(innerWidth / 2, r.top + r.height * .4, 900, 18); } } }), { threshold: .2 });
+document.querySelectorAll('.rv,#last').forEach((n, i) => { n.style.transitionDelay = (i % 4) * .09 + 's'; io.observe(n); });
+const scenes = [...document.querySelectorAll('.scene')];
+function tick() { const vh = innerHeight; for (const e of scenes) { const r = e.getBoundingClientRect(); draw[e.dataset.scene](e, still ? 1 : clamp(-r.top / (r.height - vh)), r); } }
+let queued = false; addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; tick(); }); } }, { passive: true }); addEventListener('resize', tick);
+
+/* one canvas: embers, sparks, and the headline that breaks into gold dust and re-forms as ज्योतिष */
+const FX = (function () {
+  const c = $('embers'), x = c.getContext('2d'), N = innerWidth < 700 ? 2600 : 5200; let W, H, A = [], B = [], parts = [], sparks = [], embers = [], gp = 0, ga = 0, ready = false;
+  const smooth = t => t * t * (3 - 2 * t);
+  function size() { const d = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; c.style.width = W + 'px'; c.style.height = H + 'px'; x.setTransform(d, 0, 0, d, 0, 0); }
+  function sample(paint) { const o = document.createElement('canvas'); o.width = W; o.height = H; const g = o.getContext('2d'); g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; paint(g);
+    const d = g.getImageData(0, 0, W, H).data, pts = [], st = W < 700 ? 2 : 3; for (let yy = 0; yy < H; yy += st) for (let xx = 0; xx < W; xx += st) if (d[(yy * W + xx) * 4 + 3] > 120) pts.push([xx, yy]); return pts; }
+  function targets() {
+    if (still) return; const pin = document.querySelector('[data-scene=gate] .pin'), top = pin.getBoundingClientRect().top, h1 = pin.querySelector('h1'), dv = pin.querySelector('.deva'), f = e => { const s = getComputedStyle(e); return `${s.fontWeight} ${s.fontSize} ${s.fontFamily}`; };
+    A = sample(g => { g.font = f(h1); h1.querySelectorAll('span').forEach(w => { const r = w.getBoundingClientRect(); g.fillText(w.textContent, r.left + r.width / 2, r.top - top + r.height / 2); }); });
+    B = sample(g => { g.font = f(dv); const r = dv.getBoundingClientRect(); g.fillText(dv.textContent, r.left + r.width / 2, r.top - top + r.height / 2); });
+    if (A.length < 50 || B.length < 50) return;
+    parts = []; const R = Math.max(W, H); for (let i = 0; i < N; i++) { const an = Math.random() * 6.283, m = (.12 + Math.pow(Math.random(), 1.6) * .8) * R;
+      parts.push({ a: Math.floor(i * A.length / N), b: Math.floor(Math.random() * B.length), sx: Math.cos(an) * m, sy: Math.sin(an) * m, ph: Math.random() * 6.283, s: 1.2 + Math.random() * 1.5 }); }
+    ready = true; document.documentElement.classList.add('fx-on');
   }
-}
-document.getElementById('nm').addEventListener('input',run);
-document.getElementById('dob').addEventListener('input',run);
-document.querySelectorAll('.sys-toggle button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.sys-toggle button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
-  sys=b.dataset.sys; document.getElementById('sysHint').textContent=hints[sys]; run();
-});
-run();
+  const born = () => ({ x: Math.random() * W, y: H + 10, r: .6 + Math.random() * 1.6, v: .18 + Math.random() * .5, s: Math.random() * 6.3, a: .25 + Math.random() * .55 });
+  function frame(t) {
+    x.clearRect(0, 0, W, H); x.globalCompositeOperation = 'lighter'; x.fillStyle = '#E7B45A';
+    for (const p of embers) { p.y -= p.v; p.s += .012; p.x += Math.sin(p.s) * .25; if (p.y < -10) Object.assign(p, born()); x.globalAlpha = p.a * (.6 + .4 * Math.sin(p.s * 3)); x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.3); x.fill(); }
+    if (ready && ga > .01) { const tt = clamp((gp - .05) / .7), m = tt < .3 ? 0 : smooth((tt - .3) / .7), bell = Math.pow(Math.sin(Math.PI * tt), .7), ca = Math.cos(tt * 1.5), sa = Math.sin(tt * 1.5);
+      for (const p of parts) { const a = A[p.a], b = B[p.b]; x.globalAlpha = ga * (.5 + .5 * Math.sin(t * .004 + p.ph));
+        x.fillRect(a[0] + (b[0] - a[0]) * m + (p.sx * ca - p.sy * sa) * bell + Math.sin(t * .002 + p.ph) * .8, a[1] + (b[1] - a[1]) * m + (p.sx * sa + p.sy * ca) * bell + Math.cos(t * .0017 + p.ph) * .8, p.s, p.s); } }
+    for (let i = sparks.length - 1; i >= 0; i--) { const p = sparks[i]; p.x += p.vx; p.y += p.vy; p.vx *= .955; p.vy = p.vy * .955 - .035; p.l -= p.k; if (p.l <= 0) { sparks.splice(i, 1); continue; } x.globalAlpha = p.l; x.fillRect(p.x, p.y, p.s, p.s); }
+    requestAnimationFrame(frame);
+  }
+  size(); for (let i = 0; i < 46; i++) { const p = born(); p.y = Math.random() * H; embers.push(p); }
+  addEventListener('resize', () => { size(); ready = false; clearTimeout(targets.t); targets.t = setTimeout(() => { if (scrollY < innerHeight * 3) targets(); }, 300); });
+  if (!still) { requestAnimationFrame(frame); setTimeout(targets, 2300); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(targets, 2400)); }
+  return { morph(p, a) { gp = p; ga = a; },
+    burst(bx, by, n, power) { if (still) return; for (let i = 0; i < n; i++) { const an = Math.random() * 6.283, v = power * (.15 + Math.pow(Math.random(), 2)); sparks.push({ x: bx, y: by, vx: Math.cos(an) * v, vy: Math.sin(an) * v, l: 1, k: .006 + Math.random() * .014, s: 1 + Math.random() * 2.2 }); } } };
+})();
 
-// nine numbers
-const NINE=[[1,'Sun','Leadership'],[2,'Moon','Harmony'],[3,'Jupiter','Expression'],[4,'Rahu','Structure'],[5,'Mercury','Change'],[6,'Venus','Love'],[7,'Ketu','Wisdom'],[8,'Saturn','Ambition'],[9,'Mars','Compassion']];
-document.getElementById('nine').innerHTML=NINE.map(([n,p,w])=>`<div class="n9"><div class="d">${n}</div><span class="w">${w}</span><span class="k">${p}</span></div>`).join('');
+tick();
 
-// whatsapp chat animation
-const msgs=[...document.querySelectorAll('#chat .msg')], typing=document.getElementById('typing');
-let chatStarted=false;
-new IntersectionObserver((es,o)=>{ if(es[0].isIntersecting && !chatStarted){ chatStarted=true; o.disconnect(); playChat(); } },{threshold:.4}).observe(document.getElementById('chat'));
-function playChat(){
-  let t=300;
-  msgs.forEach(m=>{
-    setTimeout(()=>typing.classList.add('on'),t); t+=900;
-    setTimeout(()=>{ typing.classList.remove('on'); m.after(typing); m.classList.add('show'); },t); t+=700;
-  });
+/* the rishi asks, one question at a time */
+let stepNo = 1;
+$('in-dob').max = new Date().toISOString().slice(0, 10);
+$('f').onsubmit = async ev => {
+  ev.preventDefault(); $('err').textContent = '';
+  const name = $('in-name').value.trim(), dob = $('in-dob').value;
+  if (stepNo === 1) { if (name.length < 2) return $('err').textContent = 'Tell the rishi your name.'; stepNo = 2; $('q2').classList.add('on'); $('in-dob').focus(); return; }
+  if (stepNo === 2) { if (!dob) return $('err').textContent = 'Choose your date of birth.'; stepNo = 3; $('q3').classList.add('on'); $('go').textContent = 'Reveal my chart'; $('in-time').focus(); return; }
+  const btn = $('go'); btn.disabled = true; btn.textContent = 'Reading the sky…';
+  try {
+    const body = { name, dob }; if ($('in-city').value.trim()) { body.city = $('in-city').value.trim(); if ($('in-time').value) body.birth_time = $('in-time').value; }
+    const res = await fetch(API + '/api/preview', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await res.json().catch(() => null);
+    if (!res.ok) throw new Error(data && typeof data.detail === 'string' ? data.detail : 'The sky could not be read just now. Try again in a minute.');
+    reveal(name, dob, data);
+  } catch (e) { $('err').textContent = e.message.includes('fetch') ? 'No connection. Check your internet and try again.' : e.message; }
+  btn.disabled = false; btn.textContent = 'Reveal my chart';
+};
+
+const wait = ms => new Promise(r => setTimeout(r, still ? 0 : ms));
+function count(node, to, ms) { return new Promise(done => { const t0 = performance.now(); (function f(t) { const p = still ? 1 : clamp((t - t0) / ms); node.textContent = Math.round(to * ease(p)); p < 1 ? requestAnimationFrame(f) : done(); })(t0); }); }
+async function reveal(name, dob, d) {
+  const n = d.numbers.pythagorean, mean = k => d.meanings[String(k)] || '';
+  $('reveal').classList.remove('hide'); $('consult').classList.remove('hide');
+  $('r-name').textContent = name; $('r-sum').textContent = ''; $('r-big').textContent = '0'; $('r-mean').textContent = '';
+  $('book').href = 'https://wa.me/917975554666?text=' + encodeURIComponent(`Hi, I'd like to book a one-to-one consultation with Dr. Krish. My name is ${name}.`);
+  const year = new Date().getFullYear();
+  const T = [['Birth number', n.birthNumber], ['Expression', n.expression], ['Soul urge', n.soulUrge], ['Personal year ' + year, n.personalYear]];
+  $('tiles').classList.remove('on'); $('tiles').innerHTML = T.map(([l, v]) => `<div><b>0</b><span>${l}</span><em>${mean(v)}</em></div>`).join('');
+  buildWheel(d.chart);
+  $('reveal').scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' }); await wait(900);
+  const red = v => { while (v > 9 && ![11, 22, 33].includes(v)) v = String(v).split('').reduce((a, b) => a + +b, 0); return v; };
+  const [y, m, dd] = dob.split('-').map(Number), parts = [['day', dd], ['month', m], ['year', y]]; let shown = '';
+  for (const [label, v] of parts) { shown += (shown ? '  +  ' : '') + `${label} ${red(v)}`; $('r-sum').textContent = shown; await wait(420); }
+  $('r-sum').textContent = shown + '  =  ' + (red(dd) + red(m) + red(y)); await wait(600);
+  $('r-big').textContent = n.lifePath; $('r-big').classList.remove('slam'); void $('r-big').offsetWidth; $('r-big').classList.add('slam');
+  { const r = $('r-big').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 900, 17); }
+  await wait(700); $('r-mean').textContent = mean(n.lifePath) + '.'; await wait(500);
+  const tiles = [...$('tiles').children]; $('tiles').classList.add('on'); for (let i = 0; i < tiles.length; i++) { tiles[i].classList.add('on'); count(tiles[i].firstChild, T[i][1], 700); await wait(260); }
+  new IntersectionObserver((es, o) => { if (es.some(e => e.isIntersecting)) { o.disconnect(); spin(d.chart); } }, { threshold: .45 }).observe($('wheel'));
 }
+
+/* the chart wheel: Aries at the top, signs running anticlockwise; planets circle in and settle */
+let planets = [];
+const at = lon => -90 - lon;
+function buildWheel(ch) {
+  const w = $('wheel'); w.innerHTML = ''; planets = [];
+  w.appendChild(el('circle', { r: 190, class: 'sec' })); w.appendChild(el('circle', { r: 150, class: 'sec' })); w.appendChild(el('circle', { r: 46, class: 'sec' }));
+  for (let i = 0; i < 12; i++) { const [x1, y1] = pol(46, at(i * 30)), [x2, y2] = pol(190, at(i * 30)); w.appendChild(el('line', { x1, y1, x2, y2, class: 'sec' }));
+    const [tx, ty] = pol(170, at(i * 30 + 15)); w.appendChild(el('text', { x: tx, y: ty, class: 'sn' }, RASHI[i])); }
+  if (ch.lagna) { const [x1, y1] = pol(150, at(ch.lagna.longitude)), [x2, y2] = pol(198, at(ch.lagna.longitude)); w.appendChild(el('line', { x1, y1, x2, y2, class: 'asc' })); }
+  const perSign = {};
+  Object.entries(ch.natal).forEach(([name, p], i) => { const k = SIGNS.indexOf(p.sign), slot = perSign[k] = (perSign[k] || 0) + 1;
+    const g = w.appendChild(el('g', { class: 'pl' })); g.appendChild(el('circle', { r: 13 })); g.appendChild(el('text', {}, PG[name])); g.appendChild(el('title', {}, `${name} in ${p.sign}`));
+    planets.push({ g, lon: k * 30 + 15, r: 150 - slot * 27 + 6, turns: 1.2 + i * .28 }); });
+  place(0);
+  const sidereal = s => `${s} (${RASHI[SIGNS.indexOf(s)]})`, F = [['Moon sign', sidereal(ch.natal.Moon.sign)], ['Birth star', ch.birth_nakshatra], ['Sun sign', sidereal(ch.natal.Sun.sign)], ch.lagna ? ['Rising sign', sidereal(ch.lagna.sign)] : ['Current period', ch.mahadasha + ' mahadasha']];
+  $('facts').innerHTML = F.map(([l, v]) => `<div><span>${l}</span><b>${v}</b></div>`).join(''); $('r-note').textContent = ch.lagna ? '' : 'Add your birth time and city to see your rising sign. Without them the Moon\'s position is approximate.';
+}
+function place(t) { for (const p of planets) { const e = ease(t), [x, y] = pol(p.r + (1 - e) * 60, at(p.lon + (1 - e) * 360 * p.turns)); p.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`); p.g.setAttribute('opacity', clamp(t * 4)); } }
+function spin() { const t0 = performance.now(); (function f(t) { const p = still ? 1 : clamp((t - t0) / 3600); place(p); if (p < 1) return requestAnimationFrame(f);
+  const r = $('wheel').getBoundingClientRect(); FX.burst(r.left + r.width / 2, r.top + r.height / 2, 420, 13); })(t0); }
 </script>
 </body>
 </html>
