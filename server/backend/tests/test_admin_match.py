@@ -253,3 +253,13 @@ def test_the_public_guide_shows_the_engines_own_steps_and_weights():
     pts = (3 * eng._item_score(it["FAMILY_PLAN"], "want", "open") + 2 * eng._item_score(it["LIVING"], "metro", "abroad")
            + 2 * eng._item_score(it["MONEY_STYLE"], "saver", "balanced") + 2 * eng._item_score(it["CONFLICT"], "talk", "talk"))
     assert pts == 6 and round(100 * pts / 9) == 67                                                      # the worked example
+
+
+def test_the_guide_quotes_the_research_figures_exactly():
+    """Figures from the 26 Nov 2026 replication (results.csv). If the page is edited, these must still be there."""
+    from pathlib import Path
+    page = (Path(__file__).resolve().parents[3] / "site" / "guide" / "index.html").read_text()
+    for w in ("50.300%", "61.9%", "66.500%", "82.7%", "82.3%", "87.500%", "76.1%", "79.7%", "75.1%", "79.600%", "79.800%", "57.800%", "34.900%"):
+        assert f"--w:{w}" in page or f"--b:{w}" in page, w
+    for text in ("not a measured accuracy for Destiny OS reports", "−0.2 points, with a range of −0.5 to +0.1", "seasons up to 2002", "545 men", "48,842 adults"):
+        assert text in page, text
