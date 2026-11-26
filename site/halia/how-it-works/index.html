@@ -4,187 +4,260 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FBFAF7">
-<title>How HALIA works — Destiny OS</title>
-<meta name="description" content="HALIA is the guidance engine of Destiny OS. What it does, how the alignment score is worked out, the research behind it, and what has not been proven yet.">
+<title>HALIA — guidance built on your life | Destiny OS</title>
+<meta name="description" content="HALIA is the guidance engine of Destiny OS. See how it works, how accurate predictions built this way can be, and what has not been proven yet.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../halia.css?v=2">
 <style>
-:root{--bg:#FBFAF7;--paper:#fff;--ink:#15171F;--muted:#6B6F7E;--line:#E4E1D9;
-  --sans:"DM Sans",system-ui,sans-serif;--mono:"DM Mono",ui-monospace,monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
-a{color:inherit}
-.wrap{max-width:680px;margin:0 auto;padding:20px 20px 90px}
-header{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0 22px;border-bottom:1px solid var(--ink)}
-header a{text-decoration:none}
-.brand{font:500 13px var(--mono);letter-spacing:.18em}
-.lbl{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-h1{font:600 clamp(36px,9vw,56px)/1.05 var(--sans);letter-spacing:-.03em;margin:44px 0 18px}
-h2{font:600 clamp(25px,6vw,32px)/1.15 var(--sans);letter-spacing:-.02em;margin:10px 0 16px}
-h3{font:600 18px/1.3 var(--sans);margin-bottom:4px}
-p{margin-bottom:14px}.lead{font-size:20px;line-height:1.5}.muted{color:var(--muted)}.small{font-size:14.5px}
-section{padding:46px 0;border-bottom:1px solid var(--line)}
-.btn{display:inline-block;padding:14px 24px;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;text-decoration:none;margin-top:8px}
-.grid{display:grid;gap:26px 28px;margin-top:22px}
-@media(min-width:600px){.grid{grid-template-columns:1fr 1fr}}
-.grid p{margin:0;color:var(--muted);font-size:15.5px}
-ol.steps{list-style:none;counter-reset:s;margin-top:20px}
-ol.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;padding:16px 0;border-top:1px solid var(--line)}
-ol.steps li::before{content:counter(s,decimal-leading-zero);font:500 13px var(--mono);color:var(--muted);padding-top:4px}
-ol.steps p{margin:0;color:var(--muted);font-size:15.5px}
-.find{padding:26px 0;border-top:1px solid var(--line)}.find:first-of-type{border-top:0;padding-top:8px}
-.bars{margin:16px 0 10px}
-.bar{display:grid;grid-template-columns:1fr 52px;gap:10px;align-items:center;margin-bottom:10px;font-size:15px}
-.bar .t{grid-column:1/-1;margin-bottom:-4px}
-.bar .track{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
-.bar .track i{display:block;height:100%;background:var(--ink)}
-.bar .track i.dim{background:#A9A8A2}
-.bar b{text-align:right;font:500 15px var(--mono)}
-.src{font-size:13.5px;color:var(--muted)}
-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:15px}
-th,td{text-align:left;padding:10px 8px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
-th{font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-td:last-child,th:last-child{text-align:right;padding-right:0;white-space:nowrap}
-.big{font:600 64px/1 var(--sans);letter-spacing:-.03em}
-ul.plain{list-style:none}ul.plain li{padding:12px 0;border-top:1px solid var(--line)}ul.plain li:first-child{border-top:0}
-.note{font-size:14.5px;color:var(--muted);border-left:2px solid var(--ink);padding-left:14px;margin:18px 0}
-footer{padding-top:30px;font-size:13.5px;color:var(--muted)}footer p{margin-bottom:8px}
+body{font-size:18px;overflow-x:clip}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+nav.top{position:fixed;inset:0 0 auto 0;z-index:20;background:rgba(251,250,247,.8);backdrop-filter:saturate(1.6) blur(16px);-webkit-backdrop-filter:saturate(1.6) blur(16px)}
+nav.top .wrap{display:flex;justify-content:space-between;align-items:center;height:58px}
+.giant{font:800 clamp(52px,13.5vw,148px)/.93 var(--display);letter-spacing:-.05em}
+.xl{font:700 clamp(38px,8.4vw,84px)/1 var(--display);letter-spacing:-.04em}
+.lead{font-size:clamp(19px,2.6vw,24px);line-height:1.45;color:var(--muted);max-width:30em}
+.foot{font-size:14px;line-height:1.5;color:var(--muted);max-width:44em}
+.dark .foot,.dark .lead{color:#A6A9B5}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:110px 0 54px;position:relative;overflow:hidden}
+.hero .discs{position:absolute;right:-6vw;top:9vh;width:min(86vw,620px);aspect-ratio:1.55;pointer-events:none}
+.hero .discs i{position:absolute;top:0;width:64.5%;aspect-ratio:1;border-radius:50%;mix-blend-mode:multiply}
+.hero .discs .a{left:0;background:var(--marigold);animation:inA 1.6s cubic-bezier(.2,.8,.2,1) both}
+.hero .discs .b{right:0;background:var(--peacock);animation:inB 1.6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes inA{from{transform:translateX(-46%);opacity:0}}
+@keyframes inB{from{transform:translateX(46%);opacity:0}}
+.hero h1{position:relative;max-width:9.5em}
+.hero .lead{margin:22px 0 26px;position:relative}
+.hero .rise{animation:rise 1s .35s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{transform:translateY(28px);opacity:0}}
+@media(min-width:900px){
+  .hero{justify-content:center;padding-bottom:0}
+  .hero h1{max-width:5.6em;font-size:clamp(84px,9vw,128px)}
+  .hero .lead{max-width:22em}
+  .hero .discs{width:min(35vw,470px);right:2vw;top:50%;translate:0 -50%}
+}
+
+/* pinned scroll scenes: the script moves each one from 0 to 1 while it is pinned */
+.scene{position:relative;height:calc(var(--len,3)*100svh)}
+.pin{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding-top:58px}
+.pin>.wrap{width:100%}
+.dark{background:var(--ink);color:#fff}
+.static .scene{height:auto}.static .pin{position:static;height:auto;padding:90px 0}
+
+/* words that light up */
+.words{font:700 clamp(30px,6.4vw,66px)/1.1 var(--display);letter-spacing:-.035em}
+.words span{color:#D2CFC6;transition:color .25s}.words span.lit{color:var(--ink)}
+
+/* one question a day */
+.ask{display:grid;gap:26px;align-items:center}
+@media(min-width:820px){.ask{grid-template-columns:1fr 340px;gap:70px}}
+.caps{position:relative;min-height:9.5em}
+.caps>div{position:absolute;inset:0;opacity:0;transform:translateY(16px);transition:opacity .45s,transform .45s}
+[data-step="0"] .caps>div:nth-child(1),[data-step="1"] .caps>div:nth-child(2),[data-step="2"] .caps>div:nth-child(3){opacity:1;transform:none}
+.caps p{color:var(--muted);margin-top:10px;font-size:clamp(17px,2.2vw,21px)}
+.phone{width:min(100%,340px);margin:0 auto;background:var(--paper);border:1.5px solid var(--ink);border-radius:34px;padding:22px 18px;min-height:330px;box-shadow:0 30px 60px -34px rgba(21,23,31,.5)}
+.phone .q{font:600 19px/1.25 var(--display);margin:6px 0 14px}
+.phone .chip{pointer-events:none}
+[data-step="1"] .phone .pick,[data-step="2"] .phone .pick{background:var(--ink);border-color:var(--ink);color:#fff}
+.phone .saved{margin-top:18px;border-top:1.5px solid var(--line);opacity:0;transform:translateY(10px);transition:opacity .45s,transform .45s}
+[data-step="2"] .phone .saved{opacity:1;transform:none}
+.phone .saved div{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.phone .saved span{color:var(--muted)}
+
+/* accuracy */
+.num{font:800 clamp(128px,37vw,330px)/.82 var(--display);letter-spacing:-.07em;font-variant-numeric:tabular-nums}
+.num small{font-size:.36em;letter-spacing:-.04em;margin-left:.04em}
+.dark .num{color:var(--marigold)}
+.meter{height:10px;border-radius:5px;background:#2B2E3A;margin:26px 0 20px;position:relative}
+.meter i{position:absolute;inset:0 auto 0 0;border-radius:5px;background:var(--marigold);width:calc(var(--v,50)*1%)}
+.meter b{position:absolute;left:50%;top:-7px;bottom:-7px;width:2px;background:#fff;opacity:.55}
+.stage{font:600 clamp(21px,3.6vw,34px)/1.2 var(--display);letter-spacing:-.02em;min-height:2.5em}
+
+/* confident or silent */
+.gate{display:grid;gap:26px;align-items:center}
+@media(min-width:820px){.gate{grid-template-columns:1fr 1fr;gap:60px}}
+.dots{display:grid;grid-template-columns:repeat(10,1fr);gap:clamp(5px,1.3vw,10px);max-width:360px}
+.dots i{aspect-ratio:1;border-radius:50%;background:var(--line);transition:background .3s}
+.dots i.on{background:var(--peacock)}
+.gate .num{font-size:clamp(110px,26vw,230px);color:var(--peacock)}
+
+/* birth details */
+.zero{padding:120px 0}
+.bars{max-width:620px;margin:34px 0 22px}
+.bars div{margin-bottom:16px}.bars span{display:flex;justify-content:space-between;font-size:16px;margin-bottom:6px}
+.bars b{display:block;height:12px;border-radius:6px;background:var(--line);overflow:hidden}
+.bars b i{display:block;height:100%;background:var(--ink);border-radius:6px}.bars b i.dim{background:#A9A8A2}
+
+/* alignment */
+.al{display:grid;gap:14px;align-items:center}
+@media(min-width:820px){.al{grid-template-columns:1fr 1fr;gap:60px}}
+.venn{position:relative;width:min(100%,460px);aspect-ratio:1.5;margin:0 auto}
+.venn i{position:absolute;top:8%;left:50%;width:56%;aspect-ratio:1;margin-left:-28%;border-radius:50%;mix-blend-mode:multiply}
+.venn .a{background:var(--marigold);transform:translateX(calc((1 - var(--s,0))*-52% - 18%))}
+.venn .b{background:var(--peacock);transform:translateX(calc((1 - var(--s,0))*52% + 18%))}
+.venn .n{position:absolute;inset:0;display:grid;place-items:center;font:800 clamp(54px,13vw,104px)/1 var(--display);letter-spacing:-.05em;color:#fff;z-index:2}
+.areas{margin-top:18px;opacity:var(--o,0)}
+.areas div{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:16px}
+
+/* features and lists */
+.block{padding:120px 0}
+.bento{display:grid;gap:14px;margin-top:38px}
+@media(min-width:700px){.bento{grid-template-columns:repeat(6,1fr)}.bento>div{grid-column:span 2}.bento>.w{grid-column:span 3}}
+.bento>div{background:var(--paper);border-radius:26px;padding:28px 26px;min-height:170px}
+.bento>.t{background:var(--peacock);color:#fff}.bento>.m{background:var(--marigold)}
+.bento p{margin:8px 0 0;font-size:16.5px;opacity:.78}
+.two{display:grid;gap:50px;margin-top:10px}
+@media(min-width:820px){.two{grid-template-columns:1fr 1fr;gap:70px}}
+ul.plain{list-style:none;margin-top:20px}ul.plain li{padding:15px 0;border-top:1.5px solid var(--line)}
+.end{padding:130px 0 90px;text-align:center}.end .lead{margin:20px auto 28px}
+footer{padding:34px 0 60px;border-top:1.5px solid var(--line)}footer p{font-size:14px;color:var(--muted);margin-bottom:8px;max-width:60em}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header><a class="brand" href="/">DESTINY OS</a><a class="lbl" href="/halia/">Open HALIA</a></header>
+<nav class="top"><div class="wrap">
+  <a class="mark" href="/halia/how-it-works/"><svg viewBox="0 0 34 22" aria-hidden="true"><circle cx="11" cy="11" r="11" fill="#E9A92B"/><circle cx="23" cy="11" r="11" fill="#0E6A70"/></svg>HALIA</a>
+  <a class="btn sm" href="/halia/">Try HALIA</a>
+</div></nav>
 
-  <section style="padding-top:0">
-    <h1>Guidance built on your life, not your birth chart.</h1>
-    <p class="lead">HALIA is the guidance engine of Destiny OS. It learns from what you tell it, a little each day, and turns that into small practical actions and honest comparisons with the people and jobs in your life.</p>
-    <p class="muted">It is an AI. It does not predict your future, and it will tell you when it doesn't know enough.</p>
+<header class="hero">
+  <div class="discs" aria-hidden="true"><i class="a"></i><i class="b"></i></div>
+  <div class="wrap rise">
+    <h1 class="giant">Guidance built on your life.</h1>
+    <p class="lead">HALIA is the engine inside Destiny OS. It learns from what you tell it, one small question a day, and turns that into something you can act on.</p>
     <a class="btn" href="/halia/">Try HALIA</a>
-  </section>
+  </div>
+</header>
 
-  <section>
-    <div class="lbl">What it does</div>
-    <h2>Six things, all from the same profile.</h2>
-    <div class="grid">
-      <div><h3>Chat</h3><p>Ask about work, money, relationships or your day. You get a short answer and one thing to do today.</p></div>
-      <div><h3>One question a day</h3><p>A single tap-to-answer question, in the app or on WhatsApp. Skip any of them. This is how HALIA gets to know you without a long form.</p></div>
-      <div><h3>Compare with a partner</h3><p>Send a link. When they accept, you both see how your answers align across five areas, and what is worth talking about.</p></div>
-      <div><h3>Compare with a co-founder</h3><p>The same idea for business: commitment, risk, roles and working style.</p></div>
-      <div><h3>Job fit</h3><p>Your skills, experience and working preferences against what a role asks for.</p></div>
-      <div><h3>Scan to chat</h3><p>A QR code opens HALIA on WhatsApp, with the same daily allowance as the app.</p></div>
-    </div>
-  </section>
+<section class="scene" data-scene="words" style="--len:2.2"><div class="pin"><div class="wrap">
+  <p class="words">HALIA doesn't read your chart. It asks how things are going right now, remembers what you say, and gives you one small thing to do today. When it doesn't know enough, it says so.</p>
+</div></div></section>
 
-  <section>
-    <div class="lbl">How it works</div>
-    <h2>Five steps, repeated every day.</h2>
-    <ol class="steps">
-      <li><div><h3>You agree to how your answers are used</h3><p>Adults only. This is separate from signing up, and you can withdraw it at any time.</p></div></li>
-      <li><div><h3>HALIA asks one useful question</h3><p>It starts with what you want to improve and how things stand today, then fills in the rest over time. A skipped question rests for a week.</p></div></li>
-      <li><div><h3>Your answers become your profile</h3><p>Each answer is stored with its date. "How are things going" questions are asked again every month, so HALIA sees the direction you are moving in.</p></div></li>
-      <li><div><h3>Guidance uses only that profile</h3><p>Chat replies and comparisons draw on what you declared. Your date of birth, name and chart are never sent to HALIA.</p></div></li>
-      <li><div><h3>You stay in control</h3><p>See every answer HALIA holds, remove any of them, or delete everything in one tap.</p></div></li>
-    </ol>
-  </section>
+<section class="scene" data-scene="ask" data-step="0" style="--len:3"><div class="pin"><div class="wrap ask">
+  <div class="caps">
+    <div><h2 class="xl">One question a day.</h2><p>In the app or on WhatsApp. A single tap, or skip it.</p></div>
+    <div><h2 class="xl">You answer in a tap.</h2><p>No forms. A skipped question rests for a week.</p></div>
+    <div><h2 class="xl">It becomes your profile.</h2><p>Dated, visible to you, and yours to change or delete.</p></div>
+  </div>
+  <div class="phone" aria-hidden="true">
+    <div class="kicker">One quick question</div>
+    <div class="q">How in control of your money do you feel right now?</div>
+    <div class="chips"><span class="chip">Very low</span><span class="chip">Low</span><span class="chip">OK</span><span class="chip pick">Good</span><span class="chip">Very good</span></div>
+    <div class="saved"><div><span>Focus</span>Money</div><div><span>Money, today</span>Good</div><div><span>Time a day</span>15 minutes</div></div>
+  </div>
+</div></div></section>
 
-  <section>
-    <div class="lbl">The science</div>
-    <h2>Why HALIA asks about your life today.</h2>
-    <p>Before building HALIA we tested what predicts how people's careers and earnings turn out, using public datasets. Three findings shaped the design.</p>
+<section class="scene dark" data-scene="acc" style="--len:4"><div class="pin"><div class="wrap">
+  <div class="kicker" style="color:var(--marigold)">How accurate can a prediction be?</div>
+  <div class="num"><span id="acc-n">50</span><small>%</small></div>
+  <div class="meter"><i></i><b></b></div>
+  <div class="stage" id="acc-s">A coin flip.</div>
+  <p class="foot">Predicting whether a person will earn above the median next year. 545 men in a public US wage panel, 1980 to 1987, scored on people the model had never seen. The white line marks a coin flip.</p>
+</div></div></section>
 
-    <div class="find">
-      <h3>1. Where you are now is the strongest signal</h3>
-      <p class="muted">We asked a model to predict whether a person would earn above the median next year. A coin flip scores 50%.</p>
-      <div class="bars">
-        <div class="bar"><span class="t">Background only (education, ethnicity)</span><span class="track"><i class="dim" style="width:62%"></i></span><b>62%</b></div>
-        <div class="bar"><span class="t">Plus current context (job, hours, household)</span><span class="track"><i class="dim" style="width:66%"></i></span><b>66%</b></div>
-        <div class="bar"><span class="t">Plus current level (what they earn today)</span><span class="track"><i style="width:83%"></i></span><b>83%</b></div>
-      </div>
-      <p class="src">545 men followed for eight years in a public US wage panel from the 1980s, tested on people the model had not seen. This is why HALIA asks how each part of your life stands right now, and asks again each month.</p>
-    </div>
+<section class="scene" data-scene="gate" style="--len:3.4"><div class="pin"><div class="wrap gate">
+  <div>
+    <h2 class="xl">Confident, or silent.</h2>
+    <p class="lead" style="margin-top:14px">Harder questions get better answers when the model is allowed to say "not enough to go on".</p>
+    <div class="num" style="margin-top:22px"><span id="gate-n">74</span><small>%</small></div>
+    <div class="stage" id="gate-s" style="min-height:1.4em;margin-top:12px">correct, answering everyone</div>
+  </div>
+  <div>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <p class="foot" style="margin-top:20px">Each dot is one person in a hundred. Lit dots get an answer. Predicting whether a professional baseball player is still a regular three seasons later, on 3,583 held-out seasons.</p>
+  </div>
+</div></div></section>
 
-    <div class="find">
-      <h3>2. Predictions fade with distance</h3>
-      <p class="muted">The same model, looking three to four years ahead instead of one, dropped from 83% to 77%. HALIA therefore stays close to the present: small actions for today and this week, not forecasts for your life.</p>
-    </div>
+<section class="zero"><div class="wrap">
+  <h2 class="xl" style="max-width:11em">Birth details added nothing we could measure.</h2>
+  <p class="lead" style="margin-top:18px">We gave the same baseball model each player's numerology numbers, zodiac sign and lunar phase. Then we gave it a different player's.</p>
+  <div class="bars">
+    <div><span>Track record only<strong>73.9%</strong></span><b><i style="width:73.9%"></i></b></div>
+    <div><span>Plus real birth details<strong>73.0%</strong></span><b><i class="dim" style="width:73%"></i></b></div>
+    <div><span>Plus someone else's birth details<strong>73.2%</strong></span><b><i class="dim" style="width:73.2%"></i></b></div>
+  </div>
+  <p class="foot">The differences are within noise. So HALIA runs on what you tell it. Astrology and numerology readings remain a separate, traditional part of Destiny OS and do not feed HALIA.</p>
+</div></section>
 
-    <div class="find">
-      <h3>3. Birth details added nothing measurable</h3>
-      <p class="muted">We added numerology numbers, zodiac sign and lunar phase to a model that already knew a person's track record, across about 3,600 held-out seasons of professional baseball careers.</p>
-      <div class="bars">
-        <div class="bar"><span class="t">Track record only</span><span class="track"><i style="width:73.9%"></i></span><b>73.9%</b></div>
-        <div class="bar"><span class="t">Track record plus real birth details</span><span class="track"><i class="dim" style="width:73%"></i></span><b>73.0%</b></div>
-        <div class="bar"><span class="t">Track record plus someone else's birth details</span><span class="track"><i class="dim" style="width:73.2%"></i></span><b>73.2%</b></div>
-      </div>
-      <p class="src">Outcome: still a regular player three seasons later. Majority guess 53.9%. The differences are within noise. So HALIA is built on what you tell it. Astrology and numerology readings remain a separate, traditional part of Destiny OS and do not feed HALIA.</p>
-    </div>
+<section class="scene" data-scene="align" style="--len:3"><div class="pin"><div class="wrap al">
+  <div>
+    <h2 class="xl">See where two people align.</h2>
+    <p class="lead" style="margin-top:14px">Send a link to a partner or a co-founder. You each answer the same questions and see the same result.</p>
+    <div class="areas"><div><span>Life goals</span><b>100</b></div><div><span>Home and values</span><b>100</b></div><div><span>Day to day</span><b>67</b></div><div><span>Money</span><b>33</b></div><div><span>Handling disagreement</span><b>0</b></div></div>
+  </div>
+  <div>
+    <div class="venn" aria-hidden="true"><i class="a"></i><i class="b"></i><div class="n" id="al-n">0</div></div>
+    <p class="foot" style="text-align:center;margin:8px auto 0">An example. The score shows how closely your answers match. It is not a prediction of how things will turn out, and there is no score until you have both answered enough.</p>
+  </div>
+</div></div></section>
 
-    <div class="find">
-      <h3>What published research adds</h3>
-      <p class="muted">A study pooling 43 long-running studies of couples found that how each person feels about the relationship itself is what predicts its quality. Personality traits and a partner's own answers added little, and nothing predicted whose relationship would improve or decline. That is why HALIA shows couples where their answers differ and stops short of a verdict.</p>
-      <p class="muted">HALIA's daily rhythm follows the "just-in-time adaptive intervention" approach from health research: small support, fitted to your current situation, at the moment you can use it.</p>
-      <p class="src">Sources: <a href="https://doi.org/10.1073/pnas.1917036117">Joel et al., PNAS, 2020</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/27663578/">Nahum-Shani et al., Annals of Behavioral Medicine, 2018</a></p>
-    </div>
-  </section>
+<section class="block"><div class="wrap">
+  <h2 class="xl">Everything it does.</h2>
+  <div class="bento">
+    <div class="w t"><h3>Chat</h3><p>Ask about work, money, relationships or your day. A short answer and one thing to do.</p></div>
+    <div class="w"><h3>One question a day</h3><p>How HALIA gets to know you, without a long form.</p></div>
+    <div><h3>Partner</h3><p>Five areas, and what is worth talking about.</p></div>
+    <div class="m"><h3>Co-founder</h3><p>Commitment, risk, roles and working style.</p></div>
+    <div><h3>Job fit</h3><p>Your skills and preferences against what a role asks for.</p></div>
+    <div class="w"><h3>Scan to chat</h3><p>A QR code opens HALIA on WhatsApp.</p></div>
+    <div class="w"><h3>Your data</h3><p>See every answer, remove any of them, or delete it all in one tap.</p></div>
+  </div>
+</div></section>
 
-  <section>
-    <div class="lbl">The alignment score</div>
-    <h2>How two people are compared.</h2>
-    <p>Each question has a weight and a rule. Answers that match score full marks, answers on a scale score by how close they are (low and medium risk is a half match), and "flexible" or "open" matches anything. The area scores are combined by weight.</p>
-    <table>
-      <tr><th>Question</th><th>You</th><th>Them</th><th>Match</th></tr>
-      <tr><td>Having children</td><td>Want</td><td>Open either way</td><td>Full</td></tr>
-      <tr><td>Saver or spender</td><td>Saver</td><td>Spender</td><td>None</td></tr>
-      <tr><td>Free time</td><td>At home</td><td>Out with people</td><td>None</td></tr>
-      <tr><td>Handling disagreement</td><td>Talk at once</td><td>Cool off first</td><td>None</td></tr>
-    </table>
-    <div class="big">77</div>
-    <div class="lbl" style="margin:6px 0 16px">Out of 100, when the other nine answers match</div>
-    <ul class="plain">
-      <li><b>No score until there is enough to go on.</b> Both people must have answered most of the questions for that comparison. Until then HALIA shows how many are left.</li>
-      <li><b>The differences matter more than the number.</b> Every report lists the questions where you differ most, so you know what to talk about.</li>
-      <li><b>One engine, many comparisons.</b> Couples, co-founders and job fit use the same engine with different questions and weights. New comparisons can be added the same way.</li>
-    </ul>
-    <p class="note">The score shows how closely your answers match on what you each said matters. It is not a prediction of how a relationship, partnership or job will turn out.</p>
-  </section>
+<section class="block" style="padding-top:20px"><div class="wrap two">
+  <div><h2>What HALIA will not do</h2>
+    <ul class="plain"><li>Predict events, name lucky days or promise outcomes.</li><li>Tell you whether to marry, stay with or leave someone.</li><li>Diagnose a health problem or suggest medicines.</li><li>Recommend investments, loans or trades.</li><li>Send questions about family plans or faith on WhatsApp.</li></ul></div>
+  <div><h2>What is not proven yet</h2>
+    <ul class="plain"><li><b>HALIA does not show you predictions today.</b> The accuracy figures above come from research on public data. Predictions will be switched on only when they reach that standard on our own users' data.</li><li><b>That the guidance improves lives.</b> This needs a controlled study, which has not been run.</li><li><b>That the findings hold in India today.</b> The tests used US earnings data from the 1980s and professional sport.</li></ul></div>
+</div></section>
 
-  <section>
-    <div class="lbl">Limits</div>
-    <h2>What HALIA will not do.</h2>
-    <ul class="plain">
-      <li>Predict events, name lucky or unlucky days, or promise outcomes.</li>
-      <li>Tell you whether to marry, stay with or leave someone.</li>
-      <li>Diagnose a health problem or suggest medicines.</li>
-      <li>Recommend specific investments, loans or trades.</li>
-      <li>Send sensitive questions, such as family plans or faith, on WhatsApp. Those appear only if you open a couple comparison.</li>
-    </ul>
-    <p class="muted small" style="margin-top:14px">If you are in distress, HALIA will point you to Tele-MANAS (14416, free, 24 hours) or emergency services (112).</p>
-  </section>
+<section class="end"><div class="wrap">
+  <h2 class="giant">Start with one question.</h2>
+  <p class="lead">3 chats free. Then ₹499 a month for 25 chats a day, in the app and on WhatsApp.</p>
+  <a class="btn" href="/halia/">Try HALIA</a>
+</div></section>
 
-  <section>
-    <div class="lbl">Not proven yet</div>
-    <h2>What we still have to show.</h2>
-    <ul class="plain">
-      <li><b>That HALIA's guidance improves people's lives.</b> This needs a controlled study with consenting users, which has not been run.</li>
-      <li><b>That an alignment score predicts anything.</b> Today it describes how your answers match. We will test it first on job fit, where outcomes can be measured.</li>
-      <li><b>That our findings hold in India today.</b> The tests above used US earnings data from the 1980s and professional sport.</li>
-    </ul>
-    <p class="muted small" style="margin-top:14px">We will update this page as results come in, including the ones that don't go our way.</p>
-  </section>
+<footer><div class="wrap">
+  <p>HALIA stands for Hybrid Adaptive Life Intelligence. It is an AI built from established methods and is not a medical, financial or legal service. If you are in distress, contact Tele-MANAS on 14416 (free, 24 hours) or emergency services on 112.</p>
+  <p>Figures come from our own analysis of public datasets, dated 26 November 2026. Research on couples: <a href="https://doi.org/10.1073/pnas.1917036117">Joel and colleagues, PNAS, 2020</a>. Daily adaptive guidance: <a href="https://pubmed.ncbi.nlm.nih.gov/27663578/">Nahum-Shani and colleagues, 2018</a>.</p>
+</div></footer>
 
-  <section style="border-bottom:0">
-    <div class="lbl">Your data</div>
-    <h2>Yours to see, change and delete.</h2>
-    <p class="muted">HALIA keeps the answers you choose to give and your chats for 30 days. When you compare with someone, they see the score and where your answers differ, and nothing else. Withdrawing consent deletes all of it at once.</p>
-    <a class="btn" href="/halia/">Try HALIA</a>
-    <p class="small muted" style="margin-top:14px">3 chats free. HALIA Chat is ₹499 a month for 25 chats a day.</p>
-  </section>
+<script>
+const $ = id => document.getElementById(id), clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (still) document.documentElement.classList.add('static');
+const lerpStops = (p, stops) => { for (let i = 1; i < stops.length; i++) if (p <= stops[i][0]) { const [p0, v0] = stops[i - 1], [p1, v1] = stops[i]; return v0 + (v1 - v0) * (p - p0) / (p1 - p0); } return stops[stops.length - 1][1]; };
 
-  <footer>
-    <p>HALIA stands for Hybrid Adaptive Life Intelligence. It is a framework built from established methods and is not a medical, financial or legal service.</p>
-    <p>Figures on this page come from our own analysis of public datasets, dated 26 November 2026.</p>
-  </footer>
-</div>
+const words = document.querySelector('.words');
+words.innerHTML = words.textContent.trim().split(/\s+/).map(w => `<span>${w}</span>`).join(' ');
+const wspans = [...words.children];
+$('dots').innerHTML = '<i></i>'.repeat(100);
+const dots = [...$('dots').children];
+
+const ACC = [[0, 50], [.12, 50], [.34, 62], [.42, 62], [.6, 66], [.68, 66], [.9, 83], [1, 83]];
+const ACC_S = [[.12, 'A coin flip.'], [.42, 'Knowing a person\'s background.'], [.68, 'Plus their job, hours and household.'], [2, 'Plus where they stand today.']];
+const draw = {
+  words(el, p) { const n = Math.round(clamp(p * 1.25) * wspans.length); wspans.forEach((s, i) => s.classList.toggle('lit', i < n)); },
+  ask(el, p) { el.dataset.step = p < .3 ? 0 : p < .64 ? 1 : 2; },
+  acc(el, p) { const v = lerpStops(p, ACC); $('acc-n').textContent = Math.round(v); el.style.setProperty('--v', v); $('acc-s').textContent = ACC_S.find(s => p <= s[0])[1]; },
+  gate(el, p) {
+    const acc = lerpStops(p, [[0, 74], [.15, 74], [.5, 84], [.6, 84], [.9, 90], [1, 90]]), share = lerpStops(p, [[0, 100], [.15, 100], [.5, 58], [.6, 58], [.9, 35], [1, 35]]);
+    $('gate-n').textContent = Math.round(acc); const n = Math.round(share);
+    $('gate-s').textContent = n === 100 ? 'correct, answering everyone' : `correct, answering ${n} in 100`;
+    dots.forEach((d, i) => d.classList.toggle('on', (i * 37) % 100 < n));
+  },
+  align(el, p) { const s = clamp(p / .7), e = 1 - Math.pow(1 - s, 3); el.style.setProperty('--s', e * .77); $('al-n').textContent = Math.round(e * 77); el.style.setProperty('--o', clamp((p - .62) / .2)); },
+};
+const scenes = [...document.querySelectorAll('.scene')];
+function tick() {
+  const vh = innerHeight;
+  for (const el of scenes) { const r = el.getBoundingClientRect(); draw[el.dataset.scene](el, still ? 1 : clamp(-r.top / (r.height - vh))); }
+}
+let queued = false;
+addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; tick(); }); } }, { passive: true });
+addEventListener('resize', tick); tick();
+</script>
 </body>
 </html>

@@ -299,3 +299,17 @@ def test_whatsapp_chat_uses_the_same_allowance_and_gates(monkeypatch):
     wa(nc, "918111000017", "hello", "wamid.x2")
     uid = db.one("SELECT id FROM users WHERE phone='+918111000016'")["id"]
     assert "accept" in SENT[-1][1] and db.one("SELECT COUNT(*) n FROM halia_chat WHERE user_id=?", uid)["n"] == 6
+
+
+def test_public_preview_returns_numbers_and_chart_and_stores_nothing():
+    c = TestClient(main.app)
+    before = db.one("SELECT COUNT(*) n FROM users")["n"], db.one("SELECT COUNT(*) n FROM events")["n"]
+    r = c.post("/api/preview", json={"name": "Priya Sharma", "dob": "1994-08-17", "birth_time": "06:30", "city": "Bengaluru"})
+    assert r.status_code == 200, r.text
+    j = r.json()
+    assert j["numbers"]["pythagorean"]["lifePath"] == 3 and j["chart"]["lagna"] and len(j["chart"]["natal"]) == 9
+    assert j["chart"]["natal"]["Moon"]["sign"] and j["chart"]["birth_nakshatra"]
+    r = c.post("/api/preview", json={"name": "Priya Sharma", "dob": "1994-08-17"})
+    assert r.json()["chart"]["lagna"] is None and r.json()["chart"]["notes"]
+    assert c.post("/api/preview", json={"name": "Priya", "dob": "1994-02-31"}).status_code == 422
+    assert before == (db.one("SELECT COUNT(*) n FROM users")["n"], db.one("SELECT COUNT(*) n FROM events")["n"])

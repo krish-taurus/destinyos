@@ -7,6 +7,7 @@ site/                 web root (nginx serves /var/www/destinyos/frontend)
   index.html          homepage
   app/                customer panel: sign in, free report, Destiny Plus, add-ons, account
   business/           brand naming and business numerology services
+  temple/             cinematic story page: history of Jyotisha, then a live chart and numbers reveal (POST /api/preview, nothing stored)
   halia/              HALIA: chat, daily question, QR to WhatsApp, compare with a partner or co-founder
   free-report/        the link you share: /free-report/?src=instagram (source is saved on sign-up)
   config.js           DESTINY_SIGNUP_OPEN switch (false = "Free report" buttons open WhatsApp)

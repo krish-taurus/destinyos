@@ -468,6 +468,35 @@ def chart(u=Depends(current_user)):
     return slim_chart(c)
 
 
+# ── Chart and numbers preview for the temple journey page (public, nothing stored) ──
+class PreviewIn(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    dob: str = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    birth_time: str | None = Field(default=None, pattern=r"^\d{2}:\d{2}$")
+    city: str | None = Field(default=None, max_length=120)
+
+
+@app.post("/api/preview")
+def preview(body: PreviewIn, req: Request):
+    """Numerology numbers and the natal positions for a name and birth date. Nothing is saved or logged."""
+    limit(req, "chart")
+    try:
+        born = date.fromisoformat(body.dob)
+    except ValueError:
+        raise HTTPException(422, "That date of birth doesn't exist. Check the day and month.")
+    if born > date.today() or born.year < 1900:
+        raise HTTPException(422, "Check your date of birth.")
+    city = (body.city or "").strip()
+    lat, lon, tz = geocode(city) if city else (23.1765, 75.7885, "Asia/Kolkata")     # Ujjain, the old prime meridian
+    c = build_chart(body.dob, body.birth_time if city else None, lat, lon, tz)
+    return {"numbers": numerology.both(body.name, body.dob),
+            "meanings": {str(k): v[0] for k, v in numerology.MEANING.items()},
+            "chart": {"time_known": c["time_known"], "lagna": c["lagna"], "notes": c["notes"],
+                      "birth_nakshatra": c["dasha"]["birth_nakshatra"], "mahadasha": c["dasha"]["mahadasha"]["lord"],
+                      "natal": {k: {"sign": v["sign"], "degree": v["degree"], "longitude": v["longitude"],
+                                    "nakshatra": v["nakshatra"], "retrograde": v["retrograde"]} for k, v in c["natal"].items()}}}
+
+
 # ── Destiny Plus features ──
 class MealsIn(BaseModel):
     meals: list[dict] = Field(default=[], max_length=20)

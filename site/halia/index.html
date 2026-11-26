@@ -8,126 +8,208 @@
 <title>HALIA — Destiny OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="halia.css?v=2">
 <style>
-:root{--bg:#FBFAF7;--paper:#fff;--ink:#15171F;--muted:#6B6F7E;--line:#E4E1D9;--red:#B83A3A;
-  --sans:"DM Sans",system-ui,sans-serif;--mono:"DM Mono",ui-monospace,monospace}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
-button,input{font:inherit;color:inherit}
-.wrap{max-width:560px;margin:0 auto;padding:20px 18px 80px}
-header{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0 22px;border-bottom:1px solid var(--ink)}
-header a{color:inherit;text-decoration:none}
-.brand{font:500 13px var(--mono);letter-spacing:.18em}
-.lbl{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-h1{font:600 30px/1.15 var(--sans);letter-spacing:-.02em;margin:26px 0 10px}
-h2{font:600 19px/1.3 var(--sans);margin-bottom:6px}
-p{margin-bottom:12px}.muted{color:var(--muted)}.small{font-size:14px}.err{color:var(--red);font-size:14px;min-height:1px}
-section{padding:26px 0;border-bottom:1px solid var(--line)}
-.hide{display:none!important}
-.btn{display:inline-block;padding:12px 20px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:#fff;font-weight:600;font-size:15px;cursor:pointer;text-decoration:none}
-.btn.line{background:transparent;color:var(--ink)}.btn.sm{padding:8px 14px;font-size:14px}.btn:disabled{opacity:.45;cursor:default}
-.link{background:none;border:0;text-decoration:underline;cursor:pointer;font-size:14px;color:var(--muted)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.chip{padding:10px 15px;border:1px solid var(--ink);border-radius:999px;background:var(--paper);cursor:pointer;font-size:15px}
-.chip.on{background:var(--ink);color:#fff}
-.msgs{display:flex;flex-direction:column;gap:10px;max-height:46vh;overflow-y:auto;margin:14px 0}
-.msg{max-width:86%;padding:11px 14px;border-radius:16px;white-space:pre-wrap;font-size:15.5px}
-.msg.user{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:4px}
-.msg.assistant{align-self:flex-start;background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px}
-.send{display:flex;gap:8px}.send input{flex:1;padding:12px 16px;border:1px solid var(--ink);border-radius:999px;background:var(--paper);min-width:0}
-.row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+body{min-height:100svh}
+.wrap{max-width:560px;margin:0 auto;padding:0 18px}
+header.bar{position:sticky;top:0;z-index:10;background:rgba(251,250,247,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+header.bar .wrap{display:flex;justify-content:space-between;align-items:center;height:56px}
+header.bar a.small{text-decoration:none;color:var(--muted)}
+
+/* sign in, consent, first questions */
+.gate{padding:34px 0 60px}
+.gate h1{margin-bottom:12px}
+.gate .discs{position:relative;height:118px;margin-bottom:22px}
+.gate .discs i{position:absolute;top:0;width:118px;height:118px;border-radius:50%;mix-blend-mode:multiply}
+.gate .discs .a{left:0;background:var(--marigold)}.gate .discs .b{left:68px;background:var(--peacock)}
+.steps{display:flex;gap:6px;margin:0 0 22px}.steps i{height:4px;flex:1;border-radius:2px;background:var(--line)}.steps i.on{background:var(--ink)}
+.phone-row{display:flex;gap:8px}.phone-row b{display:grid;place-items:center;padding:0 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);font-weight:500}
+.terms{font-size:14px;line-height:1.5;color:var(--muted);background:var(--paper);border-radius:14px;padding:14px 16px;margin:14px 0}
+
+/* tabs */
+.tab{padding:18px 0 110px}
+nav.tabs{position:fixed;inset:auto 0 0 0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1.5px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs div{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+nav.tabs button{background:none;border:0;padding:13px 0 12px;font:600 15px var(--sans);color:var(--muted);cursor:pointer;position:relative}
+nav.tabs button.on{color:var(--ink)}
+nav.tabs button.on::before{content:"";position:absolute;top:-1.5px;left:30%;right:30%;height:3px;border-radius:2px;background:var(--ink)}
+nav.tabs button .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--marigold);margin-left:5px;vertical-align:middle}
+
+/* chat */
+.msgs{display:flex;flex-direction:column;gap:10px;margin:8px 0 14px}
+.msg{max-width:86%;padding:12px 15px;border-radius:20px;white-space:pre-wrap;font-size:16.5px;animation:pop .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{transform:translateY(8px) scale(.97);opacity:0}}
+.msg.user{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:6px}
+.msg.assistant{align-self:flex-start;background:var(--paper);border-bottom-left-radius:6px}
+.typing{display:inline-flex;gap:5px;padding:4px 0}.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:blink 1.1s infinite}
+.typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,70%,100%{opacity:.25}35%{opacity:1}}
+.empty{padding:26px 0 8px}.empty h1{margin-bottom:10px}.empty .chips{margin-top:18px}
+.composer{position:sticky;bottom:calc(58px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 26%);padding:18px 0 10px}
+.send{display:flex;gap:8px}
+.send input{flex:1;min-width:0;min-height:52px;padding:12px 18px;border:1.5px solid var(--ink);border-radius:999px;background:var(--paper);font-size:17px}
+.send button{width:52px;height:52px;border-radius:50%;border:0;background:var(--ink);color:#fff;cursor:pointer;font-size:22px;line-height:1}
+.send button:disabled{opacity:.4}
+.qcard{background:var(--peacock-soft);border-radius:22px;padding:18px 18px 16px;margin:14px 0;animation:pop .3s cubic-bezier(.2,.8,.2,1)}
+.qcard h3{margin:2px 0 14px;font-size:19px}
+.qcard .chip{border-color:transparent}
+.qcard .foot{display:flex;gap:14px;align-items:center;margin-top:12px}
+.upsell{background:var(--ink);color:#fff;border-radius:22px;padding:22px 20px;margin:14px 0}
+.upsell .btn{background:var(--marigold);border-color:var(--marigold);color:var(--ink);margin-top:6px}
+
+/* compare and profile */
+.card{background:var(--paper);border-radius:22px;padding:20px;margin:14px 0}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1.5px solid var(--line)}
 .row:last-child{border-bottom:0}
-.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--ink)}
-.score{font:600 54px/1 var(--sans);letter-spacing:-.03em}
-.qr{width:190px;height:190px;border:1px solid var(--line);background:#fff;display:block;margin:12px 0}
-label.check{display:flex;gap:10px;align-items:flex-start;margin:12px 0;font-size:15px}label.check input{margin-top:5px}
-.note{font-size:13.5px;color:var(--muted);border-left:2px solid var(--ink);padding-left:12px;margin:14px 0}
+.score{font:800 76px/1 var(--display);letter-spacing:-.05em;text-align:center}
+.area{margin:14px 0}.area div{display:flex;justify-content:space-between;font-size:15.5px;margin-bottom:6px}
+.area b{display:block;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.area b i{display:block;height:100%;width:0;background:var(--ink);border-radius:4px;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.note{font-size:14px;line-height:1.5;color:var(--muted);margin:16px 0 10px}
+.ring{--v:0;width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--peacock) calc(var(--v)*1%),var(--line) 0);display:grid;place-items:center;flex:none}
+.ring span{width:48px;height:48px;border-radius:50%;background:var(--paper);display:grid;place-items:center;font:700 15px var(--display)}
+.qr{width:170px;height:170px;border-radius:14px;background:#fff;display:block;margin:4px 0 12px}
+.toast{position:fixed;left:50%;bottom:86px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-size:15px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:30;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header><a class="brand" href="/">DESTINY OS</a><a class="lbl" href="/app/">Your panel</a></header>
+<header class="bar"><div class="wrap">
+  <a class="mark" href="/halia/how-it-works/"><svg viewBox="0 0 34 22" aria-hidden="true"><circle cx="11" cy="11" r="11" fill="#E9A92B"/><circle cx="23" cy="11" r="11" fill="#0E6A70"/></svg>HALIA</a>
+  <a class="small" href="/halia/how-it-works/">How it works</a>
+</div></header>
 
-  <div id="v-signin" class="hide">
-    <h1>Meet HALIA.</h1>
-    <p>An AI guide for career, relationships, money and everyday wellbeing. It works from what you tell it, a little at a time.</p>
-    <p class="muted small">Sign in or create your account, then come back to this page.</p>
-    <p class="small"><a href="/halia/how-it-works/">How HALIA works and the research behind it</a></p>
-    <a class="btn" href="/app/">Sign in</a>
+<main class="wrap">
+  <!-- sign in / create account -->
+  <div id="v-auth" class="gate hide">
+    <div class="discs" aria-hidden="true"><i class="a"></i><i class="b"></i></div>
+    <div id="a-phone">
+      <h1>Guidance built on your life.</h1>
+      <p class="muted">Enter your mobile number to start. We'll text you a code.</p>
+      <label class="field"><span>Mobile number</span><div class="phone-row"><b>+91</b><input id="in-phone" inputmode="tel" autocomplete="tel" placeholder="98765 43210" maxlength="16"></div></label>
+      <p class="err" id="err-phone"></p>
+      <button class="btn wide" id="btn-otp">Send code</button>
+    </div>
+    <div id="a-code" class="hide">
+      <h1>Enter the code.</h1>
+      <p class="muted">Sent to <b id="code-to"></b>. <button class="link" id="btn-change">Change number</button></p>
+      <label class="field"><span>6-digit code</span><input id="in-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••"></label>
+      <p class="err" id="err-code"></p>
+      <button class="btn wide" id="btn-verify">Continue</button>
+    </div>
+    <div id="a-reg" class="hide">
+      <h1>A few details.</h1>
+      <label class="field"><span>Your name</span><input id="in-name" autocomplete="name" maxlength="120"></label>
+      <label class="field"><span>Date of birth</span><input id="in-dob" type="date" max="2010-12-31"></label>
+      <label class="field"><span>City</span><input id="in-city" autocomplete="address-level2" maxlength="120" placeholder="Bengaluru"></label>
+      <p class="terms" id="reg-terms"></p>
+      <label class="check"><input type="checkbox" id="in-consent"><span>I agree.</span></label>
+      <label class="check"><input type="checkbox" id="in-wa" checked><span>Message me on WhatsApp at this number.</span></label>
+      <p class="err" id="err-reg"></p>
+      <button class="btn wide" id="btn-reg">Create my account</button>
+    </div>
+    <div id="a-closed" class="hide">
+      <h1>We open very soon.</h1>
+      <p class="muted">New accounts aren't open yet. Message us on WhatsApp and we'll set you up.</p>
+      <a class="btn wide" id="btn-wa" href="#">Message us on WhatsApp</a>
+    </div>
   </div>
 
-  <div id="v-consent" class="hide">
+  <!-- HALIA consent -->
+  <div id="v-consent" class="gate hide">
+    <div class="steps"><i class="on"></i><i></i><i></i><i></i></div>
     <h1>Before we start.</h1>
     <p>HALIA is an AI, not a human counsellor. It gives practical suggestions, not predictions.</p>
-    <p class="note" id="consent-text"></p>
-    <p class="small"><a href="/halia/how-it-works/">How HALIA works</a></p>
+    <p class="terms" id="consent-text"></p>
     <label class="check"><input type="checkbox" id="c-agree"><span>I agree.</span></label>
-    <label class="check" id="c-daily-row"><input type="checkbox" id="c-daily"><span>Also send me one short question a day on WhatsApp. I can stop this any time by replying STOP.</span></label>
+    <label class="check" id="c-daily-row"><input type="checkbox" id="c-daily" checked><span>Send me one short question a day on WhatsApp. I can stop it by replying STOP.</span></label>
     <p class="err" id="err-consent"></p>
-    <button class="btn" id="btn-consent">Turn on HALIA</button>
+    <button class="btn wide" id="btn-consent">Turn on HALIA</button>
   </div>
 
-  <div id="v-main" class="hide">
-    <section id="s-invite" class="hide">
-      <div class="lbl">Invitation</div>
-      <h2 id="inv-title"></h2>
-      <p class="small">If you accept, you will each see an alignment score and the questions where your answers differ. Nothing else is shared, and either of you can disconnect at any time.</p>
-      <p class="err" id="err-inv"></p>
-      <button class="btn" id="btn-accept">Accept and compare</button> <button class="link" id="btn-decline">Not now</button>
-    </section>
+  <!-- first three questions -->
+  <div id="v-first" class="gate hide">
+    <div class="steps" id="first-steps"><i class="on"></i><i></i><i></i><i></i></div>
+    <p class="kicker" id="first-count"></p>
+    <h1 id="first-q" style="font-size:clamp(28px,7.4vw,40px)"></h1>
+    <div class="chips" id="first-opts" style="margin-top:22px"></div>
+    <p style="margin-top:22px"><button class="link" id="first-skip">Skip for now</button></p>
+  </div>
 
-    <section>
-      <div class="lbl">Chat</div>
-      <h1 style="margin-top:10px">Ask HALIA.</h1>
-      <div class="msgs" id="msgs"></div>
-      <form class="send" id="f-chat"><input id="in-chat" placeholder="What's on your mind?" maxlength="2000" autocomplete="off"><button class="btn" id="btn-send">Send</button></form>
-      <p class="err" id="err-chat" style="margin-top:8px"></p>
-      <p class="muted small" id="chat-left" style="margin-top:8px"></p>
-      <div id="upsell" class="hide">
-        <p class="small"><b>HALIA Chat</b> is ₹499 a month for 25 chats a day, here and on WhatsApp. Cancel any time.</p>
-        <button class="btn sm" id="btn-sub">Subscribe for ₹499 a month</button>
+  <!-- app -->
+  <div id="v-main" class="hide">
+    <section class="tab" id="t-chat">
+      <div class="card hide" id="s-invite">
+        <h3 id="inv-title"></h3>
+        <p class="small muted" style="margin-top:6px">If you accept, you will each see an alignment score and the questions where your answers differ. Nothing else is shared, and either of you can disconnect at any time.</p>
+        <p class="err" id="err-inv"></p>
+        <button class="btn sm" id="btn-accept">Accept and compare</button> <button class="link" id="btn-decline">Not now</button>
+      </div>
+      <div class="empty" id="empty">
+        <h1 id="hello">What's on your mind?</h1>
+        <p class="muted">Ask about work, money, relationships or your day. You'll get a short answer and one thing to do.</p>
+        <div class="chips" id="starters"></div>
+      </div>
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <div class="qcard hide" id="s-q">
+        <div class="kicker">One quick question</div>
+        <h3 id="q-text"></h3>
+        <div class="chips" id="q-opts"></div>
+        <div class="foot"><button class="btn sm hide" id="q-save">Save</button><button class="link" id="q-skip">Skip</button></div>
+      </div>
+      <div class="upsell hide" id="upsell">
+        <h3>You've used your 3 free chats.</h3>
+        <p style="opacity:.8;margin-top:6px">HALIA Chat is ₹499 a month for 25 chats a day, here and on WhatsApp. Cancel any time.</p>
+        <button class="btn" id="btn-sub">Subscribe for ₹499 a month</button>
+      </div>
+      <div class="composer">
+        <form class="send" id="f-chat"><input id="in-chat" placeholder="Ask HALIA" maxlength="2000" autocomplete="off" aria-label="Message"><button id="btn-send" aria-label="Send">↑</button></form>
+        <p class="err" id="err-chat" style="margin-top:8px"></p>
+        <p class="muted small" id="chat-left" style="margin-top:6px;text-align:center"></p>
       </div>
     </section>
 
-    <section id="s-q" class="hide">
-      <div class="lbl">One quick question</div>
-      <h2 id="q-text" style="margin-top:8px"></h2>
-      <div class="chips" id="q-opts"></div>
-      <button class="btn sm hide" id="q-save">Save</button> <button class="link" id="q-skip">Skip</button>
-    </section>
-
-    <section>
-      <div class="lbl">On WhatsApp</div>
-      <h2 style="margin-top:8px">Scan to chat.</h2>
-      <img class="qr" id="qr" alt="QR code that opens the HALIA chat" src="">
-      <p class="small"><a id="qr-link" href="#">Or open the chat on this phone</a>. Message from the number you signed up with.</p>
-      <label class="check"><input type="checkbox" id="t-daily"><span>Send me one short question a day on WhatsApp.</span></label>
-      <p class="err" id="err-daily"></p>
-    </section>
-
-    <section>
-      <div class="lbl">Compare</div>
-      <h2 style="margin-top:8px">See where you and someone else align.</h2>
-      <p class="small muted">Send a link. When they accept, you both see the same score, by area, and what to talk about. It reflects your answers, not a prediction of how things will go.</p>
-      <div class="chips"><button class="chip" data-inv="couple">With a partner</button><button class="chip" data-inv="cofounder">With a co-founder</button></div>
-      <p class="small" id="inv-out"></p>
+    <section class="tab hide" id="t-compare">
+      <h1 style="margin:14px 0 10px">See where you align.</h1>
+      <p class="muted">Send a link. When they accept, you both see the same result.</p>
+      <div class="chips" style="margin-top:18px"><button class="chip" data-inv="couple">With a partner</button><button class="chip" data-inv="cofounder">With a co-founder</button></div>
+      <div class="card hide" id="inv-card"><h3>Your link is ready</h3><p class="small muted" id="inv-url" style="word-break:break-all;margin:6px 0 12px"></p><button class="btn sm" id="inv-share">Share link</button></div>
       <div id="links"></div>
-      <div id="report" class="hide"></div>
+      <div class="card hide" id="report"></div>
     </section>
 
-    <section>
-      <div class="lbl">What you've told HALIA</div>
-      <div id="answers" style="margin-top:8px"></div>
-      <p style="margin-top:16px"><button class="link" id="btn-withdraw">Withdraw consent and delete all of this</button></p>
+    <section class="tab hide" id="t-you">
+      <div class="card" style="display:flex;gap:16px;align-items:center">
+        <div class="ring" id="ring"><span id="ring-n">0%</span></div>
+        <div><h3 id="you-name"></h3><p class="small muted" style="margin:2px 0 0" id="you-sub"></p></div>
+      </div>
+      <div class="card">
+        <h3>HALIA on WhatsApp</h3>
+        <p class="small muted" style="margin-top:4px">Scan to chat, or <a id="qr-link" href="#">open it on this phone</a>. Message from the number you signed up with.</p>
+        <img class="qr" id="qr" alt="QR code that opens the HALIA chat" src="">
+        <label class="check"><input type="checkbox" id="t-daily"><span>Send me one short question a day.</span></label>
+        <p class="err" id="err-daily"></p>
+      </div>
+      <div class="card">
+        <h3>What you've told HALIA</h3>
+        <div id="answers" style="margin-top:6px"></div>
+      </div>
+      <p style="text-align:center;margin-top:20px"><button class="link" id="btn-withdraw">Turn HALIA off and delete all of this</button></p>
+      <p style="text-align:center;margin-top:10px"><a class="link" href="/app/">Destiny OS panel</a> &nbsp; <button class="link" id="btn-out">Sign out</button></p>
     </section>
   </div>
-</div>
+</main>
+<nav class="tabs hide" id="tabs"><div><button data-tab="chat" class="on">Chat</button><button data-tab="compare">Compare</button><button data-tab="you">You<span class="dot hide" id="you-dot"></span></button></div></nav>
+<div class="toast" id="toast" role="status"></div>
+
 <script src="/config.js"></script>
 <script>
 const API = (window.DESTINY_API || '').replace(/\/$/, ''), $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let st = null, q = null, picked = [];
+const FIRST = ['FOCUS_PILLAR', 'OCCUPATION', 'TIME_AVAILABLE'];
+const STARTERS = ['I have too much to do today', 'How do I ask for a raise?', 'I want to save more each month', 'Help me plan a calmer week'];
+let st = null, me = null, q = null, picked = [], phone = '', signupToken = '', firstRun = false, lastInvite = '';
 const invite = new URLSearchParams(location.search).get('invite');
 
 async function api(path, { method = 'GET', body } = {}) {
@@ -135,46 +217,109 @@ async function api(path, { method = 'GET', body } = {}) {
   if (body !== undefined) { opt.headers['Content-Type'] = 'application/json'; opt.body = JSON.stringify(body); }
   let res; try { res = await fetch(API + path, opt); } catch (e) { const er = new Error('No connection. Check your internet and try again.'); er.status = 0; throw er; }
   let data = null; try { data = await res.json(); } catch (e) {}
-  if (!res.ok) { const er = new Error(data && typeof data.detail === 'string' ? data.detail : 'Something went wrong. Try again shortly.'); er.status = res.status; throw er; }
+  if (!res.ok) { const er = new Error(data && typeof data.detail === 'string' ? data.detail : res.status >= 500 ? 'Something went wrong on our side. Try again shortly.' : 'Check your details and try again.'); er.status = res.status; throw er; }
   return data;
 }
-function show(id) { ['v-signin', 'v-consent', 'v-main'].forEach(v => $(v).classList.toggle('hide', v !== id)); }
+function show(id) { ['v-auth', 'v-consent', 'v-first', 'v-main'].forEach(v => $(v).classList.toggle('hide', v !== id)); $('tabs').classList.toggle('hide', id !== 'v-main'); scrollTo(0, 0); }
+function step(id) { ['a-phone', 'a-code', 'a-reg', 'a-closed'].forEach(v => $(v).classList.toggle('hide', v !== id)); }
+function toast(t) { const el = $('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 1900); }
+async function busy(btn, fn) { const t = btn.textContent; btn.disabled = true; try { await fn(); } finally { btn.disabled = false; btn.textContent = t; } }
 
+/* ── start ── */
 async function load() {
-  try { st = await api('/api/halia/state'); } catch (e) { if (e.status === 401) return show('v-signin'); document.body.insertAdjacentHTML('beforeend', `<p class="err wrap">${esc(e.message)}</p>`); return; }
+  try { st = await api('/api/halia/state'); } catch (e) { if (e.status === 401) { show('v-auth'); step('a-phone'); return; } toast(e.message); return; }
+  if (!me) { try { me = await api('/api/me'); } catch (e) { me = { name: '' }; } }
   if (!st.consented) {
-    $('consent-text').textContent = st.consent_text;
-    $('c-daily-row').classList.toggle('hide', !st.whatsapp_optin);
+    $('consent-text').textContent = st.consent_text; $('c-daily-row').classList.toggle('hide', !st.whatsapp_optin);
     if (!st.adult) { $('err-consent').textContent = 'HALIA is for adults aged 18 and over.'; $('btn-consent').disabled = true; }
     return show('v-consent');
   }
+  if (firstRun && nextFirst()) return;
   show('v-main'); render();
   $('qr').src = API + '/api/halia/chat/qr'; $('qr-link').href = st.chat_link;
-  const h = await api('/api/halia/chat/history'); $('msgs').innerHTML = ''; h.messages.forEach(m => bubble(m.role, m.content));
+  const h = await api('/api/halia/chat/history'); $('msgs').innerHTML = ''; h.messages.forEach(m => bubble(m.role, m.content, true)); $('empty').classList.toggle('hide', h.messages.length > 0);
   nextQuestion(); loadLinks(); if (invite) loadInvite();
 }
+
+/* ── sign in / create account ── */
+$('btn-otp').onclick = () => busy($('btn-otp'), async () => {
+  $('err-phone').textContent = '';
+  try { const r = await api('/api/auth/otp', { method: 'POST', body: { phone: $('in-phone').value } }); phone = r.phone; $('code-to').textContent = phone; step('a-code'); $('in-code').focus(); }
+  catch (e) { $('err-phone').textContent = e.message; }
+});
+$('btn-change').onclick = () => step('a-phone');
+$('btn-verify').onclick = () => busy($('btn-verify'), async () => {
+  $('err-code').textContent = '';
+  try {
+    const r = await api('/api/auth/verify', { method: 'POST', body: { phone, code: $('in-code').value.trim() } });
+    if (!r.needs_registration) return load();
+    if (window.DESTINY_SIGNUP_OPEN !== true) { $('btn-wa').href = 'https://wa.me/917975554666?text=' + encodeURIComponent("Hi, I'd like to try HALIA"); return step('a-closed'); }
+    signupToken = r.signup_token; $('reg-terms').textContent = (await api('/api/auth/consent-text')).text; step('a-reg'); $('in-name').focus();
+  } catch (e) { $('err-code').textContent = e.message; }
+});
+$('btn-reg').onclick = () => busy($('btn-reg'), async () => {
+  $('err-reg').textContent = '';
+  if (!$('in-dob').value) { $('err-reg').textContent = 'Add your date of birth. HALIA is for adults, and we only use it to check that.'; return; }
+  try {
+    await api('/api/auth/register', { method: 'POST', body: { signup_token: signupToken, name: $('in-name').value.trim(), dob: $('in-dob').value, city: $('in-city').value.trim(),
+      consent: $('in-consent').checked, whatsapp_optin: $('in-wa').checked, source: new URLSearchParams(location.search).get('src') || 'halia' } });
+    load();
+  } catch (e) { $('err-reg').textContent = e.message; }
+});
+$('btn-out').onclick = async () => { await api('/api/auth/logout', { method: 'POST' }); me = null; load(); };
+
+/* ── consent and the first three questions ── */
+$('btn-consent').onclick = () => busy($('btn-consent'), async () => {
+  $('err-consent').textContent = '';
+  try { await api('/api/halia/consent', { method: 'POST', body: { consent: $('c-agree').checked, daily_optin: $('c-daily').checked && st.whatsapp_optin } }); firstRun = true; load(); }
+  catch (e) { $('err-consent').textContent = e.message; }
+});
+let bank = {};
+function nextFirst() {
+  const have = new Set(st.answers.map(a => a.field)), i = FIRST.findIndex(f => !have.has(f) && !nextFirst.skipped.has(f));
+  if (i < 0) { firstRun = false; return false; }
+  show('v-first');
+  api('/api/halia/questions/next').then(d => {
+    const fq = d.question; if (!fq || !FIRST.includes(fq.field)) { firstRun = false; return load(); }
+    const n = FIRST.indexOf(fq.field); [...$('first-steps').children].forEach((el, k) => el.classList.toggle('on', k <= n + 1));
+    $('first-count').textContent = `Question ${n + 1} of 3`; $('first-q').textContent = fq.text;
+    $('first-opts').innerHTML = fq.options.map(o => `<button class="chip" data-code="${esc(o.code)}">${esc(o.label)}</button>`).join('');
+    $('first-opts').querySelectorAll('.chip').forEach(b => b.onclick = async () => { b.classList.add('on'); await api('/api/halia/answers', { method: 'POST', body: { question_id: fq.id, value: b.dataset.code } }); st = await api('/api/halia/state'); load(); });
+    $('first-skip').onclick = async () => { nextFirst.skipped.add(fq.field); await api('/api/halia/answers', { method: 'POST', body: { question_id: fq.id, skip: true } }); load(); };
+  });
+  return true;
+}
+nextFirst.skipped = new Set();
+
+/* ── tabs ── */
+document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => tab(b.dataset.tab));
+function tab(name) { document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === name)); ['chat', 'compare', 'you'].forEach(t => $('t-' + t).classList.toggle('hide', t !== name)); scrollTo(0, name === 'chat' ? document.body.scrollHeight : 0); }
+
 function render() {
-  const c = st.chat;
-  $('chat-left').textContent = c.kind === 'daily' ? `${c.left} of ${c.of} chats left today.` : `${c.left} of ${c.of} free chats left.`;
-  $('upsell').classList.toggle('hide', !(c.kind === 'free' && c.left === 0));
+  const c = st.chat, first = (me && me.name || '').split(' ')[0];
+  $('hello').textContent = first ? `What's on your mind, ${first}?` : "What's on your mind?";
+  $('chat-left').textContent = c.kind === 'daily' ? `${c.left} of ${c.of} chats left today` : `${c.left} of ${c.of} free chats left`;
+  const out = c.kind === 'free' && c.left === 0; $('upsell').classList.toggle('hide', !out); $('f-chat').classList.toggle('hide', out);
+  $('starters').innerHTML = STARTERS.map(s => `<button class="chip">${esc(s)}</button>`).join('');
+  $('starters').querySelectorAll('.chip').forEach(b => b.onclick = () => { $('in-chat').value = b.textContent; $('f-chat').requestSubmit(); });
   $('t-daily').checked = st.daily_optin; $('t-daily').disabled = !st.whatsapp_optin;
+  const cov = st.coverage.reduce((a, d) => ({ n: a.n + d.answered, of: a.of + d.of }), { n: 0, of: 0 }), pct = Math.round(100 * st.answers.length / 29);
+  $('ring').style.setProperty('--v', pct); $('ring-n').textContent = pct + '%';
+  $('you-name').textContent = first || 'Your profile'; $('you-sub').textContent = `${st.answers.length} answers so far. The more HALIA knows, the more specific it gets.`;
   $('answers').innerHTML = st.answers.length ? st.answers.map(a =>
     `<div class="row"><div><div class="small muted">${esc(a.question)}</div><div>${esc(a.label)}</div></div><button class="link" data-del="${esc(a.field)}">Remove</button></div>`).join('')
     : '<p class="muted small">Nothing yet. Answers you give appear here, and you can remove any of them.</p>';
-  document.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => { await api('/api/halia/answers/' + b.dataset.del, { method: 'DELETE' }); st = await api('/api/halia/state'); render(); });
+  document.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => { await api('/api/halia/answers/' + b.dataset.del, { method: 'DELETE' }); st = await api('/api/halia/state'); render(); toast('Removed'); });
 }
-function bubble(role, text) { const d = document.createElement('div'); d.className = 'msg ' + role; d.textContent = text; $('msgs').appendChild(d); $('msgs').scrollTop = 1e9; return d; }
 
-$('btn-consent').onclick = async () => {
-  $('err-consent').textContent = '';
-  try { await api('/api/halia/consent', { method: 'POST', body: { consent: $('c-agree').checked, daily_optin: $('c-daily').checked } }); load(); }
-  catch (e) { $('err-consent').textContent = e.message; }
-};
+/* ── chat ── */
+function bubble(role, text, quiet) { const d = document.createElement('div'); d.className = 'msg ' + role; if (quiet) d.style.animation = 'none'; d.textContent = text; $('msgs').appendChild(d); if (!quiet) d.scrollIntoView({ block: 'center', behavior: 'smooth' }); return d; }
 $('f-chat').onsubmit = async ev => {
   ev.preventDefault(); const text = $('in-chat').value.trim(); if (!text) return;
-  $('err-chat').textContent = ''; $('in-chat').value = ''; bubble('user', text); const wait = bubble('assistant', '…'); $('btn-send').disabled = true;
-  try { const r = await api('/api/halia/chat', { method: 'POST', body: { text } }); wait.textContent = r.reply; st.chat = r.chat; st = await api('/api/halia/state'); render(); showQuestion(r.question); }
-  catch (e) { wait.remove(); $('err-chat').textContent = e.message; if (e.status === 402) { st.chat.left = 0; render(); } }
+  $('err-chat').textContent = ''; $('in-chat').value = ''; $('empty').classList.add('hide'); bubble('user', text);
+  const wait = bubble('assistant', ''); wait.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>'; $('btn-send').disabled = true;
+  try { const r = await api('/api/halia/chat', { method: 'POST', body: { text } }); wait.textContent = r.reply; st = await api('/api/halia/state'); render(); showQuestion(r.question); }
+  catch (e) { wait.remove(); $('err-chat').textContent = e.status === 402 ? '' : e.message; if (e.status === 402) { st.chat.left = 0; render(); } }
   $('btn-send').disabled = false;
 };
 async function nextQuestion() { try { showQuestion((await api('/api/halia/questions/next')).question); } catch (e) {} }
@@ -183,73 +328,88 @@ function showQuestion(nq) {
   $('q-text').textContent = q.text; $('q-save').classList.toggle('hide', q.kind !== 'multi');
   $('q-opts').innerHTML = q.options.map(o => `<button class="chip" data-code="${esc(o.code)}">${esc(o.label)}</button>`).join('');
   $('q-opts').querySelectorAll('.chip').forEach(b => b.onclick = () => {
-    if (q.kind !== 'multi') return sendAnswer(b.dataset.code);
+    if (q.kind !== 'multi') { b.classList.add('on'); return sendAnswer(b.dataset.code); }
     b.classList.toggle('on'); picked = [...$('q-opts').querySelectorAll('.chip.on')].map(x => x.dataset.code);
   });
 }
-async function sendAnswer(value, skip) {
-  try { await api('/api/halia/answers', { method: 'POST', body: skip ? { question_id: q.id, skip: true } : { question_id: q.id, value } }); st = await api('/api/halia/state'); render(); nextQuestion(); loadLinks(); } catch (e) {}
+async function sendAnswer(value, skip, domain) {
+  try {
+    await api('/api/halia/answers', { method: 'POST', body: skip ? { question_id: q.id, skip: true } : { question_id: q.id, value } });
+    if (!skip) toast('Saved'); st = await api('/api/halia/state'); render(); loadLinks();
+    const d = await api('/api/halia/questions/next' + (sendAnswer.domain ? '?domain=' + sendAnswer.domain : '')); showQuestion(d.question);
+    if (!d.question && sendAnswer.domain) { sendAnswer.domain = ''; tab('compare'); toast('All answered'); }
+  } catch (e) { toast(e.message); }
 }
 $('q-save').onclick = () => picked.length && sendAnswer(picked);
 $('q-skip').onclick = () => sendAnswer(null, true);
+async function askDomain(domain) { sendAnswer.domain = domain; const d = await api('/api/halia/questions/next?domain=' + domain); if (!d.question) return toast('You have answered everything for this'); showQuestion(d.question); tab('chat'); $('s-q').scrollIntoView({ block: 'center' }); }
+
+/* ── profile ── */
 $('t-daily').onchange = async () => {
   $('err-daily').textContent = '';
-  try { await api('/api/halia/settings', { method: 'PATCH', body: { daily_optin: $('t-daily').checked } }); st.daily_optin = $('t-daily').checked; }
+  try { await api('/api/halia/settings', { method: 'PATCH', body: { daily_optin: $('t-daily').checked } }); st.daily_optin = $('t-daily').checked; toast(st.daily_optin ? 'Daily question on' : 'Daily question off'); }
   catch (e) { $('err-daily').textContent = e.message; $('t-daily').checked = st.daily_optin; }
 };
 $('btn-withdraw').onclick = async () => { if (!confirm('Delete everything HALIA has stored about you? This cannot be undone.')) return; await api('/api/halia/consent', { method: 'DELETE' }); load(); };
 
-/* compare */
+/* ── compare ── */
 document.querySelectorAll('[data-inv]').forEach(b => b.onclick = async () => {
-  try {
-    const r = await api('/api/halia/invites', { method: 'POST', body: { domain: b.dataset.inv } });
-    $('inv-out').innerHTML = `Send this link (valid ${r.expires_days} days): <a href="${esc(r.url)}">${esc(r.url)}</a>`;
-    if (navigator.share) navigator.share({ title: 'Compare with me on Destiny OS', url: r.url }).catch(() => {});
-    const d = await api('/api/halia/questions/next?domain=' + b.dataset.inv); if (d.question) showQuestion(d.question);
-  } catch (e) { $('inv-out').textContent = e.message; }
+  try { const r = await api('/api/halia/invites', { method: 'POST', body: { domain: b.dataset.inv } }); lastInvite = r.url; $('inv-url').textContent = r.url; $('inv-card').classList.remove('hide'); share(); }
+  catch (e) { toast(e.message); }
 });
+function share() { if (navigator.share) navigator.share({ title: 'Compare with me on HALIA', url: lastInvite }).catch(() => {}); else if (navigator.clipboard) navigator.clipboard.writeText(lastInvite).then(() => toast('Link copied')); }
+$('inv-share').onclick = share;
 async function loadLinks() {
   try {
     const r = await api('/api/halia/links');
-    $('links').innerHTML = r.links.map(l => `<div class="row"><div><b>${esc(l.with)}</b> <span class="muted small">${esc(l.name || '')}</span><div class="small muted">${l.paused ? 'Paused' : l.enough ? l.score + ' out of 100' : 'More answers needed from you both'}</div></div><button class="btn line sm" data-link="${l.id}">Open</button></div>`).join('');
+    $('links').innerHTML = r.links.map(l => `<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div><h3>${esc(l.with)}</h3><div class="small muted">${esc(l.name || '')} · ${l.paused ? 'paused' : l.enough ? l.score + ' out of 100' : 'more answers needed'}</div></div><button class="btn line sm" data-link="${l.id}">Open</button></div>`).join('');
     document.querySelectorAll('[data-link]').forEach(b => b.onclick = () => openLink(b.dataset.link));
   } catch (e) {}
 }
 async function openLink(id) {
-  const r = await api('/api/halia/links/' + id), el = $('report'); el.classList.remove('hide');
+  const r = await api('/api/halia/links/' + id), el = $('report'), you = (me && me.name || 'You').split(' ')[0]; el.classList.remove('hide');
   if (!r.enough) {
-    el.innerHTML = `<h2 style="margin-top:20px">You and ${esc(r.with)}</h2><p class="small">${r.paused ? 'They have switched HALIA off, so there is nothing to compare right now.' : `Not enough answers yet for a score. You have ${r.missing_you} left to answer and they have ${r.missing_them}.`}</p><button class="btn sm" id="btn-more">Answer the next one</button> <button class="link" id="btn-unlink">Disconnect</button>`;
-    if ($('btn-more')) $('btn-more').onclick = async () => { const d = await api('/api/halia/questions/next?domain=' + r.domain); showQuestion(d.question); $('s-q').scrollIntoView({ behavior: 'smooth' }); };
+    el.innerHTML = `<h2>You and ${esc(r.with)}</h2><p class="muted" style="margin-top:8px">${r.paused ? 'They have switched HALIA off, so there is nothing to compare right now.' : `Not enough answers yet for a score. You have ${r.missing_you} left to answer and ${esc(r.with)} has ${r.missing_them}.`}</p>
+      ${!r.paused && r.missing_you ? '<button class="btn sm" id="btn-more">Answer my questions</button> ' : ''}<button class="link" id="btn-unlink">Disconnect</button>`;
+    if ($('btn-more')) $('btn-more').onclick = () => askDomain(r.domain);
   } else {
-    el.innerHTML = `<h2 style="margin-top:20px">You and ${esc(r.with)}</h2><div class="score">${r.score}</div><div class="lbl">alignment out of 100</div>
-      <div style="margin:18px 0">${r.areas.filter(a => a.score !== null).map(a => `<div style="margin-bottom:12px"><div class="row" style="border:0;padding:0"><span>${esc(a.name)}</span><span>${a.score}</span></div><div class="bar"><i style="width:${a.score}%"></i></div></div>`).join('')}</div>
-      ${r.talk_about.length ? '<div class="lbl">Worth talking about</div>' + r.talk_about.map(t => `<div class="row"><div><div class="small muted">${esc(t.question)}</div><div>You: ${esc(t.you)} · ${esc(r.with)}: ${esc(t.them)}</div></div></div>`).join('') : ''}
+    el.innerHTML = `<h2>You and ${esc(r.with)}</h2>
+      <div class="overlap"><i class="a"></i><i class="b"></i><div class="names"><span>${esc(you)}</span><span>${esc(r.with)}</span></div></div>
+      <div class="score" id="sc">0</div><p class="small muted" style="text-align:center">alignment out of 100</p>
+      ${r.areas.filter(a => a.score !== null).map(a => `<div class="area"><div><span>${esc(a.name)}</span><span>${a.score}</span></div><b><i data-w="${a.score}"></i></b></div>`).join('')}
+      ${r.talk_about.length ? '<h3 style="margin-top:22px">Worth talking about</h3>' + r.talk_about.map(t => `<div class="row"><div><div class="small muted">${esc(t.question)}</div><div>You: ${esc(t.you)}<br>${esc(r.with)}: ${esc(t.them)}</div></div></div>`).join('') : ''}
       <p class="note">${esc(r.note)}</p><button class="link" id="btn-unlink">Disconnect</button>`;
+    const off = 95 - r.score * .7, t0 = performance.now(), still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      el.querySelector('.overlap .a').style.transform = `translateX(${-off}px)`; el.querySelector('.overlap .b').style.transform = `translateX(${off}px)`;
+      el.querySelectorAll('[data-w]').forEach(i => i.style.width = i.dataset.w + '%');
+      (function count(t) { const p = still ? 1 : Math.min(1, (t - t0) / 1000); $('sc').textContent = Math.round(r.score * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(count); })(t0);
+    }));
   }
+  el.scrollIntoView({ block: 'start', behavior: 'smooth' });
   $('btn-unlink').onclick = async () => { if (!confirm('Disconnect? Neither of you will see this comparison any more.')) return; await api('/api/halia/links/' + id, { method: 'DELETE' }); el.classList.add('hide'); loadLinks(); };
 }
 async function loadInvite() {
   try {
     const i = await api('/api/halia/invites/' + encodeURIComponent(invite)); if (i.own) return;
-    $('inv-title').textContent = `${i.from} invited you to compare answers (${i.name}).`; $('s-invite').classList.remove('hide');
+    $('inv-title').textContent = `${i.from} invited you to compare answers.`; $('s-invite').classList.remove('hide');
     $('btn-accept').onclick = async () => {
-      try { const r = await api('/api/halia/invites/' + encodeURIComponent(invite) + '/accept', { method: 'POST', body: { agree: true } }); history.replaceState(null, '', location.pathname); $('s-invite').classList.add('hide'); await loadLinks(); openLink(r.link_id); }
+      try { const r = await api('/api/halia/invites/' + encodeURIComponent(invite) + '/accept', { method: 'POST', body: { agree: true } }); history.replaceState(null, '', location.pathname); $('s-invite').classList.add('hide'); await loadLinks(); tab('compare'); openLink(r.link_id); }
       catch (e) { $('err-inv').textContent = e.message; }
     };
     $('btn-decline').onclick = () => { history.replaceState(null, '', location.pathname); $('s-invite').classList.add('hide'); };
   } catch (e) {}
 }
 
-/* ₹499 plan */
+/* ── ₹499 plan ── */
 function loadCheckout() { if (window.Razorpay) return Promise.resolve(); return new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://checkout.razorpay.com/v1/checkout.js'; s.onload = res; s.onerror = () => rej(new Error("Couldn't load the payment window. Check your connection.")); document.head.appendChild(s); }); }
-$('btn-sub').onclick = async () => {
-  $('err-chat').textContent = '';
+$('btn-sub').onclick = () => busy($('btn-sub'), async () => {
   try {
     const s = await api('/api/billing/subscribe', { method: 'POST', body: { plan: 'chat' } }); await loadCheckout();
     new Razorpay({ key: s.key_id, subscription_id: s.subscription_id, name: 'Destiny OS', description: s.description, prefill: { name: s.name, contact: s.phone }, theme: { color: '#15171F' },
-      handler: async resp => { try { await api('/api/billing/subscribe/verify', { method: 'POST', body: resp }); st = await api('/api/halia/state'); render(); } catch (e) { $('err-chat').textContent = e.message; } } }).open();
-  } catch (e) { $('err-chat').textContent = e.message; }
-};
+      handler: async resp => { try { await api('/api/billing/subscribe/verify', { method: 'POST', body: resp }); st = await api('/api/halia/state'); render(); toast('HALIA Chat is on'); } catch (e) { toast(e.message); } } }).open();
+  } catch (e) { toast(e.message); }
+});
 load();
 </script>
 </body>

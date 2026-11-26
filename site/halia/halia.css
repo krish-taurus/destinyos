@@ -1,0 +1,53 @@
+/* HALIA: shared tokens and type for /halia/ and /halia/how-it-works/.
+   Identity: two discs that overlap. Marigold is "you", peacock is the other side (a person, a job). */
+:root{
+  --bg:#FBFAF7; --paper:#FFFFFF; --ink:#15171F; --muted:#666A78; --line:#E4E1D9;
+  --marigold:#E9A92B; --peacock:#0E6A70; --peacock-soft:#E3F0EF; --red:#B83A3A;
+  --display:"Bricolage Grotesque","DM Sans",system-ui,sans-serif; --sans:"DM Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font:400 16.5px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--peacock);outline-offset:2px}
+.hide{display:none!important}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;font-weight:600}
+h1{font-size:clamp(32px,8.5vw,52px);line-height:1.04;font-weight:700;letter-spacing:-.035em}
+h2{font-size:clamp(23px,5.6vw,30px);line-height:1.15}
+h3{font-size:18px;line-height:1.3;letter-spacing:-.01em}
+p{margin-bottom:12px}
+.muted{color:var(--muted)}.small{font-size:14.5px}.err{color:var(--red);font-size:14.5px;min-height:1px}
+.kicker{font-size:14px;font-weight:600;color:var(--peacock);margin-bottom:6px}
+
+.mark{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font:700 19px/1 var(--display);letter-spacing:-.02em}
+.mark svg{width:34px;height:22px;display:block}
+.mark circle{mix-blend-mode:multiply}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 22px;border-radius:14px;border:1.5px solid var(--ink);background:var(--ink);color:#fff;font-weight:600;font-size:16px;cursor:pointer;text-decoration:none;transition:transform .15s}
+.btn:active{transform:scale(.98)}
+.btn.line{background:transparent;color:var(--ink)}
+.btn.wide{width:100%}
+.btn.sm{min-height:40px;padding:8px 14px;font-size:14.5px;border-radius:11px}
+.btn:disabled{opacity:.45;cursor:default}
+.link{background:none;border:0;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:14.5px;color:var(--muted)}
+
+.field{display:block;margin:14px 0}
+.field span{display:block;font-size:14.5px;font-weight:500;margin-bottom:6px}
+.field input{width:100%;min-height:50px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);font-size:17px}
+.field input:focus{border-color:var(--ink);outline:0}
+label.check{display:flex;gap:11px;align-items:flex-start;margin:14px 0;font-size:15px;line-height:1.45}
+label.check input{width:20px;height:20px;margin-top:1px;accent-color:var(--peacock);flex:none}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:10px 16px;border:1.5px solid var(--line);border-radius:999px;background:var(--paper);cursor:pointer;font-size:15.5px;transition:border-color .15s,background .15s}
+.chip:hover{border-color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* the overlap: used as the score display */
+.overlap{position:relative;height:150px;margin:6px 0 2px}
+.overlap i{position:absolute;top:10px;left:50%;width:130px;height:130px;margin-left:-65px;border-radius:50%;mix-blend-mode:multiply;transition:transform 1.1s cubic-bezier(.2,.8,.2,1)}
+.overlap i.a{background:var(--marigold);transform:translateX(-95px)}
+.overlap i.b{background:var(--peacock);transform:translateX(95px)}
+.overlap .names{position:absolute;inset:auto 0 -4px 0;display:flex;justify-content:space-between;font-size:13.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
